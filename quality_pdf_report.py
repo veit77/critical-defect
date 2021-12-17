@@ -8,12 +8,16 @@ from quality_data_types import QualityReport
 
 
 class ReportPDFCreator():
+    """ Class to create report PDF
+    """
     def __init__(self, data_plot: Figure,
                  quality_reports: List[QualityReport]):
         self.quality_reports = quality_reports
         self.data_plot = data_plot
 
     def create_report(self):
+        """ Main function to draw content of report PDF
+        """
         pdf = DefectReportPDF(orientation="L")
         pdf.alias_nb_pages()
         pdf.add_page()
@@ -29,7 +33,12 @@ class ReportPDFCreator():
 
 
 class DefectReportPDF(FPDF):
+    """ Subclass of FPDF to set up page structure
+    """
     def header(self):
+        """ Draw header
+        """
+
         # Rendering logo:
         self.image("./assets/THEVA-Logo.png", self.l_margin, self.t_margin, 60)
         # Setting font: helvetica bold 15
@@ -42,6 +51,8 @@ class DefectReportPDF(FPDF):
         self.ln(20)
 
     def footer(self):
+        """ Draw footer
+        """
         # Position cursor at 1.5 cm from bottom:
         self.set_y(-15)
         # Setting font: helvetica italic 8
@@ -51,6 +62,8 @@ class DefectReportPDF(FPDF):
 
 
 def main():
+    """ Main function to test PDF rendering
+    """
     pdf = DefectReportPDF(orientation="L")
     pdf.alias_nb_pages()
     pdf.add_page()
