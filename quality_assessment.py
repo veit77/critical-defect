@@ -1,71 +1,96 @@
 from typing import List, Optional
 import matplotlib.pyplot as plt
-from quality_data_types import QualityReport, FailInformation, FailType, TapeSpecs, TapeProduct
+from matplotlib.figure import Figure
+from quality_data_types import QualityReport, FailInformation, FailType, TapeSpecs, TapeProduct, QualityParameterInfo
 from tape_quality_information import TapeQualityInformation
-from quality_pdf_report import DefectReportPDF
+from quality_pdf_report import ReportPDFCreator
 
 
 class TapeQualityAssessor():
     tape_quality_info: TapeQualityInformation
     tape_specs: TapeSpecs
     quality_reports: List[QualityReport] = []
-    data_plot: Optional[plt.Figure]
+    data_plot: Optional[Figure]
 
     def __init__(self, tape_quality_info, tape_specs) -> None:
         self.tape_quality_info = tape_quality_info
         self.tape_specs = tape_specs
+        self.quality_reports = []
+        self.data_plot = None
 
-    def check_meets_specs(self):
+    def assess_meets_specs(self):
         # prepare tape quality information
         info = self.tape_quality_info
         info.calculate_averages()
         info.calculate_basic_peak_info()
-        # cl.write_peak_info("")
 
-        self.quality_reports.append(self._check_meets_average_value())
+        # assess different spec categories
+        self.quality_reports.append(self.assess_average_value())
+        self.quality_reports.append(self.assess_min_value())
 
+        # make the data plot containing all failure infos
         self.make_plot()
-        self.plot_defects()
 
-    def create_report(self):
-        pass
+    def create_pdf_report(self):
+        if self.data_plot is None:
+            raise ValueError("No data plot available.")
+
+        pdf_report = ReportPDFCreator(self.data_plot, self.quality_reports)
+        pdf_report.create_report()
 
     def print_reports(self):
         for report in self.quality_reports:
             print(f"Tape {report.tape_id} passed: {report.passed}")
             if not report.passed and report.fail_information is not None:
+                print(f"Failed due to: {report.type.value}")
                 for fail_info in report.fail_information:
                     print(
-                        f"Failed at {fail_info.quality_parameter_info.start_position} "
+                        f"Failed at {fail_info.quality_parameter_info.start_position:.2f} "
                         +
-                        f"to {fail_info.quality_parameter_info.end_position} "
+                        f"to {fail_info.quality_parameter_info.end_position:.2f} "
                         +
-                        f"due to: {fail_info.type.value} | {fail_info.description}"
+                        f"with: {fail_info.description}"
                     )
 
-    def _check_meets_average_value(self) -> QualityReport:
-        threshold = self.tape_specs.min_average
+    def assess_average_value(self) -> QualityReport:
+        return self._assess_failure(FailType.AVERAGE)
+
+    def assess_min_value(self) -> QualityReport:
+        return self._assess_failure(FailType.MINIMUM)
+
+    def _assess_failure(self, type: FailType) -> QualityReport:
+        threshold = 0
+        parameter_infos: List[QualityParameterInfo] = []
+        parameter_string = ""
+        if type == FailType.AVERAGE:
+            threshold = self.tape_specs.min_average
+            parameter_infos = self.tape_quality_info.averages
+            parameter_string = "Average"
+        elif type == FailType.MINIMUM:
+            threshold = self.tape_specs.min_value
+            parameter_infos = self.tape_quality_info.peaks
+            parameter_string = "Peak"
+
         fails = []
 
-        for average in self.tape_quality_info.averages:
-            if average.value < threshold:
-                info = FailInformation(FailType.AVERAGE, average,
-                                       f"Average = {average.value}")
+        for p_info in parameter_infos:
+            if p_info.value < threshold:
+                info = FailInformation(p_info, f"{parameter_string} = {p_info.value}")
                 fails.append(info)
 
         if not fails:
-            return QualityReport(self.tape_quality_info.tape_id, True, None)
+            return QualityReport(self.tape_quality_info.tape_id, True)
         else:
-            return QualityReport(self.tape_quality_info.tape_id, False, fails)
+            return QualityReport(self.tape_quality_info.tape_id, False, type, fails)
 
     def make_plot(self):
         data = self.tape_quality_info.data
-        peak_info = self.tape_quality_info.peak_info
         fig = plt.figure()
         axis = fig.subplots()
         axis.plot(data.iloc[:, 0], data.iloc[:, 1], label='Data')
 
-        # plot fail reportss
+        # plot fail reports
+        # TODO evaluate for fail type -> color of marker
         for report in self.quality_reports:
             if report.fail_information is None:
                 continue
@@ -78,21 +103,20 @@ class TapeQualityAssessor():
                     fail.quality_parameter_info.value,
                     fail.quality_parameter_info.value
                 ]
-                axis.plot(x,
-                          y,
-                          label='Fails',
-                          color='r',
-                          marker='|',
-                          linewidth=2.0)
 
-        peak_pos = [info.start_position for info in peak_info]
-        height = [info.value for info in peak_info]
-        axis.scatter(peak_pos,
-                     height,
-                     color='r',
-                     s=15,
-                     marker='D',
-                     label='Maxima')
+                if report.type == FailType.AVERAGE:
+                    color = 'crimson'
+                    axis.plot(x, y, color=color,
+                              marker='|',
+                              linewidth=2.0,
+                              label='Averages Failed')
+                elif report.type == FailType.MINIMUM:
+                    color = 'deeppink'
+                    axis.scatter(x, y, color=color,
+                                 s=15,
+                                 marker='D',
+                                 label='Minimum Failed')
+
         # axis.legend()
         axis.grid()
 
@@ -100,13 +124,8 @@ class TapeQualityAssessor():
 
     # TODO Draw report pdf
     def save_report_pdf(self) -> None:
-        pdf = DefectReportPDF(orientation="L")
-        pdf.alias_nb_pages()
-        pdf.add_page()
-        pdf.set_font("Times", size=12)
-        for i in range(1, 41):
-            pdf.cell(0, 10, f"Printing line number {i}", 0, 1)
-        pdf.output("report.pdf")
+        pdf = ReportPDFCreator(self.data_plot, self.quality_reports)
+        pdf.create_report()
 
     def plot_defects(self):
         if self.data_plot is None:
@@ -134,7 +153,9 @@ def main():
         assessor = TapeQualityAssessor(q_info, TapeProduct.STANDARD.value)
         assessor.tape_quality_info = q_info
 
-        assessor.check_meets_specs()
+        assessor.assess_meets_specs()
+
+        assessor.create_pdf_report()
         assessor.print_reports()
 
 

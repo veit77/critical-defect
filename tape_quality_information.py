@@ -26,7 +26,7 @@ class TapeQualityInformation:
         return self.expected_average * 0.8
 
     averages: List[AveragesInfo]
-    peak_info: List[PeakInfo]
+    peaks: List[PeakInfo]
 
     def __init__(self, data: pd.DataFrame, tape_id: str,
                  expected_average: float, expected_average_length: float):
@@ -34,7 +34,7 @@ class TapeQualityInformation:
         self.tape_id = tape_id
         self.expected_average = expected_average
         self.expected_average_length = expected_average_length
-        self.peak_info = []
+        self.peaks = []
         self.averages = []
         self.data_plot = None
 
@@ -112,7 +112,7 @@ class TapeQualityInformation:
                          width=widths[0][i],
                          value=self.data.iloc[index, 1]))
 
-        self.peak_info = info
+        self.peaks = info
 
     # TODO missing implementation
     def peak_fwhm(self, position: int) -> float:
@@ -120,5 +120,5 @@ class TapeQualityInformation:
 
     # TODO missing implementation
     def write_peak_info(self, to_path: str) -> None:
-        for info in self.peak_info:
+        for info in self.peaks:
             print(f"x={info.start_position}, width={info.width}")

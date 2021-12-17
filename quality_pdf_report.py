@@ -1,18 +1,30 @@
+from typing import List
 from fpdf import FPDF
-from tape_quality_information import TapeQualityInformation
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+import numpy
+from PIL import Image
+from quality_data_types import QualityReport
 
 
 class ReportPDFCreator():
-    def __init__(self, quality_info: TapeQualityInformation):
-        self.quality_info = quality_info
+    def __init__(self, data_plot: Figure,
+                 quality_reports: List[QualityReport]):
+        self.quality_reports = quality_reports
+        self.data_plot = data_plot
 
     def create_report(self):
         pdf = DefectReportPDF(orientation="L")
         pdf.alias_nb_pages()
         pdf.add_page()
         pdf.set_font("Times", size=12)
-        for i in range(1, 41):
-            pdf.cell(0, 10, f"Printing line number {i}", 0, 1)
+
+        # plot data graph with failure markers
+        canvas = FigureCanvas(self.data_plot)
+        canvas.draw()
+        img = Image.fromarray(numpy.asarray(canvas.buffer_rgba()))
+        pdf.image(img, x=297/2-100, w=200)
+
         pdf.output("tuto2.pdf")
 
 

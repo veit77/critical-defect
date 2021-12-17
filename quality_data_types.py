@@ -94,7 +94,6 @@ class FailType(Enum):
 class FailInformation(NamedTuple):
     """ Tuple of failure information
     """
-    type: FailType
     quality_parameter_info: QualityParameterInfo
     description: str
 
@@ -104,4 +103,5 @@ class QualityReport(NamedTuple):
     """
     tape_id: str
     passed: bool
-    fail_information: Optional[List[FailInformation]]
+    type: Optional[FailType] = None
+    fail_information: Optional[List[FailInformation]] = None
