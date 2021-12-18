@@ -27,8 +27,9 @@ class ReportPDFCreator():
         canvas = FigureCanvas(self.data_plot)
         canvas.draw()
         img = Image.fromarray(numpy.asarray(canvas.buffer_rgba()))
-        pdf.image(img, x=297/2-100, w=200)
+        pdf.image(img, x=pdf.l_margin, w=pdf.epw)
 
+        # TODO split creation from saving
         pdf.output("tuto2.pdf")
 
 
