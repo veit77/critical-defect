@@ -1,6 +1,9 @@
+""" Class implementation for TapeQualityInformation
+"""
+
 from typing import List, Optional
-from pandas import DataFrame
 from math import isclose
+from pandas import DataFrame
 from scipy.signal import find_peaks
 from quality_data_types import PeakInfo, AveragesInfo
 
@@ -15,9 +18,11 @@ class TapeQualityInformation:
     tape_id: str
         ID of the HTS tape
     expected_average : Optional[float]
-        Approximate average critical current. Used for drop-out detection and piecewise average calculation.
+        Approximate average critical current. Used for drop-out detection and
+        piecewise average calculation.
     averaging_length : Optional[float]
-        Tape length over which to average. Used for piecewise average calculation.
+        Tape length over which to average. Used for piecewise average
+        calculation.
     averages : List[AveragesInfo] = []
         Piecewise averages.
     drop_outs : List[PeakInfo] = []
@@ -44,8 +49,8 @@ class TapeQualityInformation:
             raise ValueError("Property expected_average_length not set")
 
         self._data = value
-        self.averages = self.calculate_averages(self._data)
-        self.drop_outs = self.calculate_drop_out_info(self._data)
+        self.calculate_averages()
+        self.calculate_drop_out_info()
 
     tape_id = str
 
@@ -69,38 +74,34 @@ class TapeQualityInformation:
         self.data = data
         self.tape_id = tape_id
 
-    def calculate_averages(self, data: DataFrame) -> List[AveragesInfo]:
+    def calculate_averages(self) -> None:
         """ Calculates piecewise averages.
 
-        Args:
-            data (DataFrame): Pandas DataFrame containing Ic vs. position data.
-
         Raises:
-            ValueError: throws exception if expected_average and averaging_length are not properly set.
-
-        Returns:
-            List[AveragesInfo]: List of information about piecewise averages.
+            ValueError: throws exception if expected_average and
+                averaging_length are not properly set.
         """
         if self.averaging_length is None:
             raise ValueError("Property expected_average_length not set")
 
-        start_index, end_index = self._find_start_end_index_of_tape(data)
+        start_index, end_index = self._find_start_end_index(self.data)
         length = self.averaging_length
 
-        next_position = (data.iloc[start_index, 0] + length)
+        next_position = (self.data.iloc[start_index, 0] + length)
         last_index = start_index
         piece = 0
         averages_info_list = []
 
         # works only if positions are counting up
         # TODO: reverse order if counting down?
+
         # Calculate averages and store them in AveragesInfo instance
-        while next_position < data.iloc[end_index, 0]:
-            next_index = data.index[data.iloc[:,
-                                              0] > next_position].to_list()[0]
-            average = data.iloc[last_index:next_index, 1].mean()
-            start_position = data.iloc[last_index, 0]
-            end_position = data.iloc[next_index, 0]
+        while next_position < self.data.iloc[end_index, 0]:
+            next_index = self.data.index[
+                self.data.iloc[:, 0] > next_position].to_list()[0]
+            average = self.data.iloc[last_index:next_index, 1].mean()
+            start_position = self.data.iloc[last_index, 0]
+            end_position = self.data.iloc[next_index, 0]
             average_info = AveragesInfo(number=piece,
                                         start_position=start_position,
                                         end_position=end_position,
@@ -111,29 +112,24 @@ class TapeQualityInformation:
             piece += 1
 
         # append averages till end of tape
-        average = data.iloc[last_index:end_index, 1].mean()
-        start_position = data.iloc[last_index, 0]
-        end_position = data.iloc[end_index, 0]
+        average = self.data.iloc[last_index:end_index, 1].mean()
+        start_position = self.data.iloc[last_index, 0]
+        end_position = self.data.iloc[end_index, 0]
         average_info = AveragesInfo(number=piece,
                                     start_position=start_position,
                                     end_position=end_position,
                                     value=average)
         averages_info_list.append(average_info)
-        return averages_info_list
+        self.averages = averages_info_list
 
-    # TODO Function should not take an argument that is a member of the class
-    # and should not return
-    def calculate_drop_out_info(self, data: DataFrame) -> List[PeakInfo]:
+    def calculate_drop_out_info(self, pos_tol: float = 2e-3) -> None:
         """ Calculate drop-out information.
 
         Args:
-            data (DataFrame): Pandas DataFrame containing Ic vs. position data.
-
-        Returns:
-            List[PeakInfo]: List of information about drop-outs.
+            pos_tol (float): Tolerance for position to be identified as the same.
         """
-        start_index, end_index = self._find_start_end_index_of_tape(data)
-        indices, _ = find_peaks(-data.iloc[:, 1],
+        start_index, end_index = self._find_start_end_index(self.data)
+        indices, _ = find_peaks(-self.data.iloc[:, 1],
                                 height=(-self._peak_definition, 0),
                                 distance=10)
 
@@ -144,24 +140,25 @@ class TapeQualityInformation:
         peak_info_list: List[PeakInfo] = []
         last_peak = PeakInfo()
         for i, index in enumerate(indices):
-            position = data.iloc[index, 0]
-            value = data.iloc[index, 1]
+            position = self.data.iloc[index, 0]
+            value = self.data.iloc[index, 1]
             level = self.expected_average
             for average in self.averages:
-                if position > average.start_position and position < average.end_position:
+                if (position > average.start_position
+                        and position < average.end_position):
                     level = average.value
                     break
 
             half_max = (value + level) / 2.0
-            start_position = 0.0
-            end_position = 0.0
-            for j in range(index, len(data.index)):
-                if data.iloc[j, 1] > half_max:
-                    end_position = data.iloc[j, 0]
+            start_position = self.data.iloc[start_index, 0]
+            end_position = self.data.iloc[end_index, 0]
+            for j in range(index, len(self.data.index)):
+                if self.data.iloc[j, 1] > half_max:
+                    end_position = self.data.iloc[j, 0]
                     break
             for j in range(index, 0, -1):
-                if data.iloc[j, 1] > half_max:
-                    start_position = data.iloc[j, 0]
+                if self.data.iloc[j, 1] > half_max:
+                    start_position = self.data.iloc[j, 0]
                     break
 
             current_peak = PeakInfo(number=i,
@@ -173,8 +170,8 @@ class TapeQualityInformation:
             # check if width is the same. if value smaler than before, remove
             # last entry and replace by new entry. Add new entry, if not the
             # same width (tolerance is 2mm -> might be tweaked a bit)
-            if (isclose(start_position, last_peak.start_position, abs_tol=2e-3)
-                and isclose(end_position, last_peak.end_position, abs_tol=2e-3)):
+            if (isclose(start_position, last_peak.start_position, abs_tol=pos_tol)
+                    and isclose(end_position, last_peak.end_position, abs_tol=pos_tol)):
                 if value < last_peak.value:
                     peak_info_list.remove(last_peak)
                     peak_info_list.append(current_peak)
@@ -183,10 +180,9 @@ class TapeQualityInformation:
                 peak_info_list.append(current_peak)
                 last_peak = current_peak
 
-        return peak_info_list
+        self.drop_outs = peak_info_list
 
-    def _find_start_end_index_of_tape(self,
-                                      data: DataFrame) -> tuple[int, int]:
+    def _find_start_end_index(self, data: DataFrame) -> tuple[int, int]:
         if self.expected_average is None:
             raise ValueError("Property expected_average not set")
 
@@ -194,8 +190,7 @@ class TapeQualityInformation:
 
         # Find start and end of tape -> where Ic is greater threshold
         # the first time and last time, respectively.
-        above_threshold_list = data.index[data.iloc[:,
-                                                    1] > threshold].to_list()
+        above_threshold_list = data.index[data.iloc[:, 1] > threshold].to_list()
         start_index = above_threshold_list[0]
         end_index = above_threshold_list[-1]
 
