@@ -10,6 +10,7 @@ class QualityParameterInfo(Protocol):
     number: int
     start_position: float
     end_position: float
+    center_position: float
     width: float
     value: float
 
@@ -18,12 +19,20 @@ class PeakInfo:
     """ Class holding information about individual peaks.
         Conforms to QualityParameterInfo protocol
     """
-    def __init__(self, number: int, start_position: float, end_position: float,
-                 width: float, value: float) -> None:
+    @property
+    def width(self):
+        return self.end_position - self.start_position
+
+    def __init__(self,
+                 number: int = 1,
+                 start_position: float = 0.0,
+                 end_position: float = 0.0,
+                 center_position: float = 0.0,
+                 value: float = 0.0) -> None:
         self.number = number
         self.start_position = start_position
         self.end_position = end_position
-        self.width = width
+        self.center_position = center_position
         self.value = value
 
 
@@ -31,12 +40,22 @@ class AveragesInfo:
     """ Class holding information about piecewise averages.
         Conforms to QualityParameterInfo protocol
     """
-    def __init__(self, number: int, start_position: float, end_position: float,
-                 width: float, value: float) -> None:
+    @property
+    def center_position(self):
+        return (self.start_position + self.end_position) / 2.0
+
+    @property
+    def width(self):
+        return self.end_position - self.start_position
+
+    def __init__(self,
+                 number: int = 0,
+                 start_position: float = 0.0,
+                 end_position: float = 0.0,
+                 value: float = 0.0) -> None:
         self.number = number
         self.start_position = start_position
         self.end_position = end_position
-        self.width = width
         self.value = value
 
 

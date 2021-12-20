@@ -60,7 +60,9 @@ class TapeQualityAssessor():
                     print(
                         f"Failed at {fail_info.quality_parameter_info.start_position:.2f} "
                         +
-                        f"to {fail_info.quality_parameter_info.end_position:.2f} "
+                        f"to {fail_info.quality_parameter_info.end_position:.2f}, "
+                        +
+                        f"width: {fail_info.quality_parameter_info.width*1000:.1f}mm "
                         + f"with: {fail_info.description}")
 
     def assess_average_value(self) -> QualityReport:
@@ -93,8 +95,8 @@ class TapeQualityAssessor():
         if not fails:
             return QualityReport(self.tape_quality_info.tape_id, True)
         else:
-            return QualityReport(self.tape_quality_info.tape_id, False, fail_type,
-                                 fails)
+            return QualityReport(self.tape_quality_info.tape_id, False,
+                                 fail_type, fails)
 
     def _make_plot(self) -> Figure:
         data = self.tape_quality_info.data
@@ -119,20 +121,24 @@ class TapeQualityAssessor():
 
                 if report.type == FailType.AVERAGE:
                     color = 'crimson'
-                    axis.plot(x,
-                              y,
+                    axis.plot(x, y,
                               color=color,
                               marker='|',
                               linewidth=2.0,
                               label='Averages Failed')
                 elif report.type == FailType.MINIMUM:
                     color = 'deeppink'
-                    axis.scatter(x,
-                                 y,
+                    axis.scatter([fail.quality_parameter_info.center_position],
+                                 [fail.quality_parameter_info.value],
                                  color=color,
                                  s=15,
                                  marker='D',
                                  label='Minimum Failed')
+                    axis.plot(x, y,
+                              color=color,
+                              marker='|',
+                              linewidth=2.0,
+                              label='Averages Failed')
 
         # axis.legend()
         plt.xlabel("Position (m)")

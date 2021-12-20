@@ -15,7 +15,7 @@ class ReportPDFCreator():
         self.quality_reports = quality_reports
         self.data_plot = data_plot
 
-    def create_report(self):
+    def create_report(self) ->  None:
         """ Main function to draw content of report PDF
         """
         pdf = DefectReportPDF(orientation="L")
