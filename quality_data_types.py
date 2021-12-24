@@ -13,6 +13,7 @@ class QualityParameterInfo(Protocol):
     center_position: float
     width: float
     value: float
+    description: str
 
 
 class PeakInfo:
@@ -22,6 +23,11 @@ class PeakInfo:
     @property
     def width(self):
         return self.end_position - self.start_position
+
+    @property
+    def description(self):
+        return (f"Peak at {self.center_position:.2f}m, " +
+                f"width: {self.width*1000:.1f}mm, value: {self.value:.0f}A")
 
     def __init__(self,
                  number: int = 1,
@@ -48,6 +54,11 @@ class AveragesInfo:
     def width(self):
         return self.end_position - self.start_position
 
+    @property
+    def description(self):
+        return (f"Average between {self.start_position:.2f}m and " +
+                f"{self.end_position:.2f}m is {self.value:.0f}A")
+
     def __init__(self,
                  number: int = 0,
                  start_position: float = 0.0,
@@ -63,12 +74,24 @@ class ScatterInfo:
     """ Class holding information about piecewise scatter characteristics.
         Conforms to QualityParameterInfo protocol
     """
+    @property
+    def center_position(self):
+        return (self.start_position + self.end_position) / 2.0
+
+    @property
+    def width(self):
+        return self.end_position - self.start_position
+
+    @property
+    def description(self):
+        return (f"Scatter between {self.start_position:.2f}m and " +
+                f"{self.end_position:.2f}m is {self.value:.0f}A")
+
     def __init__(self, number: int, start_position: float, end_position: float,
-                 width: float, value: float) -> None:
+                 value: float) -> None:
         self.number = number
         self.start_position = start_position
         self.end_position = end_position
-        self.width = width
         self.value = value
 
 
@@ -79,6 +102,7 @@ class TapeSpecs(NamedTuple):
     min_average: float
     min_value: float
     average_length: float
+    min_tape_length: float
 
 
 class TapeProduct(Enum):
@@ -87,19 +111,22 @@ class TapeProduct(Enum):
     SUPERLINK_PHASE = TapeSpecs(width=3.0,
                                 min_average=135.0,
                                 min_value=70.0,
-                                average_length=20.0)
+                                average_length=20.0,
+                                min_tape_length=190.0)
     SUPERLINK_NEUTRAL = TapeSpecs(width=6.0,
                                   min_average=200.0,
                                   min_value=100.0,
-                                  average_length=20.0)
+                                  average_length=20.0,
+                                  min_tape_length=190.0)
     STANDARD = TapeSpecs(width=12.0,
                          min_average=700.0,
                          min_value=500.0,
-                         average_length=20.0)
+                         average_length=20.0,
+                         min_tape_length=25.0)
 
 
 class FailType(Enum):
-    """ Enum of different failur types.
+    """ Enum of different failure types.
 
     Args:
         Enum (str): failure tape as string
@@ -110,17 +137,22 @@ class FailType(Enum):
     DROP_OUT = 'Drop Out Failed'
 
 
-class FailInformation(NamedTuple):
-    """ Tuple of failure information
+class TapeSection(NamedTuple):
+    """ Holds information of tape sections.
     """
-    quality_parameter_info: QualityParameterInfo
-    description: str
+    @property
+    def length(self):
+        return self.end_position - self.start_position
+
+    start_position: float
+    end_position: float
 
 
 class QualityReport(NamedTuple):
-    """ Class containing all information for a quality report for a tape.
+    """ Class containing all information for a quality report for a tape
+        regarding a specific quality parameter.
     """
     tape_id: str
     passed: bool
     type: Optional[FailType] = None
-    fail_information: Optional[List[FailInformation]] = None
+    fail_information: Optional[List[QualityParameterInfo]] = None

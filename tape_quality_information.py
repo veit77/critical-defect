@@ -5,7 +5,7 @@ from typing import List, Optional
 from math import isclose
 from pandas import DataFrame
 from scipy.signal import find_peaks
-from quality_data_types import PeakInfo, AveragesInfo
+from quality_data_types import PeakInfo, AveragesInfo, TapeSection
 
 
 class TapeQualityInformation:
@@ -30,9 +30,9 @@ class TapeQualityInformation:
 
     Methods:
     --------
-    calculate_averages(self, data: DataFrame) -> List[AveragesInfo]
+    calculate_averages() -> None
         Calculates piecewise averages.
-    calculate_drop_out_info(self, data: DataFrame) -> List[PeakInfo]
+    calculate_drop_out_info() -> None
         Calculate drop-out information.
     """
     @property
@@ -51,6 +51,13 @@ class TapeQualityInformation:
         self._data = value
         self.calculate_averages()
         self.calculate_drop_out_info()
+
+    @property
+    def tape_section(self) -> TapeSection:
+        start, end = self._find_start_end_index(self._data)
+        start_pos = self._data.iloc[start, 0]
+        end_pos = self._data.iloc[end, 0]
+        return TapeSection(start_pos, end_pos)
 
     tape_id = str
 

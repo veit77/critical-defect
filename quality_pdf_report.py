@@ -1,36 +1,10 @@
-from typing import List
+from typing import List, Optional
 from fpdf import FPDF
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import numpy
 from PIL import Image
 from quality_data_types import QualityReport
-
-
-class ReportPDFCreator():
-    """ Class to create report PDF
-    """
-    def __init__(self, data_plot: Figure,
-                 quality_reports: List[QualityReport]):
-        self.quality_reports = quality_reports
-        self.data_plot = data_plot
-
-    def create_report(self) ->  None:
-        """ Main function to draw content of report PDF
-        """
-        pdf = DefectReportPDF(orientation="L")
-        pdf.alias_nb_pages()
-        pdf.add_page()
-        pdf.set_font("Times", size=12)
-
-        # plot data graph with failure markers
-        canvas = FigureCanvas(self.data_plot)
-        canvas.draw()
-        img = Image.fromarray(numpy.asarray(canvas.buffer_rgba()))
-        pdf.image(img, x=pdf.l_margin, w=pdf.epw)
-
-        # TODO split creation from saving
-        pdf.output("tuto2.pdf")
 
 
 class DefectReportPDF(FPDF):
@@ -60,6 +34,44 @@ class DefectReportPDF(FPDF):
         self.set_font("helvetica", "I", 8)
         # Printing page number:
         self.cell(0, 10, f"Page {self.page_no()}/{{nb}}", 0, 0, "C")
+
+
+class ReportPDFCreator():
+    """ Class to create report PDF
+    """
+    _pdf: Optional[DefectReportPDF] = None
+
+    def __init__(self, data_plot: Figure,
+                 quality_reports: List[QualityReport]):
+        self.quality_reports = quality_reports
+        self.data_plot = data_plot
+
+    def create_report(self) -> None:
+        """ Main function to draw content of report PDF
+        """
+        self._pdf = DefectReportPDF(orientation="L")
+        self._pdf.alias_nb_pages()
+        self._pdf.add_page()
+        self._pdf.set_font("Times", size=12)
+
+        # plot data graph with failure markers
+        canvas = FigureCanvas(self.data_plot)
+        canvas.draw()
+        img = Image.fromarray(numpy.asarray(canvas.buffer_rgba()))
+        self._pdf.image(img, x=self._pdf.l_margin, w=self._pdf.epw)
+
+    def save_report(self, to_path: str) -> None:
+        """ Save the PDF to disk.
+
+        Args:
+            to_path (str): Path (incl. file name) to save the PDF to.
+
+        Raises:
+            ValueError: Raised if the PDF cannot is not created (is None).
+        """
+        if self._pdf is None:
+            raise ValueError("PDF has not been created yet.")
+        self._pdf.output(to_path)
 
 
 def main():
