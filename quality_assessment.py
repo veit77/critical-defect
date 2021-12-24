@@ -52,25 +52,44 @@ class TapeQualityAssessor():
         self.quality_reports.append(self.assess_min_value())
 
     def determine_ok_tape_section(self, min_length: float) -> None:
+        """ Determines all tape section that do not contain defects and are long enough
+
+        Args:
+            min_length (float): Minimum length a defect-free tape section must be
+        """
         tape_sections = [self.tape_quality_info.tape_section]
 
         for q_report in self.quality_reports:
             if q_report.fail_information is None:
                 continue
             for fail_info in q_report.fail_information:
-                # TODO if defect spans over two sections, this defect is not cut out
-                section_to_devide = [
+                # find all sections that overlap with the current defect
+                sections_to_devide = [
                     section for section in tape_sections
-                    if section.start_position <= fail_info.start_position
-                    and section.end_position > fail_info.end_position
+                    if (fail_info.start_position > section.start_position
+                        and fail_info.start_position < section.end_position) or
+                    (fail_info.end_position > section.start_position
+                     and fail_info.end_position < section.end_position)
                 ]
-                if section_to_devide:
-                    tape_sections.remove(section_to_devide[0])
-                    new_sections = self._devide_tape_section(
-                        section_to_devide[0], fail_info.start_position,
-                        fail_info.end_position)
-                    tape_sections.append(new_sections[0])
-                    tape_sections.append(new_sections[1])
+                for section in sections_to_devide:
+                    # remove section, then cut defective part from section and
+                    # append it again
+                    tape_sections.remove(section)
+                    if fail_info.end_position > section.end_position:
+                        tape_sections.append(
+                            TapeSection(section.start_position,
+                                        fail_info.start_position))
+                    elif fail_info.start_position < section.start_position:
+                        tape_sections.append(
+                            TapeSection(fail_info.end_position,
+                                        section.end_position))
+                    else:
+                        tape_sections.append(
+                            TapeSection(section.start_position,
+                                        fail_info.start_position))
+                        tape_sections.append(
+                            TapeSection(fail_info.end_position,
+                                        section.end_position))
 
         tape_sections = [
             tape_sec for tape_sec in tape_sections
@@ -197,14 +216,10 @@ class TapeQualityAssessor():
 
         return fig
 
-    def _devide_tape_section(self, tape_section: TapeSection, cut_from: float,
-                             cut_to: float) -> List[TapeSection]:
-        section1 = TapeSection(tape_section.start_position, cut_from)
-        section2 = TapeSection(cut_to, tape_section.end_position)
-        return [section1, section2]
-
 
 def main():
+    """ Main function of module to test functionality of classes in module
+    """
     product = TapeProduct.STANDARD.value
     quality_info = [
         TapeQualityInformation(
@@ -229,7 +244,7 @@ def main():
 
         print("OK Tape Sections:")
         for i, section in enumerate(assessor.ok_tape_sections):
-            print(f"{i}. From {section.start_position:0.2f}m to " +
+            print(f"{i+1}. From {section.start_position:0.2f}m to " +
                   f"{section.end_position:0.2f}m, " +
                   f"Length: {section.length:0.2f}m")
 
