@@ -46,9 +46,15 @@ class TapeQualityInformation:
         if self.expected_average is None:
             raise ValueError("Property expected_average not set")
         if self.averaging_length is None:
-            raise ValueError("Property expected_average_length not set")
+            raise ValueError("Property averaging_length not set")
 
-        self._data = value
+        # reverse order of dataframe if end position is smaller than start
+        # position.
+        if value.iloc[0, 0] > value.iloc[-1, 0]:
+            self._data = value.iloc[::-1].reset_index(drop=True)
+        else:
+            self._data = value
+
         self.calculate_averages()
         self.calculate_drop_out_info()
 
@@ -74,10 +80,11 @@ class TapeQualityInformation:
         return self.expected_average * 0.8
 
     def __init__(self, data: DataFrame, tape_id: str, expected_average: float,
-                 expected_average_length: float):
+                 averaging_length: float):
         self.expected_average = expected_average
-        self.averaging_length = expected_average_length
+        self.averaging_length = averaging_length
 
+        # Always set data after expected_average and averaging_length is set.
         self.data = data
         self.tape_id = tape_id
 
@@ -98,9 +105,6 @@ class TapeQualityInformation:
         last_index = start_index
         piece = 0
         averages_info_list = []
-
-        # works only if positions are counting up
-        # TODO: reverse order if counting down?
 
         # Calculate averages and store them in AveragesInfo instance
         while next_position < self.data.iloc[end_index, 0]:
