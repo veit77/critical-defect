@@ -103,6 +103,7 @@ class TapeSpecs(NamedTuple):
     min_value: float
     average_length: float
     min_tape_length: float
+    description: str
 
 
 class TapeProduct(Enum):
@@ -112,17 +113,20 @@ class TapeProduct(Enum):
                                 min_average=135.0,
                                 min_value=70.0,
                                 average_length=20.0,
-                                min_tape_length=190.0)
+                                min_tape_length=190.0,
+                                description="SuperLink Phase")
     SUPERLINK_NEUTRAL = TapeSpecs(width=6.0,
                                   min_average=200.0,
                                   min_value=100.0,
                                   average_length=20.0,
-                                  min_tape_length=190.0)
+                                  min_tape_length=190.0,
+                                  description="SuperLink Neutral")
     STANDARD = TapeSpecs(width=12.0,
                          min_average=700.0,
                          min_value=500.0,
                          average_length=20.0,
-                         min_tape_length=25.0)
+                         min_tape_length=25.0,
+                         description="Standard Tape")
 
 
 class FailType(Enum):

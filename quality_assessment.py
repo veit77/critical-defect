@@ -101,9 +101,11 @@ class TapeQualityAssessor():
     def save_pdf_report(self) -> None:
         """ Creates PDF report for the tape and saves it.
         """
-        pdf_report = ReportPDFCreator(self._make_plot(), self.quality_reports)
+        pdf_report = ReportPDFCreator(self._make_plot(), self.quality_reports,
+                                      self.ok_tape_sections,
+                                      self.tape_quality_info.tape_id)
         pdf_report.create_report()
-        pdf_report.save_report("tuto2.pdf")
+        pdf_report.save_report(f"Report {self.tape_quality_info.tape_id}.pdf")
 
     def plot_defects(self) -> None:
         """ Shows plot in a window.
@@ -233,12 +235,10 @@ def main():
 
     for q_info in quality_info:
         assessor = TapeQualityAssessor(q_info, product)
-        assessor.tape_quality_info = q_info
 
         assessor.assess_meets_specs()
         assessor.determine_ok_tape_section(product.min_tape_length)
 
-        # TODO prevent opening of empty window on creation of figure
         assessor.save_pdf_report()
         assessor.print_reports()
         assessor.plot_defects()
