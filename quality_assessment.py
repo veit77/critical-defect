@@ -106,7 +106,7 @@ class TapeQualityAssessor():
         pdf_report.save_report("tuto2.pdf")
 
     def plot_defects(self) -> None:
-        """ Shows self.data_plot in a window.
+        """ Shows plot in a window.
         """
         _ = self._make_plot()
 
@@ -167,11 +167,14 @@ class TapeQualityAssessor():
             return QualityReport(self.tape_quality_info.tape_id, False,
                                  fail_type, fails)
 
-    # TODO prevent opening of empty window on creation of figure
     def _make_plot(self) -> Figure:
         data = self.tape_quality_info.data
-        fig = plt.figure(figsize=(9.5, 3.1))
+        fig = plt.figure(num='figure', figsize=(9.5, 3.1))
+        fig.set_tight_layout(True)
         axis = fig.subplots()
+        axis.set_xlabel("Position (m)")
+        axis.set_ylabel("Critical Current (A)")
+        axis.grid()
         axis.plot(data.iloc[:, 0], data.iloc[:, 1], label='Data')
 
         # plot fail reports
@@ -210,9 +213,6 @@ class TapeQualityAssessor():
                               label='Averages Failed')
 
         # axis.legend()
-        plt.xlabel("Position (m)")
-        plt.ylabel("Critical Current (A)")
-        axis.grid()
 
         return fig
 
@@ -238,6 +238,7 @@ def main():
         assessor.assess_meets_specs()
         assessor.determine_ok_tape_section(product.min_tape_length)
 
+        # TODO prevent opening of empty window on creation of figure
         assessor.save_pdf_report()
         assessor.print_reports()
         assessor.plot_defects()
