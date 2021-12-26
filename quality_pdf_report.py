@@ -10,7 +10,7 @@ from quality_data_types import QualityReport, TapeSection
 class DefectReportPDF(FPDF):
     """ Subclass of FPDF to set up page structure
     """
-    def __init__(self,tape_id: str, product: str, orientation: str):
+    def __init__(self, tape_id: str, product: str, orientation: str):
         self.tape_id = tape_id
         self.product = product
         super().__init__(orientation=orientation)
@@ -18,7 +18,6 @@ class DefectReportPDF(FPDF):
     def header(self):
         """ Draw header
         """
-
         # Rendering logo:
         self.image("./assets/THEVA-Logo.png", self.l_margin, self.t_margin, 60)
         # Setting font: helvetica bold 15
@@ -73,43 +72,13 @@ class ReportPDFCreator():
         self._pdf.add_page()
         self._pdf.set_font("helvetica", size=11)
 
-        self._pdf.set_y(self._pdf.t_margin + 20)
-
         # plot data graph with failure markers
-        canvas = FigureCanvas(self.data_plot)
-        canvas.draw()
-        img = Image.fromarray(numpy.asarray(canvas.buffer_rgba()))
-        self._pdf.image(img, x=self._pdf.l_margin, w=self._pdf.epw)
+        self._draw_data_plot(self._pdf.l_margin, self._pdf.t_margin + 20,
+                             self._pdf.epw)
 
         # plot table with OK tape sections
-        line_height = self._pdf.font_size * 2.0
-        self._pdf.cell(0, line_height, "**OK Tape Sections:**", ln=1, markdown=True)
-        self._pdf.multi_cell(15, line_height, "**Nr.**",
-                             border=1, ln=3, markdown=True,
-                             max_line_height=self._pdf.font_size)
-        self._pdf.multi_cell(35, line_height, "**Start Position**",
-                             border=1, ln=3, markdown=True,
-                             max_line_height=self._pdf.font_size)
-        self._pdf.multi_cell(35, line_height, "**End Position**",
-                             border=1, ln=3, markdown=True,
-                             max_line_height=self._pdf.font_size)
-        self._pdf.multi_cell(35, line_height, "**Length**",
-                             border=1, ln=3, markdown=True,
-                             max_line_height=self._pdf.font_size)
-        self._pdf.ln(line_height)
-        for i, row in enumerate(self.ok_tape_sections):
-            self._pdf.multi_cell(15, line_height, f"{i+1}", border=1, ln=3,
-                                 max_line_height=self._pdf.font_size)
-            self._pdf.multi_cell(35, line_height, f"{row.start_position:0.2f}m",
-                                 border=1, ln=3, align="R",
-                                 max_line_height=self._pdf.font_size)
-            self._pdf.multi_cell(35, line_height, f"{row.end_position:0.2f}m",
-                                 border=1, ln=3, align="R",
-                                 max_line_height=self._pdf.font_size)
-            self._pdf.multi_cell(35, line_height, f"{row.length:0.2f}m",
-                                 border=1, ln=3, align="R",
-                                 max_line_height=self._pdf.font_size)
-            self._pdf.ln(line_height)
+        self._draw_ok_tape_section_list(self._pdf.l_margin,
+                                        self._pdf.t_margin + 110)
 
     def save_report(self, to_path: str) -> None:
         """ Save the PDF to disk.
@@ -124,11 +93,60 @@ class ReportPDFCreator():
             raise ValueError("PDF has not been created yet.")
         self._pdf.output(to_path)
 
+    def _draw_data_plot(self, x: float, y: float, width: float):
+        if self._pdf is None:
+            raise ValueError("No PDF Object available")
+
+        self._pdf.set_y(y)
+
+        canvas = FigureCanvas(self.data_plot)
+        canvas.draw()
+        img = Image.fromarray(numpy.asarray(canvas.buffer_rgba()))
+        self._pdf.image(img, x=x, w=width)
+
+    def _draw_ok_tape_section_list(self, x: float, y: float):
+        if self._pdf is None:
+            raise ValueError("No PDF Object available")
+
+        self._pdf.set_xy(x, y)
+        line_height = self._pdf.font_size * 2.0
+        self._pdf.cell(0, line_height, "**OK Tape Sections:**",
+                       ln=1, markdown=True)
+
+        # Draw table header
+        self._draw_table_cells([(15, "**Nr.**", "L"),
+                                (35, "**Start Position**", "L"),
+                                (35, "**Start Position**", "L"),
+                                (35, "**Length**", "L")],
+                               line_height)
+
+        # Draw table rows
+        for i, row in enumerate(self.ok_tape_sections):
+            # TODO unclear why text is bold here
+            self._draw_table_cells([(15, f"{i+1}", "L"),
+                                    (35, f"{row.start_position:0.2f}m", "R"),
+                                    (35, f"{row.end_position:0.2f}m", "R"),
+                                    (35, f"{row.length:0.2f}m", "R")],
+                                   line_height)
+
+    def _draw_table_cells(self, cell_entries: List[tuple[float, str, str]],
+                          line_height: float):
+        if self._pdf is None:
+            raise ValueError("No PDF Object available")
+
+        length = len(cell_entries) - 1
+        for (width, entry, align) in cell_entries:
+            self._pdf.multi_cell(width, line_height, entry,
+                                 border=1, ln=length, align=align,
+                                 max_line_height=self._pdf.font_size,
+                                 markdown=True)
+        self._pdf.ln(line_height)
+
 
 def main():
     """ Main function to test PDF rendering
     """
-    pdf = DefectReportPDF(orientation="L")
+    pdf = DefectReportPDF(tape_id="tape_id", product="product", orientation="L")
     pdf.alias_nb_pages()
     pdf.add_page()
     pdf.set_font("Times", size=12)
