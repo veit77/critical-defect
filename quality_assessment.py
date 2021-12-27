@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from pandas import DataFrame, read_csv
 from quality_data_types import (QualityReport, TestType, TapeSpecs, TapeSection,
-                                TapeProduct, QualityParameterInfo)
+                                TapeProduct, QualityParameterInfo, Threshold)
 from tape_quality_information import TapeQualityInformation
 from quality_pdf_report import ReportPDFCreator
 
@@ -51,6 +51,7 @@ class TapeQualityAssessor():
         """
         self.quality_reports.append(self.assess_average_value())
         self.quality_reports.append(self.assess_min_value())
+        self.quality_reports.append(self.assess_drop_outs())
 
     def determine_ok_tape_section(self, min_length: float) -> None:
         """ Determines all tape section that do not contain defects and are long enough
@@ -136,8 +137,9 @@ class TapeQualityAssessor():
         Returns:
             QualityReport: Quality report on average values.
         """
+        threshold = Threshold(value=self.tape_specs.min_average)
         return self._assess_failure(TestType.AVERAGE,
-                                    self.tape_specs.min_average,
+                                    threshold,
                                     self.tape_quality_info.averages)
 
     def assess_min_value(self) -> QualityReport:
@@ -146,28 +148,44 @@ class TapeQualityAssessor():
         Returns:
             QualityReport: Quality report on minimum values.
         """
+        threshold = Threshold(value=self.tape_specs.min_value)
         return self._assess_failure(TestType.MINIMUM,
-                                    self.tape_specs.min_value,
+                                    threshold,
                                     self.tape_quality_info.drop_outs)
-    
+
     def assess_drop_outs(self) -> QualityReport:
-        return None
+        """ Assesses if drop-outs meet the specs.
+
+        Returns:
+            QualityReport: Quality report on drop-outs.
+        """
+        # TODO Drop-outs if allowed can rehabilitate min_value failures
+        threshold = Threshold(width=self.tape_specs.drop_out_width,
+                              value=self.tape_specs.drop_out_value)
+        return self._assess_failure(TestType.DROP_OUT, threshold,
+                                    self.tape_quality_info.drop_outs)
 
     def _assess_failure(
-            self, test_type: TestType, threshold: float,
+            self, test_type: TestType, threshold: Threshold,
             parameter_infos: List[QualityParameterInfo]) -> QualityReport:
         """ Assesses if selected quality parameter meets the specs.
 
         Args:
             test_type (TestType): Qualityparameter to assess.
-            threshold (float): threshold to pass specs.
+            threshold (Threshold): Threshold to pass specs.
             parameter_infos (List[QualityParameterInfo])
 
         Returns:
             QualityReport: Quality report on selected quality parameter.
         """
-        # TODO Test against any/all two or more parameters.
-        fails = [p_info for p_info in parameter_infos if p_info.value < threshold]
+        # TODO This only implements the "all" Option in Threshold
+        fails = parameter_infos
+        if threshold.width is not None:
+            fails = [p_info for p_info in parameter_infos
+                     if p_info.width > threshold.width]
+        if threshold.value is not None:
+            fails = [p_info for p_info in parameter_infos
+                     if p_info.value < threshold.value]
 
         if not fails:
             return QualityReport(self.tape_quality_info.tape_id, test_type,
@@ -203,7 +221,7 @@ class TapeQualityAssessor():
                               marker='|',
                               linewidth=2.0,
                               label='Averages Failed')
-                elif report.test_type == TestType.MINIMUM:
+                elif report.test_type in [TestType.MINIMUM, TestType.DROP_OUT]:
                     color = 'deeppink'
                     axis.scatter([fail.center_position],
                                  [fail.value],

@@ -97,10 +97,23 @@ class ScatterInfo:
 
 class TapeSpecs(NamedTuple):
     """ Tuple holding information about tape specifications
+
+    Attributes:
+    -----------
+        width (float): Tape width in mm
+        min_average (float): Minimum average value in A
+        min_value (float): Minimum value in A
+        drop_out_value (float): Minimum drop-out value in A
+        drop_out_width (float): Maximum width of drop-out in mm
+        average_length (float): Length over which to average in m
+        min_tape_length (float): Minimum tape length for product in m
+        description (str): Name/Description of the product
     """
     width: float
     min_average: float
     min_value: float
+    drop_out_value: float
+    drop_out_width: float
     average_length: float
     min_tape_length: float
     description: str
@@ -112,18 +125,24 @@ class TapeProduct(Enum):
     SUPERLINK_PHASE = TapeSpecs(width=3.0,
                                 min_average=135.0,
                                 min_value=70.0,
+                                drop_out_value=20.0,
+                                drop_out_width=5.0,
                                 average_length=20.0,
                                 min_tape_length=190.0,
                                 description="SuperLink Phase")
     SUPERLINK_NEUTRAL = TapeSpecs(width=6.0,
                                   min_average=200.0,
                                   min_value=100.0,
+                                  drop_out_value=50.0,
+                                  drop_out_width=10.0,
                                   average_length=20.0,
                                   min_tape_length=190.0,
                                   description="SuperLink Neutral")
     STANDARD = TapeSpecs(width=12.0,
                          min_average=700.0,
                          min_value=500.0,
+                         drop_out_value=100.0,
+                         drop_out_width=20.0,
                          average_length=20.0,
                          min_tape_length=25.0,
                          description="Standard Tape")
@@ -131,18 +150,21 @@ class TapeProduct(Enum):
 
 class TestType(Enum):
     """ Enum of different quality test types.
-
-    Args:
-        Enum (str): test type as string
     """
     AVERAGE = 'Average Value'
-    SCATTER = 'Scatter'
+    SCATTER = 'Scatter'         # TODO Currently not available in Specs and Tests
     MINIMUM = 'Minimum Value'
     DROP_OUT = 'Drop Out'
 
 
 class TapeSection(NamedTuple):
     """ Holds information of tape sections.
+
+    Attributes:
+    -----------
+        start_position (float): Start position of the tape section.
+        end_position (float): End position of the tape section.
+        length (float, read only): Length of the tape section.
     """
     @property
     def length(self):
@@ -155,8 +177,29 @@ class TapeSection(NamedTuple):
 class QualityReport(NamedTuple):
     """ Class containing all information for a quality report for a tape
         regarding a specific quality parameter.
+    
+    Attributes:
+    -----------
+        tape_id (str): ID of the tested tape.
+        test_type (TestType): Type of the test.
+        passed (bool): Test passed or not.
+        fail_information (Optional[List[QualityParameterInfo]]): Information about failures
     """
     tape_id: str
     test_type: TestType
     passed: bool
     fail_information: Optional[List[QualityParameterInfo]] = None
+
+
+class Threshold(NamedTuple):
+    """ Class to define thresholds for quality parameters in tests.
+
+    Attributes:
+    -----------
+        width (Optional[float]): Threshold for parameter value
+        value (Optional[float]): Threshold for parameter width
+        any_all (bool): Test fails if any (False) or all (True) parameter fail.
+    """
+    width: Optional[float] = None
+    value: Optional[float] = None
+    any_all: bool = True
