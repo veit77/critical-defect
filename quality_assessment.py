@@ -240,9 +240,24 @@ class TapeQualityAssessor():
         return fig
 
 
+def excecute_assessment(quality_info: TapeQualityInformation,
+                        product: TapeSpecs) -> None:
+    assessor = TapeQualityAssessor(quality_info, product)
+
+    assessor.assess_meets_specs()
+    assessor.determine_ok_tape_section(product.min_tape_length)
+
+    assessor.save_pdf_report()
+    assessor.print_reports()
+    assessor.plot_defects()
+
+
 def main():
     """ Main function of module to test functionality of classes in module
     """
+    from multiprocessing import Pool
+    from functools import partial
+
     product = TapeProduct.STANDARD.value
     quality_info = [
         TapeQualityInformation(
@@ -254,21 +269,18 @@ def main():
             product.min_average, product.average_length)
     ]
 
-    for q_info in quality_info:
-        assessor = TapeQualityAssessor(q_info, product)
+    with Pool() as pool:
+        pool.map(partial(excecute_assessment, product=product), quality_info)
 
-        assessor.assess_meets_specs()
-        assessor.determine_ok_tape_section(product.min_tape_length)
+    # for q_info in quality_info:
+    #     assessor = TapeQualityAssessor(q_info, product)
 
-        assessor.save_pdf_report()
-        assessor.print_reports()
-        assessor.plot_defects()
+    #     assessor.assess_meets_specs()
+    #     assessor.determine_ok_tape_section(product.min_tape_length)
 
-        print("OK Tape Sections:")
-        for i, section in enumerate(assessor.ok_tape_sections):
-            print(f"{i+1}. From {section.start_position:0.2f}m to " +
-                  f"{section.end_position:0.2f}m, " +
-                  f"Length: {section.length:0.2f}m")
+    #     assessor.save_pdf_report()
+    #     assessor.print_reports()
+    #     assessor.plot_defects()
 
 
 if __name__ == '__main__':
