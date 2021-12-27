@@ -53,20 +53,22 @@ class ReportPDFCreator():
     """
     _pdf: Optional[DefectReportPDF] = None
 
-    def __init__(self, data_plot: Figure,
+    def __init__(self, tape_id: str, product: str,
+                 data_plot: Figure,
                  quality_reports: List[QualityReport],
-                 ok_tape_sections: List[TapeSection],
-                 tape_id: str):
-        self.quality_reports = quality_reports
-        self.data_plot = data_plot
-        self.ok_tape_sections = ok_tape_sections
+                 ok_tape_sections: List[TapeSection]):
+
         self.tape_id = tape_id
+        self.product = product
+        self.data_plot = data_plot
+        self.quality_reports = quality_reports
+        self.ok_tape_sections = ok_tape_sections
 
     def create_report(self) -> None:
         """ Main function to draw content of report PDF
         """
         self._pdf = DefectReportPDF(tape_id=self.tape_id,
-                                    product="product",
+                                    product=self.product,
                                     orientation="L")
         self._pdf.alias_nb_pages()
         self._pdf.add_page()
@@ -77,8 +79,12 @@ class ReportPDFCreator():
                              self._pdf.epw)
 
         # plot table with OK tape sections
-        self._draw_ok_tape_section_list(self._pdf.l_margin,
+        self._draw_ok_tape_section_list(self._pdf.l_margin + self._pdf.epw/2.0,
                                         self._pdf.t_margin + 110)
+
+        # plot table with test pass informations
+        self._draw_test_pass_info(self._pdf.l_margin,
+                                  self._pdf.t_margin + 110)
 
     def save_report(self, to_path: str) -> None:
         """ Save the PDF to disk.
@@ -114,6 +120,7 @@ class ReportPDFCreator():
                        ln=1, markdown=True)
 
         # Draw table header
+        self._pdf.set_x(x)
         self._draw_table_cells([(15, "**Nr.**", "L"),
                                 (35, "**Start Position**", "L"),
                                 (35, "**Start Position**", "L"),
@@ -123,10 +130,40 @@ class ReportPDFCreator():
         # Draw table rows
         for i, row in enumerate(self.ok_tape_sections):
             # TODO unclear why text is bold here
+            self._pdf.set_x(x)
             self._draw_table_cells([(15, f"{i+1}", "L"),
                                     (35, f"{row.start_position:0.2f}m", "R"),
                                     (35, f"{row.end_position:0.2f}m", "R"),
                                     (35, f"{row.length:0.2f}m", "R")],
+                                   line_height)
+
+    def _draw_test_pass_info(self, x: float, y: float):
+        if self._pdf is None:
+            raise ValueError("No PDF Object available")
+
+        self._pdf.set_xy(x, y)
+        line_height = self._pdf.font_size * 2.0
+        self._pdf.cell(0, line_height, "**Test Pass Information:**",
+                       ln=1, markdown=True)
+
+        self._pdf.set_x(x)
+        self._draw_table_cells([(35, "**Test**", "L"),
+                                (35, "**Pass/Fail**", "L"),
+                                (35, "**Number of Fails", "L")],
+                               line_height)
+        for report in self.quality_reports:
+            # TODO unclear why text is bold here
+            passed = "Pass" if report.passed else "Fail"
+            nb_failed = ""
+            if report.fail_information is not None:
+                if len(report.fail_information) == 0:
+                    nb_failed = ""
+                else:
+                    nb_failed = f"{len(report.fail_information)}"
+            self._pdf.set_x(x)
+            self._draw_table_cells([(35, f"{report.test_type.value}", "L"),
+                                    (35, passed, "C"),
+                                    (35, nb_failed, "R")],
                                    line_height)
 
     def _draw_table_cells(self, cell_entries: List[tuple[float, str, str]],
@@ -134,10 +171,9 @@ class ReportPDFCreator():
         if self._pdf is None:
             raise ValueError("No PDF Object available")
 
-        length = len(cell_entries) - 1
         for (width, entry, align) in cell_entries:
             self._pdf.multi_cell(width, line_height, entry,
-                                 border=1, ln=length, align=align,
+                                 border=1, ln=3, align=align,
                                  max_line_height=self._pdf.font_size,
                                  markdown=True)
         self._pdf.ln(line_height)

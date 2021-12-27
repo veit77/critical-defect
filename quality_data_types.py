@@ -129,16 +129,16 @@ class TapeProduct(Enum):
                          description="Standard Tape")
 
 
-class FailType(Enum):
-    """ Enum of different failure types.
+class TestType(Enum):
+    """ Enum of different quality test types.
 
     Args:
-        Enum (str): failure tape as string
+        Enum (str): test type as string
     """
-    AVERAGE = 'Average Failed'
-    SCATTER = 'Scatter Failed'
-    MINIMUM = 'Minimum Failed'
-    DROP_OUT = 'Drop Out Failed'
+    AVERAGE = 'Average Value'
+    SCATTER = 'Scatter'
+    MINIMUM = 'Minimum Value'
+    DROP_OUT = 'Drop Out'
 
 
 class TapeSection(NamedTuple):
@@ -157,6 +157,6 @@ class QualityReport(NamedTuple):
         regarding a specific quality parameter.
     """
     tape_id: str
+    test_type: TestType
     passed: bool
-    type: Optional[FailType] = None
     fail_information: Optional[List[QualityParameterInfo]] = None
