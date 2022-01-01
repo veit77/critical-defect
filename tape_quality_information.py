@@ -190,16 +190,18 @@ class TapeQualityInformation:
     def _find_half_max_position(self, peak_index: int, half_max: float,
                                 go_up: bool) -> float:
         half_max_position = 0.0
-        last_index = len(self.data.index)
+        last_index = len(self.data.index) - 1
         step = 1
         if not go_up:
             last_index = 0
             step = -1
 
+        half_max_position = self.data.iloc[last_index, 0]
         for j in range(peak_index, last_index, step):
             if self.data.iloc[j, 1] > half_max:
                 half_max_position = self.data.iloc[j, 0]
                 break
+
         return half_max_position
 
     def _find_start_end_index(self, data: DataFrame) -> tuple[int, int]:

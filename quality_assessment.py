@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from pandas import DataFrame, read_csv
 from quality_data_types import (QualityReport, TestType, TapeSpecs, TapeSection,
-                                TapeProduct, QualityParameterInfo, Threshold)
+                                TapeProduct)
 from tape_quality_information import TapeQualityInformation
 from quality_pdf_report import ReportPDFCreator
 
@@ -53,8 +53,11 @@ class TapeQualityAssessor():
         except ValueError as error:
             print(f"Averages not evaluated: {repr(error)}")
 
-        self.quality_reports.append(self.assess_min_value())
-        self.quality_reports.append(self.assess_drop_outs())
+        if (self.tape_specs.drop_out_value is None
+                or self.tape_specs.drop_out_width is None):
+            self.quality_reports.append(self.assess_min_value())
+        else:
+            self.quality_reports.append(self.assess_drop_outs())
 
     def determine_ok_tape_section(self, min_length: float) -> None:
         """ Determines all tape section that do not contain defects and are long enough
@@ -145,11 +148,16 @@ class TapeQualityAssessor():
         """
         if self.tape_quality_info.averages is None:
             raise ValueError("No Averages available.")
+        if self.tape_specs.min_average is None:
+            raise ValueError("Averages are not specified.")
 
-        threshold = Threshold(value=self.tape_specs.min_average)
-        return self._assess_failure(TestType.AVERAGE,
-                                    threshold,
-                                    self.tape_quality_info.averages)
+        threshold = self.tape_specs.min_average
+        parameter_infos = self.tape_quality_info.averages
+
+        fails = list(filter(lambda x: x.value < threshold, parameter_infos))
+
+        return QualityReport(self.tape_quality_info.tape_id, TestType.AVERAGE,
+                             fails)
 
     def assess_min_value(self) -> QualityReport:
         """ Assesses if minimum values meet the specs.
@@ -157,51 +165,41 @@ class TapeQualityAssessor():
         Returns:
             QualityReport: Quality report on minimum values.
         """
-        threshold = Threshold(value=self.tape_specs.min_value)
-        return self._assess_failure(TestType.MINIMUM,
-                                    threshold,
-                                    self.tape_quality_info.drop_outs)
+        threshold = self.tape_specs.min_value
+        parameter_infos = self.tape_quality_info.drop_outs
+
+        fails = list(filter(lambda x: x.value < threshold, parameter_infos))
+
+        return QualityReport(self.tape_quality_info.tape_id, TestType.MINIMUM,
+                             fails)
 
     def assess_drop_outs(self) -> QualityReport:
         """ Assesses if drop-outs meet the specs.
 
+        Raises:
+            ValueError: Exception if drop-outs are not in TapeSpecs
+
         Returns:
             QualityReport: Quality report on drop-outs.
         """
-        # TODO Drop-outs if allowed can rehabilitate min_value failures
-        threshold = Threshold(width=self.tape_specs.drop_out_width,
-                              value=self.tape_specs.drop_out_value)
-        return self._assess_failure(TestType.DROP_OUT, threshold,
-                                    self.tape_quality_info.drop_outs)
+        if (self.tape_specs.drop_out_width is None
+                or self.tape_specs.drop_out_value is None):
+            raise ValueError("Drop-outs are not specified.")
+        # A peak is a drop-out if it is smaller than min Ic
+        threshold = self.tape_specs.min_value
+        parameter_infos = self.tape_quality_info.drop_outs
+        fails = list(filter(lambda x: x.value < threshold, parameter_infos))
 
-    def _assess_failure(
-            self, test_type: TestType, threshold: Threshold,
-            parameter_infos: List[QualityParameterInfo]) -> QualityReport:
-        """ Assesses if selected quality parameter meets the specs.
+        # A drop-out is a fail if it is too wide or below a min Drop-out Ic
+        max_width = self.tape_specs.drop_out_width
+        min_ic = self.tape_specs.drop_out_value
 
-        Args:
-            test_type (TestType): Qualityparameter to assess.
-            threshold (Threshold): Threshold to pass specs.
-            parameter_infos (List[QualityParameterInfo])
+        fails = list(
+            filter(lambda x: x.value < min_ic or x.width > max_width,
+                   parameter_infos))
 
-        Returns:
-            QualityReport: Quality report on selected quality parameter.
-        """
-        # TODO This only implements the "all" Option in Threshold
-        fails = parameter_infos
-        if threshold.width is not None:
-            fails = [p_info for p_info in parameter_infos
-                     if p_info.width > threshold.width]
-        if threshold.value is not None:
-            fails = [p_info for p_info in parameter_infos
-                     if p_info.value < threshold.value]
-
-        if not fails:
-            return QualityReport(self.tape_quality_info.tape_id, test_type,
-                                 True)
-        else:
-            return QualityReport(self.tape_quality_info.tape_id, test_type,
-                                 False, fails)
+        return QualityReport(self.tape_quality_info.tape_id, TestType.DROP_OUT,
+                             fails)
 
     def _make_plot(self) -> Figure:
         data = self.tape_quality_info.data
@@ -251,6 +249,12 @@ class TapeQualityAssessor():
 
 def excecute_assessment(quality_info: TapeQualityInformation,
                         product: TapeSpecs) -> None:
+    """ Do all the steps to assess a tape.
+
+    Args:
+        quality_info (TapeQualityInformation): Quality information about the tape
+        product (TapeSpecs): Product definition to assess the tape against
+    """
     assessor = TapeQualityAssessor(quality_info, product)
 
     assessor.assess_meets_specs()
@@ -267,7 +271,7 @@ def main():
     from multiprocessing import Pool
     from functools import partial
 
-    product = TapeProduct.STANDARD1.value
+    product = TapeProduct.STANDARD3.value
     # width * thickness * critical current density * factor to fix units
     expected_average = product.width * 1.9 * 3 * 10
     expected_average = (product.min_average if product.min_average is not None

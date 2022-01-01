@@ -158,7 +158,7 @@ class TapeProduct(Enum):
                           min_tape_length=25.0,
                           min_value=500.0,
                           drop_out_value=150.0,
-                          drop_out_width=10.0,
+                          drop_out_width=20.0,
                           min_average=700.0,
                           average_length=20.0,
                           description="Standard Tape 3")
@@ -183,14 +183,14 @@ class TapeSection(NamedTuple):
         length (float, read only): Length of the tape section.
     """
     @property
-    def length(self):
+    def length(self) -> float:
         return self.end_position - self.start_position
 
     start_position: float
     end_position: float
 
 
-class QualityReport(NamedTuple):
+class QualityReport():
     """ Class containing all information for a quality report for a tape
         regarding a specific quality parameter.
 
@@ -198,22 +198,23 @@ class QualityReport(NamedTuple):
     -----------
         tape_id (str): ID of the tested tape.
         test_type (TestType): Type of the test.
-        passed (bool): Test passed or not.
         fail_information (Optional[List[QualityParameterInfo]]): Information about failures
+        passed (bool): Test passed or not.
     """
     tape_id: str
     test_type: TestType
-    passed: bool
     fail_information: Optional[List[QualityParameterInfo]] = None
 
+    @property
+    def passed(self) -> bool:
+        return self.fail_information is None
 
-class Threshold(NamedTuple):
-    """ Class to define thresholds for quality parameters in tests.
-
-    Attributes:
-    -----------
-        width (Optional[float]): Threshold for parameter value
-        value (Optional[float]): Threshold for parameter width
-    """
-    width: Optional[float] = None
-    value: Optional[float] = None
+    def __init__(
+            self, tape_id: str, test_type: TestType,
+            fail_information: Optional[List[QualityParameterInfo]]) -> None:
+        self.tape_id = tape_id
+        self.test_type = test_type
+        if fail_information is None or fail_information:
+            self.fail_information = fail_information
+        else:
+            self.fail_information = None
