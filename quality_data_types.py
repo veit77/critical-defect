@@ -101,21 +101,21 @@ class TapeSpecs(NamedTuple):
     Attributes:
     -----------
         width (float): Tape width in mm
-        min_average (float): Minimum average value in A
-        min_value (float): Minimum value in A
-        drop_out_value (float): Minimum drop-out value in A
-        drop_out_width (float): Maximum width of drop-out in mm
-        average_length (float): Length over which to average in m
         min_tape_length (float): Minimum tape length for product in m
+        min_value (float): Minimum value in A
+        drop_out_value (Optional[float]): Minimum drop-out value in A
+        drop_out_width (Optional[float]): Maximum width of drop-out in mm
+        min_average (Optional[float]): Minimum average value in A
+        average_length (Optional[float]): Length over which to average in m
         description (str): Name/Description of the product
     """
     width: float
-    min_average: float
-    min_value: float
-    drop_out_value: float
-    drop_out_width: float
-    average_length: float
     min_tape_length: float
+    min_value: float
+    drop_out_value: Optional[float]
+    drop_out_width: Optional[float]
+    min_average: Optional[float]
+    average_length: Optional[float]
     description: str
 
 
@@ -123,12 +123,12 @@ class TapeProduct(Enum):
     """ Enum summarizing different tape specifications
     """
     SUPERLINK_PHASE = TapeSpecs(width=3.0,
-                                min_average=135.0,
+                                min_tape_length=190.0,
                                 min_value=70.0,
                                 drop_out_value=20.0,
                                 drop_out_width=5.0,
+                                min_average=135.0,
                                 average_length=20.0,
-                                min_tape_length=190.0,
                                 description="SuperLink Phase")
     SUPERLINK_NEUTRAL = TapeSpecs(width=6.0,
                                   min_average=200.0,
@@ -138,14 +138,30 @@ class TapeProduct(Enum):
                                   average_length=20.0,
                                   min_tape_length=190.0,
                                   description="SuperLink Neutral")
-    STANDARD = TapeSpecs(width=12.0,
-                         min_average=700.0,
-                         min_value=500.0,
-                         drop_out_value=100.0,
-                         drop_out_width=20.0,
-                         average_length=20.0,
-                         min_tape_length=25.0,
-                         description="Standard Tape")
+    STANDARD1 = TapeSpecs(width=12.0,
+                          min_tape_length=25.0,
+                          min_value=500.0,
+                          drop_out_value=None,
+                          drop_out_width=None,
+                          min_average=None,
+                          average_length=None,
+                          description="Standard Tape 1")
+    STANDARD2 = TapeSpecs(width=12.0,
+                          min_tape_length=25.0,
+                          min_value=500.0,
+                          drop_out_value=None,
+                          drop_out_width=None,
+                          min_average=700.0,
+                          average_length=20.0,
+                          description="Standard Tape 2")
+    STANDARD3 = TapeSpecs(width=12.0,
+                          min_tape_length=25.0,
+                          min_value=500.0,
+                          drop_out_value=150.0,
+                          drop_out_width=10.0,
+                          min_average=700.0,
+                          average_length=20.0,
+                          description="Standard Tape 3")
 
 
 class TestType(Enum):
@@ -177,7 +193,7 @@ class TapeSection(NamedTuple):
 class QualityReport(NamedTuple):
     """ Class containing all information for a quality report for a tape
         regarding a specific quality parameter.
-    
+
     Attributes:
     -----------
         tape_id (str): ID of the tested tape.
@@ -198,8 +214,6 @@ class Threshold(NamedTuple):
     -----------
         width (Optional[float]): Threshold for parameter value
         value (Optional[float]): Threshold for parameter width
-        any_all (bool): Test fails if any (False) or all (True) parameter fail.
     """
     width: Optional[float] = None
     value: Optional[float] = None
-    any_all: bool = True

@@ -40,13 +40,11 @@ class TapeQualityInformation:
         return self._data
 
     @data.setter
-    def data(self, value) -> None:
+    def data(self, value: DataFrame) -> None:
         if not isinstance(value, DataFrame) or value is None:
             raise TypeError("Wrong data type for data")
         if self.expected_average is None:
             raise ValueError("Property expected_average not set")
-        if self.averaging_length is None:
-            raise ValueError("Property averaging_length not set")
 
         # reverse order of dataframe if end position is smaller than start
         # position.
@@ -55,7 +53,10 @@ class TapeQualityInformation:
         else:
             self._data = value
 
-        self.calculate_averages()
+        try:
+            self.calculate_averages()
+        except ValueError as error:
+            print(f"Error: Calculating averages failed: {repr(error)}")
         self.calculate_drop_out_info()
 
     @property
@@ -67,10 +68,10 @@ class TapeQualityInformation:
 
     tape_id = str
 
-    expected_average: Optional[float]
+    expected_average: float
     averaging_length: Optional[float]
 
-    averages: List[AveragesInfo] = []
+    averages: Optional[List[AveragesInfo]] = []
     drop_outs: List[PeakInfo] = []
 
     @property
@@ -80,7 +81,7 @@ class TapeQualityInformation:
         return self.expected_average * 0.8
 
     def __init__(self, data: DataFrame, tape_id: str, expected_average: float,
-                 averaging_length: float):
+                 averaging_length: Optional[float]):
         self.expected_average = expected_average
         self.averaging_length = averaging_length
 
@@ -154,23 +155,16 @@ class TapeQualityInformation:
             position = self.data.iloc[index, 0]
             value = self.data.iloc[index, 1]
             level = self.expected_average
-            for average in self.averages:
-                if (position > average.start_position
-                        and position < average.end_position):
-                    level = average.value
-                    break
+            if self.averages is not None:
+                for average in self.averages:
+                    if (position > average.start_position
+                            and position < average.end_position):
+                        level = average.value
+                        break
 
             half_max = (value + level) / 2.0
-            start_position = self.data.iloc[start_index, 0]
-            end_position = self.data.iloc[end_index, 0]
-            for j in range(index, len(self.data.index)):
-                if self.data.iloc[j, 1] > half_max:
-                    end_position = self.data.iloc[j, 0]
-                    break
-            for j in range(index, 0, -1):
-                if self.data.iloc[j, 1] > half_max:
-                    start_position = self.data.iloc[j, 0]
-                    break
+            start_position = self._find_half_max_position(index, half_max, False)
+            end_position = self._find_half_max_position(index, half_max, True)
 
             current_peak = PeakInfo(number=i,
                                     start_position=start_position,
@@ -192,6 +186,21 @@ class TapeQualityInformation:
                 last_peak = current_peak
 
         self.drop_outs = peak_info_list
+
+    def _find_half_max_position(self, peak_index: int, half_max: float,
+                                go_up: bool) -> float:
+        half_max_position = 0.0
+        last_index = len(self.data.index)
+        step = 1
+        if not go_up:
+            last_index = 0
+            step = -1
+
+        for j in range(peak_index, last_index, step):
+            if self.data.iloc[j, 1] > half_max:
+                half_max_position = self.data.iloc[j, 0]
+                break
+        return half_max_position
 
     def _find_start_end_index(self, data: DataFrame) -> tuple[int, int]:
         if self.expected_average is None:

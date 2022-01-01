@@ -1,6 +1,5 @@
 """ Class implementation for TapeQualityAssessor
 """
-
 from typing import List
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
@@ -49,7 +48,11 @@ class TapeQualityAssessor():
         """ Kicks off assessment for various quality parameters and stores
             quality reports.
         """
-        self.quality_reports.append(self.assess_average_value())
+        try:
+            self.quality_reports.append(self.assess_average_value())
+        except ValueError as error:
+            print(f"Averages not evaluated: {repr(error)}")
+
         self.quality_reports.append(self.assess_min_value())
         self.quality_reports.append(self.assess_drop_outs())
 
@@ -132,11 +135,17 @@ class TapeQualityAssessor():
                     print(fail_info.description)
 
     def assess_average_value(self) -> QualityReport:
-        """ Assesses if average value meet the specs.
+        """Assesses if average value meet the specs.
+
+        Raises:
+            ValueError: In case no averages are available in Quality Info
 
         Returns:
             QualityReport: Quality report on average values.
         """
+        if self.tape_quality_info.averages is None:
+            raise ValueError("No Averages available.")
+
         threshold = Threshold(value=self.tape_specs.min_average)
         return self._assess_failure(TestType.AVERAGE,
                                     threshold,
@@ -258,29 +267,23 @@ def main():
     from multiprocessing import Pool
     from functools import partial
 
-    product = TapeProduct.STANDARD.value
+    product = TapeProduct.STANDARD1.value
+    # width * thickness * critical current density * factor to fix units
+    expected_average = product.width * 1.9 * 3 * 10
+    expected_average = (product.min_average if product.min_average is not None
+                        else expected_average)
     quality_info = [
         TapeQualityInformation(
             TapeQualityAssessor.load_data("data/20204-X-10_500A.dat", False),
-            "20204-X-10", product.min_average, product.average_length),
+            "20204-X-10", expected_average, product.average_length),
         TapeQualityInformation(
             TapeQualityAssessor.load_data(
                 "data/17346-X-11-BL_30_29970_500A.dat", True), "17346-X-11",
-            product.min_average, product.average_length)
+            expected_average, product.average_length)
     ]
 
     with Pool() as pool:
         pool.map(partial(excecute_assessment, product=product), quality_info)
-
-    # for q_info in quality_info:
-    #     assessor = TapeQualityAssessor(q_info, product)
-
-    #     assessor.assess_meets_specs()
-    #     assessor.determine_ok_tape_section(product.min_tape_length)
-
-    #     assessor.save_pdf_report()
-    #     assessor.print_reports()
-    #     assessor.plot_defects()
 
 
 if __name__ == '__main__':
