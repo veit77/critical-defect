@@ -195,8 +195,9 @@ class TapeQualityAssessor():
         min_ic = self.tape_specs.drop_out_value
 
         fails = list(
-            filter(lambda x: x.value < min_ic or x.width > width_func(x.value),
-                   parameter_infos))
+            filter(
+                lambda x: x.value < min_ic or x.width * 1000.0 > width_func(
+                    x.value), fails))
 
         return QualityReport(self.tape_quality_info.tape_id, TestType.DROP_OUT,
                              fails)
@@ -205,7 +206,7 @@ class TapeQualityAssessor():
         """ Plots Histogram of drop-out widths (Just to show what
             kind of statistics can be done).
         """
-        widths = [x.width for x in self.tape_quality_info.drop_outs]
+        widths = [x.width*1000 for x in self.tape_quality_info.drop_outs]
 
         fig = plt.figure(num='Histogram')
         fig.set_tight_layout(True)
@@ -288,7 +289,7 @@ def main():
     # from multiprocessing import Pool
     # from functools import partial
 
-    product = TapeProduct.SUPERLINK_PHASE.value
+    product = TapeProduct.SUPERLINK_PHASE_TEST.value
     # expected_average = width * thickness * critical current density * factor to fix units
     expected_average = product.width * 1.9 * 3 * 10
     expected_average = (product.min_average if product.min_average is not None

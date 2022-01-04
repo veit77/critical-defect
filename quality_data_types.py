@@ -2,6 +2,7 @@
 """
 from typing import List, NamedTuple, Optional, Protocol, Callable
 from enum import Enum
+from math import exp
 
 
 class QualityParameterInfo(Protocol):
@@ -130,6 +131,15 @@ class TapeProduct(Enum):
                                 min_average=135.0,
                                 average_length=20.0,
                                 description="SuperLink Phase")
+    SUPERLINK_PHASE_TEST = TapeSpecs(
+        width=3.0,
+        min_tape_length=190.0,
+        min_value=100.0,
+        drop_out_value=20.0,
+        drop_out_func=lambda ic: 1.43587 * exp(0.027726 * ic),
+        min_average=135.0,
+        average_length=20.0,
+        description="SuperLink Phase Test")
     SUPERLINK_NEUTRAL = TapeSpecs(width=6.0,
                                   min_average=200.0,
                                   min_value=100.0,
