@@ -53,11 +53,11 @@ class TapeQualityAssessor():
         except ValueError as error:
             print(f"Averages not evaluated: {repr(error)}")
 
-        if (self.tape_specs.drop_out_value is None
-                or self.tape_specs.drop_out_func is None):
+        if (self.tape_specs.dropout_value is None
+                or self.tape_specs.dropout_func is None):
             self.quality_reports.append(self.assess_min_value())
         else:
-            self.quality_reports.append(self.assess_drop_outs())
+            self.quality_reports.append(self.assess_dropouts())
 
     def determine_ok_tape_section(self, min_length: float) -> None:
         """ Determines all tape section that do not contain defects and are long enough
@@ -166,14 +166,14 @@ class TapeQualityAssessor():
             QualityReport: Quality report on minimum values.
         """
         threshold = self.tape_specs.min_value
-        parameter_infos = self.tape_quality_info.drop_outs
+        parameter_infos = self.tape_quality_info.dropouts
 
         fails = list(filter(lambda x: x.value < threshold, parameter_infos))
 
         return QualityReport(self.tape_quality_info.tape_id, TestType.MINIMUM,
                              fails)
 
-    def assess_drop_outs(self) -> QualityReport:
+    def assess_dropouts(self) -> QualityReport:
         """ Assesses if drop-outs meet the specs.
 
         Raises:
@@ -182,31 +182,31 @@ class TapeQualityAssessor():
         Returns:
             QualityReport: Quality report on drop-outs.
         """
-        if (self.tape_specs.drop_out_func is None
-                or self.tape_specs.drop_out_value is None):
+        if (self.tape_specs.dropout_func is None
+                or self.tape_specs.dropout_value is None):
             raise ValueError("Drop-outs are not specified.")
         # A peak is a drop-out if it is smaller than min Ic
         threshold = self.tape_specs.min_value
-        parameter_infos = self.tape_quality_info.drop_outs
+        parameter_infos = self.tape_quality_info.dropouts
         fails = list(filter(lambda x: x.value < threshold, parameter_infos))
 
         # A drop-out is a fail if it is too wide or below a min Drop-out Ic
-        width_func = self.tape_specs.drop_out_func
-        min_ic = self.tape_specs.drop_out_value
+        width_func = self.tape_specs.dropout_func
+        min_ic = self.tape_specs.dropout_value
 
         fails = list(
             filter(
                 lambda x: x.value < min_ic or x.width * 1000.0 > width_func(
                     x.value), fails))
 
-        return QualityReport(self.tape_quality_info.tape_id, TestType.DROP_OUT,
+        return QualityReport(self.tape_quality_info.tape_id, TestType.DROPOUT,
                              fails)
 
-    def plot_drop_out_histogram(self) -> None:
+    def plot_dropout_histogram(self) -> None:
         """ Plots Histogram of drop-out widths (Just to show what
             kind of statistics can be done).
         """
-        widths = [x.width*1000 for x in self.tape_quality_info.drop_outs]
+        widths = [x.width*1000 for x in self.tape_quality_info.dropouts]
 
         fig = plt.figure(num='Histogram')
         fig.set_tight_layout(True)
@@ -245,7 +245,7 @@ class TapeQualityAssessor():
                               marker='|',
                               linewidth=2.0,
                               label='Averages Failed')
-                elif report.test_type in [TestType.MINIMUM, TestType.DROP_OUT]:
+                elif report.test_type in [TestType.MINIMUM, TestType.DROPOUT]:
                     color = 'deeppink'
                     axis.scatter([fail.center_position],
                                  [fail.value],
@@ -275,7 +275,7 @@ def excecute_assessment(quality_info: TapeQualityInformation,
     assessor = TapeQualityAssessor(quality_info, product)
 
     assessor.assess_meets_specs()
-    assessor.plot_drop_out_histogram()
+    assessor.plot_dropout_histogram()
     assessor.determine_ok_tape_section(product.min_tape_length)
 
     assessor.save_pdf_report()

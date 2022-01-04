@@ -26,7 +26,7 @@ class TapeQualityInformation:
         calculation.
     averages : List[AveragesInfo] = []
         Piecewise averages.
-    drop_outs : List[PeakInfo] = []
+    dropouts : List[PeakInfo] = []
         Information about all drop-outs.
 
     Methods:
@@ -73,7 +73,7 @@ class TapeQualityInformation:
     averaging_length: Optional[float]
 
     averages: Optional[List[AveragesInfo]] = []
-    drop_outs: List[PeakInfo] = []
+    dropouts: List[PeakInfo] = []
 
     @property
     def _peak_definition(self) -> float:
@@ -115,7 +115,7 @@ class TapeQualityInformation:
             average = self.data.iloc[last_index:next_index, 1].mean()
             start_position = self.data.iloc[last_index, 0]
             end_position = self.data.iloc[next_index, 0]
-            average_info = AveragesInfo(number=piece,
+            average_info = AveragesInfo(id=piece,
                                         start_position=start_position,
                                         end_position=end_position,
                                         value=average)
@@ -128,7 +128,7 @@ class TapeQualityInformation:
         average = self.data.iloc[last_index:end_index, 1].mean()
         start_position = self.data.iloc[last_index, 0]
         end_position = self.data.iloc[end_index, 0]
-        average_info = AveragesInfo(number=piece,
+        average_info = AveragesInfo(id=piece,
                                     start_position=start_position,
                                     end_position=end_position,
                                     value=average)
@@ -167,7 +167,7 @@ class TapeQualityInformation:
             start_position = self._find_half_max_position(index, half_max, False)
             end_position = self._find_half_max_position(index, half_max, True)
 
-            current_peak = PeakInfo(number=i,
+            current_peak = PeakInfo(id=i,
                                     start_position=start_position,
                                     end_position=end_position,
                                     center_position=position,
@@ -186,7 +186,7 @@ class TapeQualityInformation:
                 peak_info_list.append(current_peak)
                 last_peak = current_peak
 
-        self.drop_outs = peak_info_list
+        self.dropouts = peak_info_list
 
     def _find_half_max_position(self, peak_index: int, half_max: float,
                                 go_up: bool) -> float:

@@ -7,8 +7,18 @@ from math import exp
 
 class QualityParameterInfo(Protocol):
     """ Protocol for defect information
+
+     Attributes:
+    ------------
+        id (int): ID of the defect
+        start_position (float): Start position of the defect.
+        end_position (float): End position of the defect.
+        center_position (float): Center position of the defect.
+        width (float): Width of the defect section.
+        value (float): Value of the defect.
+        description (str): Description of the defect information
     """
-    number: int
+    id: int
     start_position: float
     end_position: float
     center_position: float
@@ -31,12 +41,12 @@ class PeakInfo:
                 f"width: {self.width*1000:.1f}mm, value: {self.value:.0f}A")
 
     def __init__(self,
-                 number: int = 1,
+                 id: int = 1,
                  start_position: float = 0.0,
                  end_position: float = 0.0,
                  center_position: float = 0.0,
                  value: float = 0.0) -> None:
-        self.number = number
+        self.id = id
         self.start_position = start_position
         self.end_position = end_position
         self.center_position = center_position
@@ -61,11 +71,11 @@ class AveragesInfo:
                 f"{self.end_position:.2f}m is {self.value:.0f}A")
 
     def __init__(self,
-                 number: int = 0,
+                 id: int = 0,
                  start_position: float = 0.0,
                  end_position: float = 0.0,
                  value: float = 0.0) -> None:
-        self.number = number
+        self.id = id
         self.start_position = start_position
         self.end_position = end_position
         self.value = value
@@ -88,9 +98,9 @@ class ScatterInfo:
         return (f"Scatter between {self.start_position:.2f}m and " +
                 f"{self.end_position:.2f}m is {self.value:.0f}A")
 
-    def __init__(self, number: int, start_position: float, end_position: float,
+    def __init__(self, id: int, start_position: float, end_position: float,
                  value: float) -> None:
-        self.number = number
+        self.id = id
         self.start_position = start_position
         self.end_position = end_position
         self.value = value
@@ -104,8 +114,8 @@ class TapeSpecs(NamedTuple):
         width (float): Tape width in mm
         min_tape_length (float): Minimum tape length for product in m
         min_value (float): Minimum value in A
-        drop_out_value (Optional[float]): Minimum drop-out value in A
-        drop_out_width (Optional[float]): Maximum width of drop-out in mm
+        dropout_value (Optional[float]): Minimum drop-out value in A
+        dropout_func (Optional[Callable[[float], float]]): Maximum width of drop-out in mm
         min_average (Optional[float]): Minimum average value in A
         average_length (Optional[float]): Length over which to average in m
         description (str): Name/Description of the product
@@ -113,8 +123,8 @@ class TapeSpecs(NamedTuple):
     width: float
     min_tape_length: float
     min_value: float
-    drop_out_value: Optional[float]
-    drop_out_func: Optional[Callable[[float], float]]
+    dropout_value: Optional[float]
+    dropout_func: Optional[Callable[[float], float]]
     min_average: Optional[float]
     average_length: Optional[float]
     description: str
@@ -126,8 +136,8 @@ class TapeProduct(Enum):
     SUPERLINK_PHASE = TapeSpecs(width=3.0,
                                 min_tape_length=190.0,
                                 min_value=100.0,
-                                drop_out_value=20.0,
-                                drop_out_func=lambda ic: 2.5 + 7.5/50*(ic-20),
+                                dropout_value=20.0,
+                                dropout_func=lambda ic: 2.5 + 7.5/50*(ic-20),
                                 min_average=135.0,
                                 average_length=20.0,
                                 description="SuperLink Phase")
@@ -135,40 +145,40 @@ class TapeProduct(Enum):
         width=3.0,
         min_tape_length=190.0,
         min_value=100.0,
-        drop_out_value=20.0,
-        drop_out_func=lambda ic: 1.43587 * exp(0.027726 * ic),
+        dropout_value=20.0,
+        dropout_func=lambda ic: 1.43587 * exp(0.027726 * ic),
         min_average=135.0,
         average_length=20.0,
         description="SuperLink Phase Test")
     SUPERLINK_NEUTRAL = TapeSpecs(width=6.0,
                                   min_average=200.0,
                                   min_value=100.0,
-                                  drop_out_value=50.0,
-                                  drop_out_func=None,
+                                  dropout_value=50.0,
+                                  dropout_func=None,
                                   average_length=20.0,
                                   min_tape_length=190.0,
                                   description="SuperLink Neutral")
     STANDARD1 = TapeSpecs(width=12.0,
                           min_tape_length=25.0,
                           min_value=500.0,
-                          drop_out_value=None,
-                          drop_out_func=None,
+                          dropout_value=None,
+                          dropout_func=None,
                           min_average=None,
                           average_length=None,
                           description="Standard Tape 1")
     STANDARD2 = TapeSpecs(width=12.0,
                           min_tape_length=25.0,
                           min_value=500.0,
-                          drop_out_value=None,
-                          drop_out_func=None,
+                          dropout_value=None,
+                          dropout_func=None,
                           min_average=700.0,
                           average_length=20.0,
                           description="Standard Tape 2")
     STANDARD3 = TapeSpecs(width=12.0,
                           min_tape_length=25.0,
                           min_value=500.0,
-                          drop_out_value=150.0,
-                          drop_out_func=lambda x: 20,
+                          dropout_value=150.0,
+                          dropout_func=lambda x: 20,
                           min_average=700.0,
                           average_length=20.0,
                           description="Standard Tape 3")
@@ -180,7 +190,7 @@ class TestType(Enum):
     AVERAGE = 'Average Value'
     SCATTER = 'Scatter'         # TODO Currently not available in Specs and Tests
     MINIMUM = 'Minimum Value'
-    DROP_OUT = 'Drop Out'
+    DROPOUT = 'Drop Out'
 
 
 class TapeSection(NamedTuple):
@@ -222,6 +232,7 @@ class QualityReport():
     def __init__(
             self, tape_id: str, test_type: TestType,
             fail_information: Optional[List[QualityParameterInfo]]) -> None:
+
         self.tape_id = tape_id
         self.test_type = test_type
         if fail_information is None or fail_information:
