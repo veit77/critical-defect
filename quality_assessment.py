@@ -54,7 +54,7 @@ class TapeQualityAssessor():
             print(f"Averages not evaluated: {repr(error)}")
 
         if (self.tape_specs.drop_out_value is None
-                or self.tape_specs.drop_out_width is None):
+                or self.tape_specs.drop_out_func is None):
             self.quality_reports.append(self.assess_min_value())
         else:
             self.quality_reports.append(self.assess_drop_outs())
@@ -182,7 +182,7 @@ class TapeQualityAssessor():
         Returns:
             QualityReport: Quality report on drop-outs.
         """
-        if (self.tape_specs.drop_out_width is None
+        if (self.tape_specs.drop_out_func is None
                 or self.tape_specs.drop_out_value is None):
             raise ValueError("Drop-outs are not specified.")
         # A peak is a drop-out if it is smaller than min Ic
@@ -191,19 +191,35 @@ class TapeQualityAssessor():
         fails = list(filter(lambda x: x.value < threshold, parameter_infos))
 
         # A drop-out is a fail if it is too wide or below a min Drop-out Ic
-        max_width = self.tape_specs.drop_out_width
+        width_func = self.tape_specs.drop_out_func
         min_ic = self.tape_specs.drop_out_value
 
         fails = list(
-            filter(lambda x: x.value < min_ic or x.width > max_width,
+            filter(lambda x: x.value < min_ic or x.width > width_func(x.value),
                    parameter_infos))
 
         return QualityReport(self.tape_quality_info.tape_id, TestType.DROP_OUT,
                              fails)
 
+    def plot_drop_out_histogram(self) -> None:
+        """ Plots Histogram of drop-out widths (Just to show what
+            kind of statistics can be done).
+        """
+        widths = [x.width for x in self.tape_quality_info.drop_outs]
+
+        fig = plt.figure(num='Histogram')
+        fig.set_tight_layout(True)
+        axis = fig.subplots()
+        axis.set_xlabel("Width (mm)")
+        axis.set_ylabel("Count")
+        axis.grid()
+        axis.hist(widths, bins=60, density=True)
+
+        fig.show()
+
     def _make_plot(self) -> Figure:
         data = self.tape_quality_info.data
-        fig = plt.figure(num='figure', figsize=(9.5, 3.1))
+        fig = plt.figure(num='Figure', figsize=(9.5, 3.1))
         fig.set_tight_layout(True)
         axis = fig.subplots()
         axis.set_xlabel("Position (m)")
@@ -258,6 +274,7 @@ def excecute_assessment(quality_info: TapeQualityInformation,
     assessor = TapeQualityAssessor(quality_info, product)
 
     assessor.assess_meets_specs()
+    assessor.plot_drop_out_histogram()
     assessor.determine_ok_tape_section(product.min_tape_length)
 
     assessor.save_pdf_report()
@@ -268,26 +285,41 @@ def excecute_assessment(quality_info: TapeQualityInformation,
 def main():
     """ Main function of module to test functionality of classes in module
     """
-    from multiprocessing import Pool
-    from functools import partial
+    # from multiprocessing import Pool
+    # from functools import partial
 
-    product = TapeProduct.STANDARD3.value
-    # width * thickness * critical current density * factor to fix units
+    product = TapeProduct.SUPERLINK_PHASE.value
+    # expected_average = width * thickness * critical current density * factor to fix units
     expected_average = product.width * 1.9 * 3 * 10
     expected_average = (product.min_average if product.min_average is not None
                         else expected_average)
-    quality_info = [
-        TapeQualityInformation(
-            TapeQualityAssessor.load_data("data/20204-X-10_500A.dat", False),
-            "20204-X-10", expected_average, product.average_length),
+    # quality_info = [
+    #     TapeQualityInformation(
+    #         TapeQualityAssessor.load_data("data/20204-X-10_500A.dat", False),
+    #         "20204-X-10", expected_average, product.average_length),
+    #     TapeQualityInformation(
+    #         TapeQualityAssessor.load_data(
+    #             "data/17346-X-11-BL_30_29970_500A.dat", True), "17346-X-11",
+    #         expected_average, product.average_length)
+    # ]
+
+    quality_info2 = [
         TapeQualityInformation(
             TapeQualityAssessor.load_data(
-                "data/17346-X-11-BL_30_29970_500A.dat", True), "17346-X-11",
-            expected_average, product.average_length)
+                "data/21407-3L-110_300A_Lam_Markiert.dat", False),
+            "21407-3L-110", expected_average, product.average_length),
+        TapeQualityInformation(
+            TapeQualityAssessor.load_data(
+                "data/21407-3M1-110_300A_Lam_Markiert.dat", False),
+            "21407-3M1-110", expected_average, product.average_length)
     ]
 
-    with Pool() as pool:
-        pool.map(partial(excecute_assessment, product=product), quality_info)
+    for info in quality_info2:
+        excecute_assessment(info, product)
+
+    # TODO Pool does not work with lambda expressions as callable
+    # with Pool() as pool:
+    #     pool.map(partial(excecute_assessment, product=product), quality_info)
 
 
 if __name__ == '__main__':

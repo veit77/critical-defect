@@ -5,6 +5,7 @@ from typing import List, Optional
 from math import isclose
 from pandas import DataFrame
 from scipy.signal import find_peaks
+from scipy.interpolate import interp1d
 from quality_data_types import PeakInfo, AveragesInfo, TapeSection
 
 
@@ -84,10 +85,10 @@ class TapeQualityInformation:
                  averaging_length: Optional[float]):
         self.expected_average = expected_average
         self.averaging_length = averaging_length
+        self.tape_id = tape_id
 
         # Always set data after expected_average and averaging_length is set.
         self.data = data
-        self.tape_id = tape_id
 
     def calculate_averages(self) -> None:
         """ Calculates piecewise averages.
@@ -199,7 +200,10 @@ class TapeQualityInformation:
         half_max_position = self.data.iloc[last_index, 0]
         for j in range(peak_index, last_index, step):
             if self.data.iloc[j, 1] > half_max:
-                half_max_position = self.data.iloc[j, 0]
+                x_values = [self.data.iloc[j, 0], self.data.iloc[j-step, 0]]
+                y_values = [self.data.iloc[j, 1], self.data.iloc[j-step, 1]]
+                f_of_y = interp1d(y_values, x_values)
+                half_max_position = f_of_y(half_max)[()]
                 break
 
         return half_max_position

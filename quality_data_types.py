@@ -1,6 +1,6 @@
 """ provides data types for analysing defect structures in HTS tapes
 """
-from typing import List, NamedTuple, Optional, Protocol
+from typing import List, NamedTuple, Optional, Protocol, Callable
 from enum import Enum
 
 
@@ -113,7 +113,7 @@ class TapeSpecs(NamedTuple):
     min_tape_length: float
     min_value: float
     drop_out_value: Optional[float]
-    drop_out_width: Optional[float]
+    drop_out_func: Optional[Callable[[float], float]]
     min_average: Optional[float]
     average_length: Optional[float]
     description: str
@@ -124,9 +124,9 @@ class TapeProduct(Enum):
     """
     SUPERLINK_PHASE = TapeSpecs(width=3.0,
                                 min_tape_length=190.0,
-                                min_value=70.0,
+                                min_value=100.0,
                                 drop_out_value=20.0,
-                                drop_out_width=5.0,
+                                drop_out_func=lambda ic: 2.5 + 7.5/50*(ic-20),
                                 min_average=135.0,
                                 average_length=20.0,
                                 description="SuperLink Phase")
@@ -134,7 +134,7 @@ class TapeProduct(Enum):
                                   min_average=200.0,
                                   min_value=100.0,
                                   drop_out_value=50.0,
-                                  drop_out_width=10.0,
+                                  drop_out_func=None,
                                   average_length=20.0,
                                   min_tape_length=190.0,
                                   description="SuperLink Neutral")
@@ -142,7 +142,7 @@ class TapeProduct(Enum):
                           min_tape_length=25.0,
                           min_value=500.0,
                           drop_out_value=None,
-                          drop_out_width=None,
+                          drop_out_func=None,
                           min_average=None,
                           average_length=None,
                           description="Standard Tape 1")
@@ -150,7 +150,7 @@ class TapeProduct(Enum):
                           min_tape_length=25.0,
                           min_value=500.0,
                           drop_out_value=None,
-                          drop_out_width=None,
+                          drop_out_func=None,
                           min_average=700.0,
                           average_length=20.0,
                           description="Standard Tape 2")
@@ -158,7 +158,7 @@ class TapeProduct(Enum):
                           min_tape_length=25.0,
                           min_value=500.0,
                           drop_out_value=150.0,
-                          drop_out_width=20.0,
+                          drop_out_func=lambda x: 20,
                           min_average=700.0,
                           average_length=20.0,
                           description="Standard Tape 3")
