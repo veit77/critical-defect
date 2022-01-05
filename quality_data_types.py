@@ -1,6 +1,7 @@
 """ provides data types for analysing defect structures in HTS tapes
 """
-from typing import List, NamedTuple, Optional, Protocol, Callable
+from typing import Optional, Protocol, Callable
+from dataclasses import dataclass
 from enum import Enum
 from math import exp
 
@@ -106,7 +107,8 @@ class ScatterInfo:
         self.value = value
 
 
-class TapeSpecs(NamedTuple):
+@dataclass
+class TapeSpecs():
     """ Tuple holding information about tape specifications
 
     Attributes:
@@ -193,7 +195,8 @@ class TestType(Enum):
     DROPOUT = 'Drop Out'
 
 
-class TapeSection(NamedTuple):
+@dataclass
+class TapeSection:
     """ Holds information of tape sections.
 
     Attributes:
@@ -210,7 +213,8 @@ class TapeSection(NamedTuple):
     end_position: float
 
 
-class QualityReport():
+@dataclass
+class QualityReport:
     """ Class containing all information for a quality report for a tape
         regarding a specific quality parameter.
 
@@ -218,24 +222,18 @@ class QualityReport():
     -----------
         tape_id (str): ID of the tested tape.
         test_type (TestType): Type of the test.
-        fail_information (Optional[List[QualityParameterInfo]]): Information about failures
+        fail_information (Optional[list[QualityParameterInfo]]): Information about failures
         passed (bool): Test passed or not.
     """
     tape_id: str
     test_type: TestType
-    fail_information: Optional[List[QualityParameterInfo]] = None
+    fail_information: Optional[list[QualityParameterInfo]] = None
 
     @property
     def passed(self) -> bool:
         return self.fail_information is None
-
-    def __init__(
-            self, tape_id: str, test_type: TestType,
-            fail_information: Optional[List[QualityParameterInfo]]) -> None:
-
-        self.tape_id = tape_id
-        self.test_type = test_type
-        if fail_information is None or fail_information:
-            self.fail_information = fail_information
-        else:
+    
+    def __post_init__(self):
+        # if list is empty, set fail_information to None
+        if not self.fail_information:
             self.fail_information = None

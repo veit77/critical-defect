@@ -1,48 +1,24 @@
 """ Class implementation for TapeQualityAssessor
 """
-from typing import List
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
-from pandas import DataFrame, read_csv
 from quality_data_types import (QualityReport, TestType, TapeSpecs, TapeSection,
                                 TapeProduct)
+from quality_helper import load_data
 from tape_quality_information import TapeQualityInformation
 from quality_pdf_report import ReportPDFCreator
 
 
-class TapeQualityAssessor():
+class TapeQualityAssessor:
     """ Class for assessing whether specs for various quality parameters are met.
     """
-    tape_quality_info: TapeQualityInformation
-    tape_specs: TapeSpecs
-    quality_reports: List[QualityReport] = []
-    ok_tape_sections: List[TapeSection] = []
-
-    def __init__(self, tape_quality_info: TapeQualityInformation,
+    def __init__(self,
+                 tape_quality_info: TapeQualityInformation,
                  tape_specs: TapeSpecs) -> None:
         self.tape_quality_info = tape_quality_info
         self.tape_specs = tape_specs
-        self.quality_reports = []
-        self.data_plot = None
-
-    @staticmethod
-    def load_data(from_path: str,
-                  convert_to_meters: bool = False) -> DataFrame:
-        """ Loads csv-data from TapeStar Ic-exports.
-
-        Args:
-            from_path (str): Path of csv-file to be loaded
-            convert_to_meters (bool, optional): Convert postions from mm to
-                meters. Defaults to False.
-
-        Returns:
-            DataFrame: Ic-data from TapeStar csv-file
-        """
-        data = read_csv(from_path, header=1, delimiter="\t")
-
-        if convert_to_meters:
-            data.iloc[:, 0] = data.iloc[:, 0].div(1000.0)
-        return data
+        self.quality_reports: list[QualityReport] = []
+        self.ok_tape_sections: list[TapeSection] = []
 
     def assess_meets_specs(self) -> None:
         """ Kicks off assessment for various quality parameters and stores
@@ -296,23 +272,26 @@ def main():
                         else expected_average)
     # quality_info = [
     #     TapeQualityInformation(
-    #         TapeQualityAssessor.load_data("data/20204-X-10_500A.dat", False),
-    #         "20204-X-10", expected_average, product.average_length),
+    #         load_data("data/20204-X-10_500A.dat", False), "20204-X-10",
+    #         expected_average, product.average_length),
     #     TapeQualityInformation(
-    #         TapeQualityAssessor.load_data(
-    #             "data/17346-X-11-BL_30_29970_500A.dat", True), "17346-X-11",
-    #         expected_average, product.average_length)
+    #         load_data("data/17346-X-11-BL_30_29970_500A.dat", True),
+    #         "17346-X-11", expected_average, product.average_length)
     # ]
 
     quality_info2 = [
         TapeQualityInformation(
-            TapeQualityAssessor.load_data(
-                "data/21407-3L-110_300A_Lam_Markiert.dat", False),
+            load_data("data/21407-3L-110_300A_Lam_Markiert.dat", False),
             "21407-3L-110", expected_average, product.average_length),
         TapeQualityInformation(
-            TapeQualityAssessor.load_data(
-                "data/21407-3M1-110_300A_Lam_Markiert.dat", False),
-            "21407-3M1-110", expected_average, product.average_length)
+            load_data("data/21407-3M1-110_300A_Lam_Markiert.dat", False),
+            "21407-3M1-110", expected_average, product.average_length),
+        TapeQualityInformation(
+            load_data("data/21407-3M2-110_300A_Lam_Markiert.dat", False),
+            "21407-3M2-110", expected_average, product.average_length),
+        TapeQualityInformation(
+            load_data("data/21407-3R-110_300A_Lam_Mak.dat", False),
+            "21407-R-110", expected_average, product.average_length)
     ]
 
     for info in quality_info2:

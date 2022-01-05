@@ -1,7 +1,8 @@
 """ Class implementation for TapeQualityInformation
 """
 
-from typing import List, Optional
+from typing import Optional
+from dataclasses import dataclass, field
 from math import isclose
 from pandas import DataFrame
 from scipy.signal import find_peaks
@@ -9,6 +10,7 @@ from scipy.interpolate import interp1d
 from quality_data_types import PeakInfo, AveragesInfo, TapeSection
 
 
+@dataclass
 class TapeQualityInformation:
     """ Class to collect information on quality features of HTS tapes
 
@@ -24,9 +26,9 @@ class TapeQualityInformation:
     averaging_length : Optional[float]
         Tape length over which to average. Used for piecewise average
         calculation.
-    averages : List[AveragesInfo] = []
+    averages : list[AveragesInfo] = []
         Piecewise averages.
-    dropouts : List[PeakInfo] = []
+    dropouts : list[PeakInfo] = []
         Information about all drop-outs.
 
     Methods:
@@ -36,44 +38,21 @@ class TapeQualityInformation:
     calculate_drop_out_info() -> None
         Calculate drop-out information.
     """
-    @property
-    def data(self) -> DataFrame:
-        return self._data
+    data: DataFrame
+    tape_id: str
 
-    @data.setter
-    def data(self, value: DataFrame) -> None:
-        if not isinstance(value, DataFrame) or value is None:
-            raise TypeError("Wrong data type for data")
-        if self.expected_average is None:
-            raise ValueError("Property expected_average not set")
+    expected_average: float
+    averaging_length: float
 
-        # reverse order of dataframe if end position is smaller than start
-        # position.
-        if value.iloc[0, 0] > value.iloc[-1, 0]:
-            self._data = value.iloc[::-1].reset_index(drop=True)
-        else:
-            self._data = value
-
-        try:
-            self.calculate_averages()
-        except ValueError as error:
-            print(f"Error: Calculating averages failed: {repr(error)}")
-        self.calculate_drop_out_info()
+    averages: Optional[list[AveragesInfo]] = field(default_factory=list)
+    dropouts: list[PeakInfo] = field(default_factory=list)
 
     @property
     def tape_section(self) -> TapeSection:
-        start, end = self._find_start_end_index(self._data)
-        start_pos = self._data.iloc[start, 0]
-        end_pos = self._data.iloc[end, 0]
+        start, end = self._find_start_end_index(self.data)
+        start_pos = self.data.iloc[start, 0]
+        end_pos = self.data.iloc[end, 0]
         return TapeSection(start_pos, end_pos)
-
-    tape_id = str
-
-    expected_average: float
-    averaging_length: Optional[float]
-
-    averages: Optional[List[AveragesInfo]] = []
-    dropouts: List[PeakInfo] = []
 
     @property
     def _peak_definition(self) -> float:
@@ -81,14 +60,20 @@ class TapeQualityInformation:
             raise ValueError("Property expected_average not set")
         return self.expected_average * 0.8
 
-    def __init__(self, data: DataFrame, tape_id: str, expected_average: float,
-                 averaging_length: Optional[float]):
-        self.expected_average = expected_average
-        self.averaging_length = averaging_length
-        self.tape_id = tape_id
+    def __post_init__(self):
+        if not isinstance(self.data, DataFrame) or self.data is None:
+            raise TypeError("Wrong data type for data.")
 
-        # Always set data after expected_average and averaging_length is set.
-        self.data = data
+        # reverse order of dataframe if end position is smaller than start
+        # position.
+        if self.data.iloc[0, 0] > self.data.iloc[-1, 0]:
+            self.data = self.data.iloc[::-1].reset_index(drop=True)
+
+        try:
+            self.calculate_averages()
+        except ValueError as error:
+            print(f"Error: Calculating averages failed: {repr(error)}")
+        self.calculate_drop_out_info()
 
     def calculate_averages(self) -> None:
         """ Calculates piecewise averages.
@@ -150,7 +135,7 @@ class TapeQualityInformation:
         indices = list(filter(lambda x: x >= start_index, indices))
         indices = list(filter(lambda x: x <= end_index, indices))
 
-        peak_info_list: List[PeakInfo] = []
+        peak_info_list: list[PeakInfo] = []
         last_peak = PeakInfo()
         for i, index in enumerate(indices):
             position = self.data.iloc[index, 0]
