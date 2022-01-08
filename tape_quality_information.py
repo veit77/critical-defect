@@ -36,11 +36,9 @@ class TapeQualityInformation:
 
     Methods:
     --------
-    calculate_averages() -> None
-        Calculates piecewise averages.
-    calculate_scattering() -> None
-        Calculates piecewise scattering info.
-    calculate_drop_out_info() -> None
+    calculate_statistics(TestType) -> list[QualitityParameterInfo]
+        Calculates piecewise statistics info.
+    calculate_drop_out_info() -> list[QualitityParameterInfo]
         Calculate drop-out information.
     """
     data: DataFrame
@@ -75,12 +73,12 @@ class TapeQualityInformation:
         if self.data.iloc[0, 0] > self.data.iloc[-1, 0]:
             self.data = self.data.iloc[::-1].reset_index(drop=True)
 
-        self.calculate_averages()
-        self.calculate_scattering()
-        self.calculate_drop_out_info()
+        self.averages = self.calculate_statisitcs(TestType.AVERAGE)
+        self.scattering = self.calculate_statisitcs(TestType.SCATTER)
+        self.dropouts =  self.calculate_drop_out_info()
 
-    def calculate_averages(self) -> None:
-        """ Calculates piecewise averages.
+    def calculate_statisitcs(self, type: TestType) -> list[QualityParameterInfo]:
+        """ Calculates piecewise statistics values.
         """
         start_index, end_index = self._find_start_end_index(self.data)
         length = self.averaging_length
@@ -92,59 +90,29 @@ class TapeQualityInformation:
         next_position = (self.data.iloc[start_index, 0] + length)
         last_index = start_index
         piece = 0
-        averages_info_list = []
-
-        # Calculate averages and store them in AveragesInfo instance
-        while next_position < self.data.iloc[end_index, 0]:
-            next_index = self.data.index[
-                self.data.iloc[:, 0] > next_position].to_list()[0]
-            average_info = self._get_quality_parameter_info(
-                piece, last_index, next_index, TestType.AVERAGE)
-            averages_info_list.append(average_info)
-            last_index = next_index
-            next_position += length
-            piece += 1
-
-        # append averages till end of tape
-        average_info = self._get_quality_parameter_info(
-            piece, last_index, end_index, TestType.AVERAGE)
-        averages_info_list.append(average_info)
-        self.averages = averages_info_list
-
-    def calculate_scattering(self) -> None:
-        """ Calculates piecewise scatter value.
-        """
-        start_index, end_index = self._find_start_end_index(self.data)
-        length = self.averaging_length
-
-        # if averaging_length is not set, average over the whole length
-        if self.averaging_length is None or self.averaging_length == 0.0:
-            length = self.data.iloc[end_index, 0] - self.data.iloc[start_index, 0]
-
-        next_position = (self.data.iloc[start_index, 0] + length)
-        last_index = start_index
-        piece = 0
-        scatter_info_list = []
+        info_list = []
 
         # Calculate scattering and store them in ScatterInfo instance
         while next_position < self.data.iloc[end_index, 0]:
             next_index = self.data.index[
                 self.data.iloc[:, 0] > next_position].to_list()[0]
-            scatter_info = self._get_quality_parameter_info(
-                piece, last_index, next_index, TestType.SCATTER)
-            scatter_info_list.append(scatter_info)
+            info = self._get_quality_parameter_info(
+                piece, last_index, next_index, type)
+            info_list.append(info)
             last_index = next_index
             next_position += length
             piece += 1
 
         # append scattering till end of tape
-        scatter_info = self._get_quality_parameter_info(
-            piece, last_index, end_index, TestType.SCATTER)
+        info = self._get_quality_parameter_info(
+            piece, last_index, end_index, type)
 
-        scatter_info_list.append(scatter_info)
-        self.scattering = scatter_info_list
+        info_list.append(info)
+        return info_list
 
-    def calculate_drop_out_info(self, pos_tol: float = 2e-3) -> None:
+    def calculate_drop_out_info(self,
+                                pos_tol: float = 2e-3
+                                ) -> list[QualityParameterInfo]:
         """ Calculate drop-out information.
 
         Args:
@@ -195,7 +163,7 @@ class TapeQualityInformation:
                 peak_info_list.append(current_peak)
                 last_peak = current_peak
 
-        self.dropouts = peak_info_list
+        return peak_info_list
 
     def _get_quality_parameter_info(
             self, piece: int, start_index: int, end_index: int,
