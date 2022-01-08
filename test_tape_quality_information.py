@@ -13,9 +13,7 @@ def test_data_setter_raises_type_error():
 
 @pytest.mark.parametrize("exception_text,average_value,length_value", [
     pytest.param(r"Property expected_average not set", None,
-                 TapeProduct.STANDARD3.value.average_length),
-    pytest.param(r"Property expected_average_length not set",
-                 TapeProduct.STANDARD3.value.min_average, None)
+                 TapeProduct.STANDARD3.value.average_length)
 ])
 def test_data_setter_raises_value_error(exception_text: str,
                                         average_value: float,

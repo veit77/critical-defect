@@ -3,8 +3,7 @@
 from pandas import DataFrame, read_csv
 
 
-def load_data(from_path: str,
-                  convert_to_meters: bool = False) -> DataFrame:
+def load_data(from_path: str, convert_to_meters: bool = False) -> DataFrame:
     """ Loads csv-data from TapeStar Ic-exports.
 
     Args:

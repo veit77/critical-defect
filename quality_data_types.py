@@ -232,7 +232,7 @@ class QualityReport:
     @property
     def passed(self) -> bool:
         return self.fail_information is None
-    
+
     def __post_init__(self):
         # if list is empty, set fail_information to None
         if not self.fail_information:

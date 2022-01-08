@@ -7,7 +7,8 @@ from math import isclose
 from pandas import DataFrame
 from scipy.signal import find_peaks
 from scipy.interpolate import interp1d
-from quality_data_types import PeakInfo, AveragesInfo, TapeSection
+from quality_data_types import (QualityParameterInfo, PeakInfo, AveragesInfo,
+                                TapeSection, ScatterInfo, TestType)
 
 
 @dataclass
@@ -28,6 +29,8 @@ class TapeQualityInformation:
         calculation.
     averages : list[AveragesInfo] = []
         Piecewise averages.
+    scattering: list[ScatterInfo] = []
+        Piecewise scattering info (standard deviation).
     dropouts : list[PeakInfo] = []
         Information about all drop-outs.
 
@@ -35,6 +38,8 @@ class TapeQualityInformation:
     --------
     calculate_averages() -> None
         Calculates piecewise averages.
+    calculate_scattering() -> None
+        Calculates piecewise scattering info.
     calculate_drop_out_info() -> None
         Calculate drop-out information.
     """
@@ -42,9 +47,10 @@ class TapeQualityInformation:
     tape_id: str
 
     expected_average: float
-    averaging_length: float
+    averaging_length: Optional[float]
 
-    averages: Optional[list[AveragesInfo]] = field(default_factory=list)
+    averages: list[AveragesInfo] = field(default_factory=list)
+    scattering: list[ScatterInfo] = field(default_factory=list)
     dropouts: list[PeakInfo] = field(default_factory=list)
 
     @property
@@ -56,37 +62,32 @@ class TapeQualityInformation:
 
     @property
     def _peak_definition(self) -> float:
-        if self.expected_average is None:
-            raise ValueError("Property expected_average not set")
         return self.expected_average * 0.8
 
     def __post_init__(self):
         if not isinstance(self.data, DataFrame) or self.data is None:
             raise TypeError("Wrong data type for data.")
+        if self.expected_average is None:
+            raise ValueError("Property expected_average not set")
 
         # reverse order of dataframe if end position is smaller than start
         # position.
         if self.data.iloc[0, 0] > self.data.iloc[-1, 0]:
             self.data = self.data.iloc[::-1].reset_index(drop=True)
 
-        try:
-            self.calculate_averages()
-        except ValueError as error:
-            print(f"Error: Calculating averages failed: {repr(error)}")
+        self.calculate_averages()
+        self.calculate_scattering()
         self.calculate_drop_out_info()
 
     def calculate_averages(self) -> None:
         """ Calculates piecewise averages.
-
-        Raises:
-            ValueError: throws exception if expected_average and
-                averaging_length are not properly set.
         """
-        if self.averaging_length is None:
-            raise ValueError("Property expected_average_length not set")
-
         start_index, end_index = self._find_start_end_index(self.data)
         length = self.averaging_length
+
+        # if averaging_length is not set, average over the whole length
+        if self.averaging_length is None or self.averaging_length == 0.0:
+            length = self.data.iloc[end_index, 0] - self.data.iloc[start_index, 0]
 
         next_position = (self.data.iloc[start_index, 0] + length)
         last_index = start_index
@@ -97,28 +98,51 @@ class TapeQualityInformation:
         while next_position < self.data.iloc[end_index, 0]:
             next_index = self.data.index[
                 self.data.iloc[:, 0] > next_position].to_list()[0]
-            average = self.data.iloc[last_index:next_index, 1].mean()
-            start_position = self.data.iloc[last_index, 0]
-            end_position = self.data.iloc[next_index, 0]
-            average_info = AveragesInfo(id=piece,
-                                        start_position=start_position,
-                                        end_position=end_position,
-                                        value=average)
+            average_info = self._get_quality_parameter_info(
+                piece, last_index, next_index, TestType.AVERAGE)
             averages_info_list.append(average_info)
             last_index = next_index
             next_position += length
             piece += 1
 
         # append averages till end of tape
-        average = self.data.iloc[last_index:end_index, 1].mean()
-        start_position = self.data.iloc[last_index, 0]
-        end_position = self.data.iloc[end_index, 0]
-        average_info = AveragesInfo(id=piece,
-                                    start_position=start_position,
-                                    end_position=end_position,
-                                    value=average)
+        average_info = self._get_quality_parameter_info(
+            piece, last_index, end_index, TestType.AVERAGE)
         averages_info_list.append(average_info)
         self.averages = averages_info_list
+
+    def calculate_scattering(self) -> None:
+        """ Calculates piecewise scatter value.
+        """
+        start_index, end_index = self._find_start_end_index(self.data)
+        length = self.averaging_length
+
+        # if averaging_length is not set, average over the whole length
+        if self.averaging_length is None or self.averaging_length == 0.0:
+            length = self.data.iloc[end_index, 0] - self.data.iloc[start_index, 0]
+
+        next_position = (self.data.iloc[start_index, 0] + length)
+        last_index = start_index
+        piece = 0
+        scatter_info_list = []
+
+        # Calculate scattering and store them in ScatterInfo instance
+        while next_position < self.data.iloc[end_index, 0]:
+            next_index = self.data.index[
+                self.data.iloc[:, 0] > next_position].to_list()[0]
+            scatter_info = self._get_quality_parameter_info(
+                piece, last_index, next_index, TestType.SCATTER)
+            scatter_info_list.append(scatter_info)
+            last_index = next_index
+            next_position += length
+            piece += 1
+
+        # append scattering till end of tape
+        scatter_info = self._get_quality_parameter_info(
+            piece, last_index, end_index, TestType.SCATTER)
+
+        scatter_info_list.append(scatter_info)
+        self.scattering = scatter_info_list
 
     def calculate_drop_out_info(self, pos_tol: float = 2e-3) -> None:
         """ Calculate drop-out information.
@@ -173,6 +197,29 @@ class TapeQualityInformation:
 
         self.dropouts = peak_info_list
 
+    def _get_quality_parameter_info(
+            self, piece: int, start_index: int, end_index: int,
+            q_parameter: TestType) -> Optional[QualityParameterInfo]:
+        start_position = self.data.iloc[start_index, 0]
+        end_position = self.data.iloc[end_index, 0]
+
+        p_value = 0.0
+        p_info = None
+        if q_parameter == TestType.AVERAGE:
+            p_value = self.data.iloc[start_index:end_index, 1].mean()
+            p_info = AveragesInfo(id=piece,
+                                  start_position=start_position,
+                                  end_position=end_position,
+                                  value=p_value)
+        elif q_parameter == TestType.SCATTER:
+            p_value = self.data.iloc[start_index:end_index, 1].std()
+            p_info = ScatterInfo(id=piece,
+                                 start_position=start_position,
+                                 end_position=end_position,
+                                 value=p_value)
+
+        return p_info
+
     def _find_half_max_position(self, peak_index: int, half_max: float,
                                 go_up: bool) -> float:
         half_max_position = 0.0
@@ -194,9 +241,6 @@ class TapeQualityInformation:
         return half_max_position
 
     def _find_start_end_index(self, data: DataFrame) -> tuple[int, int]:
-        if self.expected_average is None:
-            raise ValueError("Property expected_average not set")
-
         threshold = self.expected_average * 0.8
 
         # Find start and end of tape -> where Ic is greater threshold
