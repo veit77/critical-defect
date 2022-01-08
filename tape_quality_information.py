@@ -75,9 +75,9 @@ class TapeQualityInformation:
 
         self.averages = self.calculate_statisitcs(TestType.AVERAGE)
         self.scattering = self.calculate_statisitcs(TestType.SCATTER)
-        self.dropouts =  self.calculate_drop_out_info()
+        self.dropouts = self.calculate_drop_out_info()
 
-    def calculate_statisitcs(self, type: TestType) -> list[QualityParameterInfo]:
+    def calculate_statisitcs(self, p_type: TestType) -> list[QualityParameterInfo]:
         """ Calculates piecewise statistics values.
         """
         start_index, end_index = self._find_start_end_index(self.data)
@@ -97,7 +97,7 @@ class TapeQualityInformation:
             next_index = self.data.index[
                 self.data.iloc[:, 0] > next_position].to_list()[0]
             info = self._get_quality_parameter_info(
-                piece, last_index, next_index, type)
+                piece, last_index, next_index, p_type)
             info_list.append(info)
             last_index = next_index
             next_position += length
@@ -105,7 +105,7 @@ class TapeQualityInformation:
 
         # append scattering till end of tape
         info = self._get_quality_parameter_info(
-            piece, last_index, end_index, type)
+            piece, last_index, end_index, p_type)
 
         info_list.append(info)
         return info_list
@@ -144,7 +144,7 @@ class TapeQualityInformation:
             start_position = self._find_half_max_position(index, half_max, False)
             end_position = self._find_half_max_position(index, half_max, True)
 
-            current_peak = PeakInfo(id=i,
+            current_peak = PeakInfo(p_id=i,
                                     start_position=start_position,
                                     end_position=end_position,
                                     center_position=position,
@@ -175,13 +175,13 @@ class TapeQualityInformation:
         p_info = None
         if q_parameter == TestType.AVERAGE:
             p_value = self.data.iloc[start_index:end_index, 1].mean()
-            p_info = AveragesInfo(id=piece,
+            p_info = AveragesInfo(p_id=piece,
                                   start_position=start_position,
                                   end_position=end_position,
                                   value=p_value)
         elif q_parameter == TestType.SCATTER:
             p_value = self.data.iloc[start_index:end_index, 1].std()
-            p_info = ScatterInfo(id=piece,
+            p_info = ScatterInfo(p_id=piece,
                                  start_position=start_position,
                                  end_position=end_position,
                                  value=p_value)

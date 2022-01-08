@@ -266,7 +266,8 @@ def main():
     # from functools import partial
 
     product = TapeProduct.SUPERLINK_PHASE_TEST.value
-    # expected_average = width * thickness * critical current density * factor to fix units
+    # expected_average = width * thickness * critical current density * factor
+    # to fix units
     expected_average = product.width * 1.9 * 3 * 10
     expected_average = (product.min_average if product.min_average is not None
                         else expected_average)

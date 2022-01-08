@@ -11,7 +11,7 @@ class QualityParameterInfo(Protocol):
 
      Attributes:
     ------------
-        id (int): ID of the defect
+        p_id (int): ID of the defect
         start_position (float): Start position of the defect.
         end_position (float): End position of the defect.
         center_position (float): Center position of the defect.
@@ -19,7 +19,7 @@ class QualityParameterInfo(Protocol):
         value (float): Value of the defect.
         description (str): Description of the defect information
     """
-    id: int
+    p_id: int
     start_position: float
     end_position: float
     center_position: float
@@ -42,12 +42,12 @@ class PeakInfo:
                 f"width: {self.width*1000:.1f}mm, value: {self.value:.0f}A")
 
     def __init__(self,
-                 id: int = 1,
+                 p_id: int = 1,
                  start_position: float = 0.0,
                  end_position: float = 0.0,
                  center_position: float = 0.0,
                  value: float = 0.0) -> None:
-        self.id = id
+        self.p_id = p_id
         self.start_position = start_position
         self.end_position = end_position
         self.center_position = center_position
@@ -72,11 +72,11 @@ class AveragesInfo:
                 f"{self.end_position:.2f}m is {self.value:.0f}A")
 
     def __init__(self,
-                 id: int = 0,
+                 p_id: int = 0,
                  start_position: float = 0.0,
                  end_position: float = 0.0,
                  value: float = 0.0) -> None:
-        self.id = id
+        self.p_id = p_id
         self.start_position = start_position
         self.end_position = end_position
         self.value = value
@@ -99,9 +99,9 @@ class ScatterInfo:
         return (f"Scatter between {self.start_position:.2f}m and " +
                 f"{self.end_position:.2f}m is {self.value:.0f}A")
 
-    def __init__(self, id: int, start_position: float, end_position: float,
+    def __init__(self, p_id: int, start_position: float, end_position: float,
                  value: float) -> None:
-        self.id = id
+        self.p_id = p_id
         self.start_position = start_position
         self.end_position = end_position
         self.value = value
