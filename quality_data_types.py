@@ -1,11 +1,12 @@
 """ provides data types for analysing defect structures in HTS tapes
 """
-from typing import Optional, Protocol, Callable
+from typing import Optional, Protocol, Callable, runtime_checkable
 from dataclasses import dataclass
 from enum import Enum
 from math import exp
 
 
+@runtime_checkable
 class QualityParameterInfo(Protocol):
     """ Protocol for defect information
 
@@ -99,8 +100,11 @@ class ScatterInfo:
         return (f"Scatter between {self.start_position:.2f}m and " +
                 f"{self.end_position:.2f}m is {self.value:.0f}A")
 
-    def __init__(self, p_id: int, start_position: float, end_position: float,
-                 value: float) -> None:
+    def __init__(self,
+                 p_id: int = 0,
+                 start_position: float = 0.0,
+                 end_position: float = 0.0,
+                 value: float = 0.0) -> None:
         self.p_id = p_id
         self.start_position = start_position
         self.end_position = end_position
@@ -108,7 +112,7 @@ class ScatterInfo:
 
 
 @dataclass
-class TapeSpecs():
+class TapeSpecs:
     """ Tuple holding information about tape specifications
 
     Attributes:
