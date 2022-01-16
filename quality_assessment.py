@@ -292,7 +292,19 @@ def main():
             "21407-3M2-110", expected_average, product.average_length),
         TapeQualityInformation(
             load_data("data/21407-3R-110_300A_Lam_Mak.dat", False),
-            "21407-R-110", expected_average, product.average_length)
+            "21407-R-110", expected_average, product.average_length),
+        TapeQualityInformation(
+            load_data("data/21413_3L-100_300A_Lam_Makiert.dat", False),
+            "21413-L-100", expected_average, product.average_length),
+        TapeQualityInformation(
+            load_data("data/21413-3M1-100_300A_Lam_Makiert.dat", False),
+            "21413-M1-100", expected_average, product.average_length),
+        TapeQualityInformation(
+            load_data("data/21413-3M2-100_300A_Lam_Markiert.dat", False),
+            "21413-M2-100", expected_average, product.average_length),
+        TapeQualityInformation(
+            load_data("data/21413-3R-100_300A_Lam_Markiert.dat", False),
+            "21413-R-100", expected_average, product.average_length),
     ]
 
     for info in quality_info2:

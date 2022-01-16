@@ -64,7 +64,7 @@ class AveragesInfo:
         return (self.start_position + self.end_position) / 2.0
 
     @property
-    def width(self):
+    def width(self) -> float:
         return self.end_position - self.start_position
 
     @property
@@ -153,7 +153,7 @@ class TapeProduct(Enum):
         min_value=100.0,
         dropout_value=20.0,
         dropout_func=lambda ic: 1.43587 * exp(0.027726 * ic),
-        min_average=145.0,
+        min_average=135.0,
         average_length=20.0,
         description="SuperLink Phase Test")
     SUPERLINK_NEUTRAL = TapeSpecs(width=6.0,
