@@ -21,7 +21,7 @@ class TapeQualityInformation:
         Critical current vs. position data of a HTS tape.
     tape_id: str
         ID of the HTS tape
-    expected_average : Optional[float]
+    expected_average : float
         Approximate average critical current. Used for drop-out detection and
         piecewise average calculation.
     averaging_length : Optional[float]
@@ -133,6 +133,7 @@ class TapeQualityInformation:
             position = self.data.iloc[index, 0]
             value = self.data.iloc[index, 1]
             level = self.expected_average
+            # set level to average value at the peak position
             if self.averages is not None:
                 for average in self.averages:
                     if (position > average.start_position
@@ -141,6 +142,9 @@ class TapeQualityInformation:
                         break
 
             half_max = (value + level) / 2.0
+            if half_max > level:
+                continue
+            
             start_position = self._find_half_max_position(index, half_max, False)
             end_position = self._find_half_max_position(index, half_max, True)
 
