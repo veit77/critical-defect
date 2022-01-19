@@ -2,11 +2,11 @@
 """
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
-from quality_data_types import (QualityReport, TestType, TapeSpecs, TapeSection,
+from .quality_data_types import (QualityReport, TestType, TapeSpecs, TapeSection,
                                 TapeProduct)
-from quality_helper import load_data
-from tape_quality_information import TapeQualityInformation
-from quality_pdf_report import ReportPDFCreator
+from .quality_helper import load_data
+from .tape_quality_information import TapeQualityInformation
+from .quality_pdf_report import ReportPDFCreator
 
 
 class TapeQualityAssessor:

@@ -7,7 +7,7 @@ from math import isclose
 from pandas import DataFrame
 from scipy.signal import find_peaks
 from scipy.interpolate import interp1d
-from quality_data_types import (QualityParameterInfo, PeakInfo, AveragesInfo,
+from .quality_data_types import (QualityParameterInfo, PeakInfo, AveragesInfo,
                                 TapeSection, ScatterInfo, TestType)
 
 

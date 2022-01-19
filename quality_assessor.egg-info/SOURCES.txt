@@ -1,0 +1,45 @@
+.DS_Store
+README.md
+Report 17346-X-11.pdf
+Report 20204-X-10.pdf
+Report 21407-3L-110.pdf
+Report 21407-3M1-110.pdf
+Report 21407-3M2-110.pdf
+Report 21407-R-110.pdf
+Report 21413-L-100.pdf
+Report 21413-M1-100.pdf
+Report 21413-M2-100.pdf
+Report 21413-R-100.pdf
+setup.py
+tuto2.pdf
+.vscode/settings.json
+data/17312-3L-210_300A_Cu.dat
+data/17312-3M1-210_300A_Cu.dat
+data/17312-3M2-210_300A_Cu.dat
+data/17346-X-11-BL_30_29970_500A.dat
+data/20204-X-10_500A.dat
+data/21407-3L-110_300A_Lam_Markiert.dat
+data/21407-3M1-110_300A_Lam_Markiert.dat
+data/21407-3M2-110_300A_Lam_Markiert.dat
+data/21407-3R-110_300A_Lam_Mak.dat
+data/21408-3L-220_300A_Cu.dat
+data/21408-3M1-220_300A_Cu.dat
+data/21408-3M3-220_300A_Lam_Markiert.dat
+data/21408-3R-220_300A_Cu.dat
+data/21413-3M1-100_300A_Lam_Makiert.dat
+data/21413-3M2-100_300A_Lam_Markiert.dat
+data/21413-3R-100_300A_Lam_Markiert.dat
+data/21413_3L-100_300A_Lam_Makiert.dat
+quality_assessor/__init__.py
+quality_assessor/quality_assessment.py
+quality_assessor/quality_data_types.py
+quality_assessor/quality_helper.py
+quality_assessor/quality_pdf_report.py
+quality_assessor/tape_quality_information.py
+quality_assessor.egg-info/PKG-INFO
+quality_assessor.egg-info/SOURCES.txt
+quality_assessor.egg-info/dependency_links.txt
+quality_assessor.egg-info/top_level.txt
+tests/__init__.py
+tests/test_quality_data_types.py
+tests/test_tape_quality_information.py

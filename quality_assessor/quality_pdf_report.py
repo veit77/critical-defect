@@ -1,10 +1,11 @@
 from typing import List, Optional
 from fpdf import FPDF
+from os import path
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import numpy
 from PIL import Image
-from quality_data_types import QualityReport, TapeSection
+from .quality_data_types import QualityReport, TapeSection
 
 
 class DefectReportPDF(FPDF):
@@ -19,7 +20,8 @@ class DefectReportPDF(FPDF):
         """ Draw header
         """
         # Rendering logo:
-        self.image("./assets/THEVA-Logo.png", self.l_margin, self.t_margin, 60)
+        logo_path = path.join(path.dirname(__file__), 'assets/THEVA-Logo.png')
+        self.image(logo_path, self.l_margin, self.t_margin, 60)
         # Setting font: helvetica bold 15
         self.set_font("helvetica", "B", 20)
         # Moving cursor to the right:
