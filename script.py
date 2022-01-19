@@ -3,6 +3,7 @@ from quality_assessor.quality_assessment import TapeQualityAssessor
 from quality_assessor.tape_quality_information import TapeQualityInformation
 from quality_assessor.quality_helper import load_data
 
+
 def excecute_assessment(quality_info: TapeQualityInformation,
                         product: TapeSpecs) -> None:
     """ Do all the steps to assess a tape.
