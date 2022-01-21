@@ -1,7 +1,7 @@
-from quality_assessor.quality_data_types import (TapeSpecs, TapeProduct)
+from quality_assessor.data_types import (TapeSpecs, TapeProduct)
 from quality_assessor.quality_assessment import TapeQualityAssessor
 from quality_assessor.tape_quality_information import TapeQualityInformation
-from quality_assessor.quality_helper import load_data
+from quality_assessor.helper import load_data
 
 
 def excecute_assessment(quality_info: TapeQualityInformation,

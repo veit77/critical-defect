@@ -1,11 +1,13 @@
+""" Class implementation for DefectReportPDF
+"""
 from typing import List, Optional
-from fpdf import FPDF
 from os import path
+from fpdf import FPDF
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import numpy
 from PIL import Image
-from .quality_data_types import QualityReport, TapeSection
+from .data_types import QualityReport, TapeSection
 
 
 class DefectReportPDF(FPDF):

@@ -7,8 +7,8 @@ from math import isclose
 from pandas import DataFrame
 from scipy.signal import find_peaks
 from scipy.interpolate import interp1d
-from .quality_data_types import (QualityParameterInfo, PeakInfo, AveragesInfo,
-                                TapeSection, ScatterInfo, TestType)
+from .data_types import (QualityParameterInfo, PeakInfo, AveragesInfo,
+                         TapeSection, ScatterInfo, TestType)
 
 
 @dataclass
@@ -144,7 +144,7 @@ class TapeQualityInformation:
             half_max = (value + level) / 2.0
             if half_max > level:
                 continue
-            
+
             start_position = self._find_half_max_position(index, half_max, False)
             end_position = self._find_half_max_position(index, half_max, True)
 
