@@ -2,6 +2,7 @@
 """
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
+import os
 from .data_types import (QualityReport, TestType, TapeSpecs, TapeSection,
                          TapeProduct)
 from .helper import load_data
@@ -82,19 +83,27 @@ class TapeQualityAssessor:
 
         self.ok_tape_sections = tape_sections
 
-    def save_pdf_report(self, dirname: str = "") -> None:
+    def save_pdf_report(self, to_dir: str = "") -> None:
         """ Creates PDF report for the tape and saves it.
 
         Args:
-            dirname (str): directory to save the pdf to
+            to_dir (str, optional): Directory to save the pdf to. Defaults to "".
+
+        Raises:
+            ValueError: Raised if dirname is not a directory
         """
+        if not os.path.isdir(to_dir):
+            raise ValueError(f"Directory {to_dir} does not exist")
+
         pdf_report = ReportPDFCreator(self.tape_quality_info.tape_id,
                                       self.tape_specs.description,
                                       self._make_plot(),
                                       self.quality_reports,
                                       self.ok_tape_sections)
         pdf_report.create_report()
-        pdf_report.save_report(f"Report {self.tape_quality_info.tape_id}.pdf")
+        file_name = os.path.join(
+            to_dir, f"Report {self.tape_quality_info.tape_id}.pdf")
+        pdf_report.save_report(file_name)
 
     def plot_defects(self) -> None:
         """ Shows plot in a window.

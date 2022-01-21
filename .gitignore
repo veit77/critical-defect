@@ -3,4 +3,5 @@
 */quality_assessor.egg-info
 quality_assessor.egg-info/PKG-INFO
 quality_assessor.egg-info/requires.txt
-quality_assessor.egg-info/SOURCES.txt
+quality_assessor.egg-info/
+*/reports

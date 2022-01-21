@@ -18,7 +18,11 @@ def excecute_assessment(quality_info: TapeQualityInformation,
     assessor.plot_dropout_histogram()
     assessor.determine_ok_tape_section(product.min_tape_length)
 
-    assessor.save_pdf_report()
+    try:
+        assessor.save_pdf_report("./report")
+    except ValueError:
+        print("Can't save to given directory (does not exist.")
+
     assessor.print_reports()
     assessor.plot_defects()
 
