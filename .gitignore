@@ -1,7 +1,6 @@
 *.pdf
 .DS_Store
-*/quality_assessor.egg-info
-quality_assessor.egg-info/PKG-INFO
-quality_assessor.egg-info/requires.txt
-quality_assessor.egg-info/
-*/reports
+quality_assessor.egg-info/**
+reports/**
+.vscode/**
+data/**
