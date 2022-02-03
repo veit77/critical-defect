@@ -3,7 +3,6 @@
 from typing import Optional, Protocol, Callable, runtime_checkable
 from dataclasses import dataclass
 from enum import Enum
-from math import exp
 
 
 @runtime_checkable
@@ -131,63 +130,10 @@ class TapeSpecs:
     min_value: float
     dropout_value: Optional[float]
     dropout_func: Optional[Callable[[float], float]]
+    width_from_true_baseline: bool
     min_average: Optional[float]
     average_length: Optional[float]
     description: str
-
-
-class TapeProduct(Enum):
-    """ Enum summarizing different tape specifications
-    """
-    SUPERLINK_PHASE = TapeSpecs(width=3.0,
-                                min_tape_length=190.0,
-                                min_value=100.0,
-                                dropout_value=20.0,
-                                dropout_func=lambda ic: 2.5 + 7.5/50*(ic-20),
-                                min_average=135.0,
-                                average_length=20.0,
-                                description="SuperLink Phase")
-    SUPERLINK_PHASE_TEST = TapeSpecs(
-        width=3.0,
-        min_tape_length=190.0,
-        min_value=100.0,
-        dropout_value=20.0,
-        dropout_func=lambda ic: 1.43587 * exp(0.027726 * ic),
-        min_average=135.0,
-        average_length=20.0,
-        description="SuperLink Phase Test")
-    SUPERLINK_NEUTRAL = TapeSpecs(width=6.0,
-                                  min_average=200.0,
-                                  min_value=100.0,
-                                  dropout_value=50.0,
-                                  dropout_func=None,
-                                  average_length=20.0,
-                                  min_tape_length=190.0,
-                                  description="SuperLink Neutral")
-    STANDARD1 = TapeSpecs(width=12.0,
-                          min_tape_length=25.0,
-                          min_value=500.0,
-                          dropout_value=None,
-                          dropout_func=None,
-                          min_average=None,
-                          average_length=None,
-                          description="Standard Tape 1")
-    STANDARD2 = TapeSpecs(width=12.0,
-                          min_tape_length=25.0,
-                          min_value=500.0,
-                          dropout_value=None,
-                          dropout_func=None,
-                          min_average=700.0,
-                          average_length=20.0,
-                          description="Standard Tape 2")
-    STANDARD3 = TapeSpecs(width=12.0,
-                          min_tape_length=25.0,
-                          min_value=500.0,
-                          dropout_value=150.0,
-                          dropout_func=lambda x: 20,
-                          min_average=700.0,
-                          average_length=20.0,
-                          description="Standard Tape 3")
 
 
 class TestType(Enum):

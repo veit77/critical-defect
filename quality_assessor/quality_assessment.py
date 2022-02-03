@@ -1,10 +1,10 @@
 """ Class implementation for TapeQualityAssessor
 """
+import os
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
-import os
-from .data_types import (QualityReport, TestType, TapeSpecs, TapeSection,
-                         TapeProduct)
+from .data_types import (QualityReport, TestType, TapeSpecs, TapeSection)
+from .products import TapeProduct
 from .helper import load_data
 from .tape_quality_information import TapeQualityInformation
 from .quality_pdf_report import ReportPDFCreator
@@ -25,6 +25,11 @@ class TapeQualityAssessor:
         """ Kicks off assessment for various quality parameters and stores
             quality reports.
         """
+        # calculate necessary quality information
+        self.tape_quality_info.calculate_statisitcs(TestType.AVERAGE)
+        self.tape_quality_info.calculate_statisitcs(TestType.SCATTER)
+        self.tape_quality_info.calculate_drop_out_info(self.tape_specs.width_from_true_baseline)
+
         try:
             self.quality_reports.append(self.assess_average_value())
         except ValueError as error:

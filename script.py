@@ -1,4 +1,5 @@
-from quality_assessor.data_types import (TapeSpecs, TapeProduct)
+from quality_assessor.data_types import TapeSpecs
+from quality_assessor.products import TapeProduct
 from quality_assessor.quality_assessment import TapeQualityAssessor
 from quality_assessor.tape_quality_information import TapeQualityInformation
 from quality_assessor.helper import load_data
@@ -15,16 +16,16 @@ def excecute_assessment(quality_info: TapeQualityInformation,
     assessor = TapeQualityAssessor(quality_info, product)
 
     assessor.assess_meets_specs()
-    assessor.plot_dropout_histogram()
     assessor.determine_ok_tape_section(product.min_tape_length)
 
     try:
-        assessor.save_pdf_report("./report")
-    except ValueError:
-        print("Can't save to given directory (does not exist.")
+        assessor.save_pdf_report("./reports")
+    except ValueError as err:
+        print(f"Can't save to given directory ({err}).")
 
     assessor.print_reports()
-    assessor.plot_defects()
+    # assessor.plot_dropout_histogram()
+    # assessor.plot_defects()
 
 
 def main():

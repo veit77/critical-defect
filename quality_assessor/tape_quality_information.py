@@ -73,11 +73,7 @@ class TapeQualityInformation:
         if self.data.iloc[0, 0] > self.data.iloc[-1, 0]:
             self.data = self.data.iloc[::-1].reset_index(drop=True)
 
-        self.averages = self.calculate_statisitcs(TestType.AVERAGE)
-        self.scattering = self.calculate_statisitcs(TestType.SCATTER)
-        self.dropouts = self.calculate_drop_out_info()
-
-    def calculate_statisitcs(self, p_type: TestType) -> list[QualityParameterInfo]:
+    def calculate_statisitcs(self, p_type: TestType) -> None:
         """ Calculates piecewise statistics values.
         """
         start_index, end_index = self._find_start_end_index(self.data)
@@ -108,11 +104,14 @@ class TapeQualityInformation:
             piece, last_index, end_index, p_type)
 
         info_list.append(info)
-        return info_list
+        if p_type == TestType.AVERAGE:
+            self.averages = info_list
+        elif p_type == TestType.SCATTER:
+            self.scattering = info_list
 
     def calculate_drop_out_info(self,
-                                pos_tol: float = 2e-3
-                                ) -> list[QualityParameterInfo]:
+                                use_true_baseline: bool,
+                                pos_tol: float = 2e-3) -> None:
         """ Calculate drop-out information.
 
         Args:
@@ -134,7 +133,7 @@ class TapeQualityInformation:
             value = self.data.iloc[index, 1]
             level = self.expected_average
             # set level to average value at the peak position
-            if self.averages is not None:
+            if use_true_baseline and self.averages is not None:
                 for average in self.averages:
                     if (position > average.start_position
                             and position < average.end_position):
@@ -167,7 +166,7 @@ class TapeQualityInformation:
                 peak_info_list.append(current_peak)
                 last_peak = current_peak
 
-        return peak_info_list
+        self.dropouts = peak_info_list
 
     def _get_quality_parameter_info(
             self, piece: int, start_index: int, end_index: int,
