@@ -1,7 +1,7 @@
 import pytest
 import pandas
 import quality_assessor.quality_assessment as qa
-from quality_assessor.data_types import TapeProduct
+from quality_assessor.products import TapeProduct
 from quality_assessor.tape_quality_information import TapeQualityInformation
 
 

@@ -4,3 +4,4 @@ quality_assessor.egg-info/
 reports/
 .vscode/
 data/
+dist/

@@ -47,6 +47,7 @@ class TapeQualityInformation:
     expected_average: float
     averaging_length: Optional[float]
 
+    # TODO make following attributes read-only
     averages: list[AveragesInfo] = field(default_factory=list)
     scattering: list[ScatterInfo] = field(default_factory=list)
     dropouts: list[PeakInfo] = field(default_factory=list)

@@ -20,14 +20,16 @@ def read(fname: str) -> str:
 
 
 setup(name="quality_assessor",
-      version="1.0b1",
+      version="1.0b2",
       author="Veit Grosse",
       author_email="veit.grosse@gmail.com",
-      description=(""),
+      description=("Package to derive information "
+                   "about the quality of HTS tapes and test it "
+                   "against a product specification"),
       license="BSD",
-      keywords="example documentation tutorial",
-      url="http://packages.python.org/an_example_pypi_project",
-      packages=['quality_assessor', 'tests'],
+      keywords="HTS quality test",
+      url="",
+      packages=['quality_assessor', 'tests', 'example'],
       long_description=read('README.md'),
       classifiers=[
           "Development Status :: 4 - Beta",
