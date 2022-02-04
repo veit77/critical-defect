@@ -109,6 +109,7 @@ class TapeQualityAssessor:
         file_name = os.path.join(
             to_dir, f"Report {self.tape_quality_info.tape_id}.pdf")
         pdf_report.save_report(file_name)
+        pdf_report.data_plot.clear()
 
     def plot_defects(self) -> None:
         """ Shows plot in a window.

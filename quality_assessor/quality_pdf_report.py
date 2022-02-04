@@ -1,7 +1,7 @@
 """ Class implementation for DefectReportPDF
 """
+import os
 from typing import List, Optional
-from os import path
 from fpdf import FPDF
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -22,7 +22,7 @@ class DefectReportPDF(FPDF):
         """ Draw header
         """
         # Rendering logo:
-        logo_path = path.join(path.dirname(__file__), 'assets/THEVA-Logo.png')
+        logo_path = os.sep.join([os.path.dirname(__file__), 'assets', 'THEVA-Logo.png'])
         self.image(logo_path, self.l_margin, self.t_margin, 60)
         # Setting font: helvetica bold 15
         self.set_font("helvetica", "B", 20)

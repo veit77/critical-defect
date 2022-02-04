@@ -20,7 +20,7 @@ def read(fname: str) -> str:
 
 
 setup(name="quality_assessor",
-      version="1.0b2",
+      version="1.0b3",
       author="Veit Grosse",
       author_email="veit.grosse@gmail.com",
       description=("Package to derive information "
@@ -30,6 +30,7 @@ setup(name="quality_assessor",
       keywords="HTS quality test",
       url="",
       packages=['quality_assessor', 'tests', 'example'],
+      package_data={'quality_assessor': ['assets/*.png']},
       long_description=read('README.md'),
       classifiers=[
           "Development Status :: 4 - Beta",
