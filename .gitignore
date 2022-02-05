@@ -1,6 +1,6 @@
 *.pdf
 .DS_Store
-quality_assessor.egg-info/
+quality_assessment.egg-info/
 reports/
 .vscode/
 data/

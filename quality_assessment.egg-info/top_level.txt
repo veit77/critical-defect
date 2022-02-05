@@ -1,3 +1,0 @@
-example
-quality_assessment
-tests

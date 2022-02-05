@@ -1,5 +1,0 @@
-matplotlib
-numpy
-pandas
-fpdf2
-scipy
