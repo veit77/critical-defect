@@ -1,7 +1,7 @@
 import pytest
-from quality_assessor.data_types import (QualityReport, TestType, PeakInfo,
-                                         AveragesInfo, ScatterInfo,
-                                         QualityParameterInfo)
+from quality_assessment.data_types import (QualityReport, TestType, PeakInfo,
+                                           AveragesInfo, ScatterInfo,
+                                           QualityParameterInfo)
 
 
 def test_qualityreport_init():

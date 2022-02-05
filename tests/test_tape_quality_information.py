@@ -1,7 +1,7 @@
 import pytest
 import pandas as pd
-import quality_assessor.tape_quality_information as di
-from quality_assessor.products import TapeProduct
+import quality_assessment.tape_quality_information as di
+from quality_assessment.products import TapeProduct
 
 
 def test_data_setter_raises_type_error():

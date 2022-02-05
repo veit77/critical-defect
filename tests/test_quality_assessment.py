@@ -1,8 +1,8 @@
 import pytest
 import pandas
-import quality_assessor.quality_assessment as qa
-from quality_assessor.products import TapeProduct
-from quality_assessor.tape_quality_information import TapeQualityInformation
+import quality_assessment.quality_assessor as qa
+from quality_assessment.products import TapeProduct
+from quality_assessment.tape_quality_information import TapeQualityInformation
 
 
 def test_save_pdf_raises_value_error():
