@@ -119,7 +119,7 @@ class ReportPDFCreator():
 
         self._draw_table_cells(pdf, [(15, "**Nr.**", "L"),
                                      (35, "**Start Position**", "L"),
-                                     (35, "**Start Position**", "L"),
+                                     (35, "**End Position**", "L"),
                                      (35, "**Length**", "L")], line_height)
 
         # Draw table rows

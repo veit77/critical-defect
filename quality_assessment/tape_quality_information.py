@@ -45,7 +45,6 @@ class TapeQualityInformation:
     tape_id: str
 
     expected_average: float
-    averaging_length: Optional[float]
 
     # TODO make following attributes read-only
     averages: list[AveragesInfo] = field(default_factory=list)
@@ -74,14 +73,14 @@ class TapeQualityInformation:
         if self.data.iloc[0, 0] > self.data.iloc[-1, 0]:
             self.data = self.data.iloc[::-1].reset_index(drop=True)
 
-    def calculate_statisitcs(self, p_type: TestType) -> None:
+    def calculate_statisitcs(self, p_type: TestType, piece_length: Optional[float]) -> None:
         """ Calculates piecewise statistics values.
         """
         start_index, end_index = self._find_start_end_index(self.data)
-        length = self.averaging_length
+        length = piece_length
 
-        # if averaging_length is not set, average over the whole length
-        if self.averaging_length is None or self.averaging_length == 0.0:
+        # if piece_length is not set, average over the whole length
+        if piece_length is None or piece_length == 0.0:
             length = self.data.iloc[end_index, 0] - self.data.iloc[start_index, 0]
 
         next_position = (self.data.iloc[start_index, 0] + length)

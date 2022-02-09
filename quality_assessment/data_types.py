@@ -132,7 +132,7 @@ class TapeSpecs:
     dropout_func: Optional[Callable[[float], float]]
     width_from_true_baseline: bool
     min_average: Optional[float]
-    average_length: Optional[float]
+    averaging_length: Optional[float]
     description: str
 
 

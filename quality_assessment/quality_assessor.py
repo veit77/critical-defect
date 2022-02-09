@@ -26,8 +26,8 @@ class TapeQualityAssessor:
             quality reports.
         """
         # calculate necessary quality information
-        self.tape_quality_info.calculate_statisitcs(TestType.AVERAGE)
-        self.tape_quality_info.calculate_statisitcs(TestType.SCATTER)
+        self.tape_quality_info.calculate_statisitcs(TestType.AVERAGE, self.tape_specs.averaging_length)
+        self.tape_quality_info.calculate_statisitcs(TestType.SCATTER, self.tape_specs.averaging_length)
         self.tape_quality_info.calculate_drop_out_info(self.tape_specs.width_from_true_baseline)
 
         try:
@@ -290,7 +290,7 @@ def main():
     quality_info2 = [
         TapeQualityInformation(
             load_data("data/21407-3L-110_300A_Lam_Markiert.dat", False),
-            "21407-3L-110", expected_average, product.average_length),
+            "21407-3L-110", expected_average),
     ]
 
     for info in quality_info2:
