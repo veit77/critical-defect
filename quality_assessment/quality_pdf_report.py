@@ -22,7 +22,8 @@ class DefectReportPDF(FPDF):
         """ Draw header
         """
         # Rendering logo:
-        logo_path = os.sep.join([os.path.dirname(__file__), 'assets', 'THEVA-Logo.png'])
+        logo_path = os.sep.join(
+            [os.path.dirname(__file__), 'assets', 'THEVA-Logo.png'])
         self.image(logo_path, self.l_margin, self.t_margin, 60)
         # Setting font: helvetica bold 15
         self.set_font("helvetica", "B", 20)
@@ -76,7 +77,6 @@ class ReportPDFCreator():
                                     orientation="L")
         self._pdf.alias_nb_pages()
         self._pdf.add_page()
-        self._pdf.set_font("helvetica", size=11)
 
         # plot data graph with failure markers
         self._draw_data_plot(self._pdf, self._pdf.l_margin,
@@ -115,17 +115,18 @@ class ReportPDFCreator():
 
     def _draw_ok_tape_section_list(self, pdf: DefectReportPDF, x: float,
                                    y: float) -> None:
-        line_height = self._draw_head_line(pdf, x, y, "**OK Tape Sections:**")
+        self._pdf.set_font("helvetica", "B", size=11)
+        line_height = self._draw_head_line(pdf, x, y, "OK Tape Sections:")
 
-        self._draw_table_cells(pdf, [(15, "**Nr.**", "L"),
-                                     (35, "**Start Position**", "L"),
-                                     (35, "**End Position**", "L"),
-                                     (35, "**Length**", "L")], line_height)
+        self._draw_table_cells(pdf, [(15, "Nr.", "L"),
+                                     (35, "Start Position", "L"),
+                                     (35, "End Position", "L"),
+                                     (35, "Length", "L")], line_height)
 
         # Draw table rows
         for i, row in enumerate(self.ok_tape_sections):
-            # TODO unclear why text is bold here
             pdf.set_x(x)
+            self._pdf.set_font("helvetica", size=11)
             self._draw_table_cells(pdf,
                                    [(15, f"{i+1}", "L"),
                                     (35, f"{row.start_position:0.2f}m", "R"),
@@ -135,15 +136,17 @@ class ReportPDFCreator():
 
     def _draw_test_pass_info(self, pdf: DefectReportPDF, x: float,
                              y: float) -> None:
+        self._pdf.set_font("helvetica", "B", size=11)
         line_height = self._draw_head_line(pdf, x, y,
-                                           "**Test Pass Information:**")
+                                           "Test Pass Information:")
 
-        self._draw_table_cells(pdf, [(35, "**Test**", "L"),
-                                     (35, "**Pass/Fail**", "L"),
-                                     (35, "**Number of Fails", "L")],
+        self._draw_table_cells(pdf, [(35, "Test", "L"),
+                                     (35, "Pass/Fail", "L"),
+                                     (35, "Number of Fails", "L")],
                                line_height)
+
+        self._pdf.set_font("helvetica", size=11)
         for report in self.quality_reports:
-            # TODO unclear why text is bold here
             passed = "Pass" if report.passed else "Fail"
             nb_failed = ""
             if report.fail_information is not None:
@@ -172,7 +175,7 @@ class ReportPDFCreator():
             pdf.multi_cell(width, line_height, entry,
                            border=1, ln=3, align=align,
                            max_line_height=pdf.font_size,
-                           markdown=True)
+                           markdown=False)
         pdf.ln(line_height)
 
 

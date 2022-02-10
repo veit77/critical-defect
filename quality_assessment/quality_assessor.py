@@ -26,9 +26,12 @@ class TapeQualityAssessor:
             quality reports.
         """
         # calculate necessary quality information
-        self.tape_quality_info.calculate_statisitcs(TestType.AVERAGE, self.tape_specs.averaging_length)
-        self.tape_quality_info.calculate_statisitcs(TestType.SCATTER, self.tape_specs.averaging_length)
-        self.tape_quality_info.calculate_drop_out_info(self.tape_specs.width_from_true_baseline)
+        self.tape_quality_info.calculate_statisitcs(
+            TestType.AVERAGE, self.tape_specs.averaging_length)
+        self.tape_quality_info.calculate_statisitcs(
+            TestType.SCATTER, self.tape_specs.averaging_length)
+        self.tape_quality_info.calculate_drop_out_info(
+            self.tape_specs.width_from_true_baseline)
 
         try:
             self.quality_reports.append(self.assess_average_value())
@@ -220,7 +223,7 @@ class TapeQualityAssessor:
         axis.set_xlabel("Position (m)")
         axis.set_ylabel("Critical Current (A)")
         axis.grid()
-        axis.plot(data.iloc[:, 0], data.iloc[:, 1], label='Data')
+        axis.plot(data.iloc[:, 0], data.iloc[:, 1], label='Data', linewidth=0.5)
 
         # plot fail reports
         for report in self.quality_reports:
@@ -237,7 +240,7 @@ class TapeQualityAssessor:
                     axis.plot(x, y,
                               color=color,
                               marker='|',
-                              linewidth=2.0,
+                              linewidth=1.0,
                               label='Averages Failed')
                 elif report.test_type in [TestType.MINIMUM, TestType.DROPOUT]:
                     color = 'deeppink'
@@ -250,10 +253,8 @@ class TapeQualityAssessor:
                     axis.plot(x, y,
                               color=color,
                               marker='|',
-                              linewidth=2.0,
-                              label='Averages Failed')
-
-        # axis.legend()
+                              linewidth=1.0,
+                              label='Minimum Failed')
 
         return fig
 

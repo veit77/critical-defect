@@ -50,7 +50,7 @@ def main():
     quality_info = []
     for file_name in file_list:
         name, extension = os.path.splitext(file_name)
-        path = directory + "/" + file_name
+        path = f'{directory}/{file_name}'
         if os.path.isfile(path) and extension == ".dat":
             q_info = TapeQualityInformation(load_data(path, None), name,
                                             expected_average)
