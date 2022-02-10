@@ -24,9 +24,6 @@ class TapeQualityInformation:
     expected_average : float
         Approximate average critical current. Used for drop-out detection and
         piecewise average calculation.
-    averaging_length : Optional[float]
-        Tape length over which to average. Used for piecewise average
-        calculation.
     averages : list[AveragesInfo] = []
         Piecewise averages.
     scattering: list[ScatterInfo] = []
@@ -54,8 +51,8 @@ class TapeQualityInformation:
     @property
     def tape_section(self) -> TapeSection:
         start, end = self._find_start_end_index(self.data)
-        start_pos = self.data.iloc[start, 0]
-        end_pos = self.data.iloc[end, 0]
+        start_pos = self.data.iloc[:, 0].values[start]
+        end_pos = self.data.iloc[:, 0].values[end]
         return TapeSection(start_pos, end_pos)
 
     @property
@@ -70,11 +67,17 @@ class TapeQualityInformation:
 
         # reverse order of dataframe if end position is smaller than start
         # position.
-        if self.data.iloc[0, 0] > self.data.iloc[-1, 0]:
+        if self.data.iloc[:, 0].values[0] > self.data.iloc[:, 0].values[-1]:
             self.data = self.data.iloc[::-1].reset_index(drop=True)
 
-    def calculate_statisitcs(self, p_type: TestType, piece_length: Optional[float]) -> None:
+    def calculate_statisitcs(self, p_type: TestType,
+                             piece_length: Optional[float]) -> None:
         """ Calculates piecewise statistics values.
+
+        Args:
+            p_type (TestType): Parameter type that should be calculated.
+            piece_length (float, optional): piece length over which to
+                calculate the parameter. If None, use the whole length.
         """
         start_index, end_index = self._find_start_end_index(self.data)
         length = piece_length
@@ -115,6 +118,7 @@ class TapeQualityInformation:
         """ Calculate drop-out information.
 
         Args:
+            use_true_baseline (bool): Use calculated or expected average as baseline.
             pos_tol (float): Tolerance for position to be identified as the same.
         """
         start_index, end_index = self._find_start_end_index(self.data)

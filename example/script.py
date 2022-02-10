@@ -1,3 +1,6 @@
+"""Example script to assess quality parameters of HTS tapes
+"""
+import os
 from quality_assessment.data_types import TapeSpecs
 from quality_assessment.products import TapeProduct
 from quality_assessment.quality_assessor import TapeQualityAssessor
@@ -25,7 +28,7 @@ def excecute_assessment(quality_info: TapeQualityInformation,
 
     assessor.print_reports()
     # assessor.plot_dropout_histogram()
-    assessor.plot_defects()
+    # assessor.plot_defects()
 
 
 def main():
@@ -40,47 +43,50 @@ def main():
     expected_average = product.width * 1.9 * 3 * 10
     expected_average = (product.min_average if product.min_average is not None
                         else expected_average)
-    # quality_info = [
+
+    directory = "./data"
+    file_list = os.listdir(directory)
+
+    quality_info = []
+    for file_name in file_list:
+        name, extension = os.path.splitext(file_name)
+        path = directory + "/" + file_name
+        if os.path.isfile(path) and extension == ".dat":
+            q_info = TapeQualityInformation(load_data(path, None), name,
+                                            expected_average)
+            quality_info.append(q_info)
+
+    # quality_info2 = [
     #     TapeQualityInformation(
-    #         load_data("data/20204-X-10_500A.dat", False), "20204-X-10",
-    #         expected_average, product.average_length),
+    #         load_data("data/21407-3L-110_300A_Lam_Markiert.dat", False),
+    #         "21407-3L-110", expected_average),
     #     TapeQualityInformation(
-    #         load_data("data/17346-X-11-BL_30_29970_500A.dat", True),
-    #         "17346-X-11", expected_average, product.average_length)
+    #         load_data("data/21407-3M1-110_300A_Lam_Markiert.dat", False),
+    #         "21407-3M1-110", expected_average),
+    #     TapeQualityInformation(
+    #         load_data("data/21407-3M2-110_300A_Lam_Markiert.dat", False),
+    #         "21407-3M2-110", expected_average),
+    #     TapeQualityInformation(
+    #         load_data("data/21407-3R-110_300A_Lam_Mak.dat", False),
+    #         "21407-R-110", expected_average),
+    #     TapeQualityInformation(
+    #         load_data("data/21413_3L-100_300A_Lam_Makiert.dat", False),
+    #         "21413-L-100", expected_average),
+    #     TapeQualityInformation(
+    #         load_data("data/21413-3M1-100_300A_Lam_Makiert.dat", False),
+    #         "21413-M1-100", expected_average),
+    #     TapeQualityInformation(
+    #         load_data("data/21413-3M2-100_300A_Lam_Markiert.dat", False),
+    #         "21413-M2-100", expected_average),
+    #     TapeQualityInformation(
+    #         load_data("data/21413-3R-100_300A_Lam_Markiert.dat", False),
+    #         "21413-R-100", expected_average),
+    #     TapeQualityInformation(
+    #         load_data("data/22005-3L-010_21705-3L-110_300A_Cu.dat", False),
+    #         "22005-3L-010_21705-3L-110", expected_average),
     # ]
 
-    # TODO product.average_length not needed
-    quality_info2 = [
-        TapeQualityInformation(
-            load_data("data/21407-3L-110_300A_Lam_Markiert.dat", False),
-            "21407-3L-110", expected_average),
-        TapeQualityInformation(
-            load_data("data/21407-3M1-110_300A_Lam_Markiert.dat", False),
-            "21407-3M1-110", expected_average),
-        TapeQualityInformation(
-            load_data("data/21407-3M2-110_300A_Lam_Markiert.dat", False),
-            "21407-3M2-110", expected_average),
-        TapeQualityInformation(
-            load_data("data/21407-3R-110_300A_Lam_Mak.dat", False),
-            "21407-R-110", expected_average),
-        TapeQualityInformation(
-            load_data("data/21413_3L-100_300A_Lam_Makiert.dat", False),
-            "21413-L-100", expected_average),
-        TapeQualityInformation(
-            load_data("data/21413-3M1-100_300A_Lam_Makiert.dat", False),
-            "21413-M1-100", expected_average),
-        TapeQualityInformation(
-            load_data("data/21413-3M2-100_300A_Lam_Markiert.dat", False),
-            "21413-M2-100", expected_average),
-        TapeQualityInformation(
-            load_data("data/21413-3R-100_300A_Lam_Markiert.dat", False),
-            "21413-R-100", expected_average),
-        TapeQualityInformation(
-            load_data("data/22005-3L-010_21705-3L-110_300A_Cu.dat", False),
-            "22005-3L-010_21705-3L-110", expected_average),
-    ]
-
-    for info in quality_info2:
+    for info in quality_info:
         excecute_assessment(info, product)
 
     # TODO Pool does not work with lambda expressions as callable
