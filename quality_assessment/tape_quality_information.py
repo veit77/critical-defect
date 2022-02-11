@@ -84,9 +84,10 @@ class TapeQualityInformation:
 
         # if piece_length is not set, average over the whole length
         if piece_length is None or piece_length == 0.0:
-            length = self.data.iloc[end_index, 0] - self.data.iloc[start_index, 0]
+            length = (self.data.iloc[:, 0].values[end_index] -
+                      self.data.iloc[:, 0].values[start_index])
 
-        next_position = (self.data.iloc[start_index, 0] + length)
+        next_position = (self.data.iloc[:, 0].values[start_index] + length)
         last_index = start_index
         piece = 0
         info_list = []
