@@ -20,7 +20,7 @@ def read(fname: str) -> str:
 
 
 setup(name="quality_assessment",
-      version="1.0b4",
+      version="1.0b5",
       author="Veit Grosse",
       author_email="veit.grosse@gmail.com",
       description=("Package to derive information "
