@@ -4,14 +4,24 @@ import os
 from enum import Enum
 from math import exp
 from quality_assessment.data_types import TapeSpecs
-from quality_assessment.products import TapeProduct
 from quality_assessment.quality_assessor import TapeQualityAssessor
 from quality_assessment.tape_quality_information import TapeQualityInformation
 from quality_assessment.helper import load_data
 
 
-def defect_width(from_ic: float) -> float:
-    return 1.43587 * exp(0.027726 * from_ic)
+def defect_width(from_ic: float, param_a=1.43587, param_b=0.027726) -> float:
+    """Calculates the maximum allowed width of a defect given a I_c.
+
+    Args:
+        from_ic (float): Minimum I_c of the defect
+        param_a (float, optional): Parameter a of the dependency. Defaults to 1.43587.
+        param_b (float, optional): Parameter b of the dependency. Defaults to 0.027726.
+
+    Returns:
+        float: maximum width the defect can have with the given I_c
+    """
+    return param_a * exp(param_b * from_ic)
+
 
 class CustomTapeProduct(Enum):
     """ Enum summarizing different custom tape specifications

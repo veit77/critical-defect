@@ -214,7 +214,7 @@ class TapeQualityInformation:
                 half_max_position = f_of_y(half_max)[()]
                 break
 
-        return half_max_position
+        return half_max_position  # type: ignore
 
     def _find_start_end_index(self, data: DataFrame) -> tuple[int, int]:
         threshold = self.expected_average * 0.8

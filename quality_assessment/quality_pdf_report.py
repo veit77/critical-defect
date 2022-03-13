@@ -16,7 +16,7 @@ class DefectReportPDF(FPDF):
     def __init__(self, tape_id: str, product: str, orientation: str):
         self.tape_id = tape_id
         self.product = product
-        super().__init__(orientation=orientation)
+        super().__init__(orientation=orientation)  # type: ignore
 
     def header(self):
         """ Draw header

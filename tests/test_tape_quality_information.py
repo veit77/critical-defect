@@ -10,12 +10,10 @@ def test_data_setter_raises_type_error():
         _ = di.TapeQualityInformation(10.0, 'id', tape_spec.min_average)
 
 
-@pytest.mark.parametrize("exception_text,average_value,length_value", [
-    pytest.param(r"Property expected_average not set", None,
-                 TapeProduct.STANDARD3.value.averaging_length)
-])
+@pytest.mark.parametrize(
+    "exception_text,average_value",
+    [pytest.param(r"Property expected_average not set", None)])
 def test_data_setter_raises_value_error(exception_text: str,
-                                        average_value: float,
-                                        length_value: float):
+                                        average_value: float):
     with pytest.raises(ValueError, match=exception_text):
         _ = di.TapeQualityInformation(pd.DataFrame(), 'id', average_value)

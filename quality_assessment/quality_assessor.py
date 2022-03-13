@@ -154,7 +154,7 @@ class TapeQualityAssessor:
         fails = list(filter(lambda x: x.value < threshold, parameter_infos))
 
         return QualityReport(self.tape_quality_info.tape_id, TestType.AVERAGE,
-                             fails)
+                             fails)  # type: ignore
 
     def assess_min_value(self) -> QualityReport:
         """ Assesses if minimum values meet the specs.
@@ -168,7 +168,7 @@ class TapeQualityAssessor:
         fails = list(filter(lambda x: x.value < threshold, parameter_infos))
 
         return QualityReport(self.tape_quality_info.tape_id, TestType.MINIMUM,
-                             fails)
+                             fails)  # type: ignore
 
     def assess_dropouts(self) -> QualityReport:
         """ Assesses if drop-outs meet the specs.
@@ -197,7 +197,7 @@ class TapeQualityAssessor:
                     x.value), fails))
 
         return QualityReport(self.tape_quality_info.tape_id, TestType.DROPOUT,
-                             fails)
+                             fails)  # type: ignore
 
     def plot_dropout_histogram(self) -> None:
         """ Plots Histogram of drop-out widths (Just to show what

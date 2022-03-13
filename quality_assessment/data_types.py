@@ -9,8 +9,8 @@ from enum import Enum
 class QualityParameterInfo(Protocol):
     """ Protocol for defect information
 
-     Attributes:
-    ------------
+    Attributes:
+    -----------
         p_id (int): ID of the defect
         start_position (float): Start position of the defect.
         end_position (float): End position of the defect.
