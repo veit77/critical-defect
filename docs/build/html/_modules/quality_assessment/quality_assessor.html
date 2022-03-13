@@ -1,0 +1,384 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quality_assessment.quality_assessor &#8212; Quality Assessment 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
+    
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Quality Assessment 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quality_assessment.quality_assessor</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for quality_assessment.quality_assessor</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Class implementation for TapeQualityAssessor</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="kn">import</span> <span class="n">Figure</span>
+<span class="kn">from</span> <span class="nn">.data_types</span> <span class="kn">import</span> <span class="p">(</span><span class="n">QualityReport</span><span class="p">,</span> <span class="n">TestType</span><span class="p">,</span> <span class="n">TapeSpecs</span><span class="p">,</span> <span class="n">TapeSection</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.products</span> <span class="kn">import</span> <span class="n">TapeProduct</span>
+<span class="kn">from</span> <span class="nn">.helper</span> <span class="kn">import</span> <span class="n">load_data</span>
+<span class="kn">from</span> <span class="nn">.tape_quality_information</span> <span class="kn">import</span> <span class="n">TapeQualityInformation</span>
+<span class="kn">from</span> <span class="nn">.quality_pdf_report</span> <span class="kn">import</span> <span class="n">ReportPDFCreator</span>
+
+
+<div class="viewcode-block" id="TapeQualityAssessor"><a class="viewcode-back" href="../../generated/quality_assessment.quality_assessor.TapeQualityAssessor.html#quality_assessment.quality_assessor.TapeQualityAssessor">[docs]</a><span class="k">class</span> <span class="nc">TapeQualityAssessor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Class for assessing whether specs for various quality parameters are met.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TapeQualityAssessor.__init__"><a class="viewcode-back" href="../../generated/quality_assessment.quality_assessor.TapeQualityAssessor.__init__.html#quality_assessment.quality_assessor.TapeQualityAssessor.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">tape_quality_info</span><span class="p">:</span> <span class="n">TapeQualityInformation</span><span class="p">,</span>
+                 <span class="n">tape_specs</span><span class="p">:</span> <span class="n">TapeSpecs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tape_quality_info</span> <span class="o">=</span> <span class="n">tape_quality_info</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tape_specs</span> <span class="o">=</span> <span class="n">tape_specs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quality_reports</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">QualityReport</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ok_tape_sections</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">TapeSection</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="TapeQualityAssessor.assess_meets_specs"><a class="viewcode-back" href="../../generated/quality_assessment.quality_assessor.TapeQualityAssessor.assess_meets_specs.html#quality_assessment.quality_assessor.TapeQualityAssessor.assess_meets_specs">[docs]</a>    <span class="k">def</span> <span class="nf">assess_meets_specs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Kicks off assessment for various quality parameters and stores</span>
+<span class="sd">            quality reports.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># calculate necessary quality information</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tape_quality_info</span><span class="o">.</span><span class="n">calculate_statisitcs</span><span class="p">(</span>
+            <span class="n">TestType</span><span class="o">.</span><span class="n">AVERAGE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tape_specs</span><span class="o">.</span><span class="n">averaging_length</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tape_quality_info</span><span class="o">.</span><span class="n">calculate_statisitcs</span><span class="p">(</span>
+            <span class="n">TestType</span><span class="o">.</span><span class="n">SCATTER</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tape_specs</span><span class="o">.</span><span class="n">averaging_length</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tape_quality_info</span><span class="o">.</span><span class="n">calculate_drop_out_info</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tape_specs</span><span class="o">.</span><span class="n">width_from_true_baseline</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">quality_reports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assess_average_value</span><span class="p">())</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Averages not evaluated: </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tape_specs</span><span class="o">.</span><span class="n">dropout_value</span> <span class="ow">is</span> <span class="kc">None</span>
+                <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">tape_specs</span><span class="o">.</span><span class="n">dropout_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">quality_reports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assess_min_value</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">quality_reports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assess_dropouts</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="TapeQualityAssessor.determine_ok_tape_section"><a class="viewcode-back" href="../../generated/quality_assessment.quality_assessor.TapeQualityAssessor.determine_ok_tape_section.html#quality_assessment.quality_assessor.TapeQualityAssessor.determine_ok_tape_section">[docs]</a>    <span class="k">def</span> <span class="nf">determine_ok_tape_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_length</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Determines all tape section that do not contain defects and are long enough</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            min_length (float): Minimum length a defect-free tape section must be</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tape_sections</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">tape_quality_info</span><span class="o">.</span><span class="n">tape_section</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">q_report</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">quality_reports</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">q_report</span><span class="o">.</span><span class="n">fail_information</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">for</span> <span class="n">fail_info</span> <span class="ow">in</span> <span class="n">q_report</span><span class="o">.</span><span class="n">fail_information</span><span class="p">:</span>
+                <span class="c1"># find all sections that overlap with the current defect</span>
+                <span class="n">sections_to_devide</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">section</span> <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">tape_sections</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">fail_info</span><span class="o">.</span><span class="n">start_position</span> <span class="o">&gt;</span> <span class="n">section</span><span class="o">.</span><span class="n">start_position</span>
+                        <span class="ow">and</span> <span class="n">fail_info</span><span class="o">.</span><span class="n">start_position</span> <span class="o">&lt;</span> <span class="n">section</span><span class="o">.</span><span class="n">end_position</span><span class="p">)</span> <span class="ow">or</span>
+                    <span class="p">(</span><span class="n">fail_info</span><span class="o">.</span><span class="n">end_position</span> <span class="o">&gt;</span> <span class="n">section</span><span class="o">.</span><span class="n">start_position</span>
+                     <span class="ow">and</span> <span class="n">fail_info</span><span class="o">.</span><span class="n">end_position</span> <span class="o">&lt;</span> <span class="n">section</span><span class="o">.</span><span class="n">end_position</span><span class="p">)</span>
+                <span class="p">]</span>
+                <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">sections_to_devide</span><span class="p">:</span>
+                    <span class="c1"># remove section, then cut defective part from section and</span>
+                    <span class="c1"># append it again</span>
+                    <span class="n">tape_sections</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">fail_info</span><span class="o">.</span><span class="n">end_position</span> <span class="o">&gt;</span> <span class="n">section</span><span class="o">.</span><span class="n">end_position</span><span class="p">:</span>
+                        <span class="n">tape_sections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="n">TapeSection</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">start_position</span><span class="p">,</span>
+                                        <span class="n">fail_info</span><span class="o">.</span><span class="n">start_position</span><span class="p">))</span>
+                    <span class="k">elif</span> <span class="n">fail_info</span><span class="o">.</span><span class="n">start_position</span> <span class="o">&lt;</span> <span class="n">section</span><span class="o">.</span><span class="n">start_position</span><span class="p">:</span>
+                        <span class="n">tape_sections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="n">TapeSection</span><span class="p">(</span><span class="n">fail_info</span><span class="o">.</span><span class="n">end_position</span><span class="p">,</span>
+                                        <span class="n">section</span><span class="o">.</span><span class="n">end_position</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">tape_sections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="n">TapeSection</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">start_position</span><span class="p">,</span>
+                                        <span class="n">fail_info</span><span class="o">.</span><span class="n">start_position</span><span class="p">))</span>
+                        <span class="n">tape_sections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="n">TapeSection</span><span class="p">(</span><span class="n">fail_info</span><span class="o">.</span><span class="n">end_position</span><span class="p">,</span>
+                                        <span class="n">section</span><span class="o">.</span><span class="n">end_position</span><span class="p">))</span>
+
+        <span class="n">tape_sections</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">tape_sec</span> <span class="k">for</span> <span class="n">tape_sec</span> <span class="ow">in</span> <span class="n">tape_sections</span>
+            <span class="k">if</span> <span class="n">tape_sec</span><span class="o">.</span><span class="n">length</span> <span class="o">&gt;=</span> <span class="n">min_length</span>
+        <span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ok_tape_sections</span> <span class="o">=</span> <span class="n">tape_sections</span></div>
+
+<div class="viewcode-block" id="TapeQualityAssessor.save_pdf_report"><a class="viewcode-back" href="../../generated/quality_assessment.quality_assessor.TapeQualityAssessor.save_pdf_report.html#quality_assessment.quality_assessor.TapeQualityAssessor.save_pdf_report">[docs]</a>    <span class="k">def</span> <span class="nf">save_pdf_report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Creates PDF report for the tape and saves it.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            to_dir (str, optional): Directory to save the pdf to. Defaults to &quot;&quot;.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: Raised if dirname is not a directory</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">to_dir</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Directory </span><span class="si">{</span><span class="n">to_dir</span><span class="si">}</span><span class="s2"> does not exist&quot;</span><span class="p">)</span>
+
+        <span class="n">pdf_report</span> <span class="o">=</span> <span class="n">ReportPDFCreator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tape_quality_info</span><span class="o">.</span><span class="n">tape_id</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">tape_specs</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">_make_plot</span><span class="p">(),</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">quality_reports</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">ok_tape_sections</span><span class="p">)</span>
+        <span class="n">pdf_report</span><span class="o">.</span><span class="n">create_report</span><span class="p">()</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">to_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Report </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tape_quality_info</span><span class="o">.</span><span class="n">tape_id</span><span class="si">}</span><span class="s2">.pdf&quot;</span><span class="p">)</span>
+        <span class="n">pdf_report</span><span class="o">.</span><span class="n">save_report</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+        <span class="n">pdf_report</span><span class="o">.</span><span class="n">data_plot</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TapeQualityAssessor.plot_defects"><a class="viewcode-back" href="../../generated/quality_assessment.quality_assessor.TapeQualityAssessor.plot_defects.html#quality_assessment.quality_assessor.TapeQualityAssessor.plot_defects">[docs]</a>    <span class="k">def</span> <span class="nf">plot_defects</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Shows plot in a window.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_plot</span><span class="p">()</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TapeQualityAssessor.print_reports"><a class="viewcode-back" href="../../generated/quality_assessment.quality_assessor.TapeQualityAssessor.print_reports.html#quality_assessment.quality_assessor.TapeQualityAssessor.print_reports">[docs]</a>    <span class="k">def</span> <span class="nf">print_reports</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; print all available quality reports to the shell.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">report</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">quality_reports</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tape </span><span class="si">{</span><span class="n">report</span><span class="o">.</span><span class="n">tape_id</span><span class="si">}</span><span class="s2"> passed: </span><span class="si">{</span><span class="n">report</span><span class="o">.</span><span class="n">passed</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">report</span><span class="o">.</span><span class="n">passed</span> <span class="ow">and</span> <span class="n">report</span><span class="o">.</span><span class="n">fail_information</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">report</span><span class="o">.</span><span class="n">test_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed due to: </span><span class="si">{</span><span class="n">report</span><span class="o">.</span><span class="n">test_type</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed for unknown reason&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">fail_info</span> <span class="ow">in</span> <span class="n">report</span><span class="o">.</span><span class="n">fail_information</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">fail_info</span><span class="o">.</span><span class="n">description</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TapeQualityAssessor.assess_average_value"><a class="viewcode-back" href="../../generated/quality_assessment.quality_assessor.TapeQualityAssessor.assess_average_value.html#quality_assessment.quality_assessor.TapeQualityAssessor.assess_average_value">[docs]</a>    <span class="k">def</span> <span class="nf">assess_average_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QualityReport</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Assesses if average value meet the specs.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: In case no averages are available in Quality Info</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            QualityReport: Quality report on average values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tape_quality_info</span><span class="o">.</span><span class="n">averages</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No Averages available.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tape_specs</span><span class="o">.</span><span class="n">min_average</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Averages are not specified.&quot;</span><span class="p">)</span>
+
+        <span class="n">threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tape_specs</span><span class="o">.</span><span class="n">min_average</span>
+        <span class="n">parameter_infos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tape_quality_info</span><span class="o">.</span><span class="n">averages</span>
+
+        <span class="n">fails</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">parameter_infos</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">QualityReport</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tape_quality_info</span><span class="o">.</span><span class="n">tape_id</span><span class="p">,</span> <span class="n">TestType</span><span class="o">.</span><span class="n">AVERAGE</span><span class="p">,</span>
+                             <span class="n">fails</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
+
+<div class="viewcode-block" id="TapeQualityAssessor.assess_min_value"><a class="viewcode-back" href="../../generated/quality_assessment.quality_assessor.TapeQualityAssessor.assess_min_value.html#quality_assessment.quality_assessor.TapeQualityAssessor.assess_min_value">[docs]</a>    <span class="k">def</span> <span class="nf">assess_min_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QualityReport</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Assesses if minimum values meet the specs.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            QualityReport: Quality report on minimum values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tape_specs</span><span class="o">.</span><span class="n">min_value</span>
+        <span class="n">parameter_infos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tape_quality_info</span><span class="o">.</span><span class="n">dropouts</span>
+
+        <span class="n">fails</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">parameter_infos</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">QualityReport</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tape_quality_info</span><span class="o">.</span><span class="n">tape_id</span><span class="p">,</span> <span class="n">TestType</span><span class="o">.</span><span class="n">MINIMUM</span><span class="p">,</span>
+                             <span class="n">fails</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
+
+<div class="viewcode-block" id="TapeQualityAssessor.assess_dropouts"><a class="viewcode-back" href="../../generated/quality_assessment.quality_assessor.TapeQualityAssessor.assess_dropouts.html#quality_assessment.quality_assessor.TapeQualityAssessor.assess_dropouts">[docs]</a>    <span class="k">def</span> <span class="nf">assess_dropouts</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QualityReport</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Assesses if drop-outs meet the specs.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: Exception if drop-outs are not in TapeSpecs</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            QualityReport: Quality report on drop-outs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tape_specs</span><span class="o">.</span><span class="n">dropout_func</span> <span class="ow">is</span> <span class="kc">None</span>
+                <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">tape_specs</span><span class="o">.</span><span class="n">dropout_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Drop-outs are not specified.&quot;</span><span class="p">)</span>
+        <span class="c1"># A peak is a drop-out if it is smaller than min Ic</span>
+        <span class="n">threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tape_specs</span><span class="o">.</span><span class="n">min_value</span>
+        <span class="n">parameter_infos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tape_quality_info</span><span class="o">.</span><span class="n">dropouts</span>
+        <span class="n">fails</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">parameter_infos</span><span class="p">))</span>
+
+        <span class="c1"># A drop-out is a fail if it is too wide or below a min Drop-out Ic</span>
+        <span class="n">width_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tape_specs</span><span class="o">.</span><span class="n">dropout_func</span>
+        <span class="n">min_ic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tape_specs</span><span class="o">.</span><span class="n">dropout_value</span>
+
+        <span class="n">fails</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="nb">filter</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="n">min_ic</span> <span class="ow">or</span> <span class="n">x</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">1000.0</span> <span class="o">&gt;</span> <span class="n">width_func</span><span class="p">(</span>
+                    <span class="n">x</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="n">fails</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">QualityReport</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tape_quality_info</span><span class="o">.</span><span class="n">tape_id</span><span class="p">,</span> <span class="n">TestType</span><span class="o">.</span><span class="n">DROPOUT</span><span class="p">,</span>
+                             <span class="n">fails</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
+
+<div class="viewcode-block" id="TapeQualityAssessor.plot_dropout_histogram"><a class="viewcode-back" href="../../generated/quality_assessment.quality_assessor.TapeQualityAssessor.plot_dropout_histogram.html#quality_assessment.quality_assessor.TapeQualityAssessor.plot_dropout_histogram">[docs]</a>    <span class="k">def</span> <span class="nf">plot_dropout_histogram</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Plots Histogram of drop-out widths (Just to show what</span>
+<span class="sd">            kind of statistics can be done).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">widths</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">width</span><span class="o">*</span><span class="mi">1000</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tape_quality_info</span><span class="o">.</span><span class="n">dropouts</span><span class="p">]</span>
+
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="s1">&#39;Histogram&#39;</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">set_tight_layout</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Width (mm)&quot;</span><span class="p">)</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Count&quot;</span><span class="p">)</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">widths</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">_make_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tape_quality_info</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="s1">&#39;Figure&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.5</span><span class="p">,</span> <span class="mf">3.1</span><span class="p">))</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">set_tight_layout</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Position (m)&quot;</span><span class="p">)</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Critical Current (A)&quot;</span><span class="p">)</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+        <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Data&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="c1"># plot fail reports</span>
+        <span class="k">for</span> <span class="n">report</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">quality_reports</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">report</span><span class="o">.</span><span class="n">fail_information</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">for</span> <span class="n">fail</span> <span class="ow">in</span> <span class="n">report</span><span class="o">.</span><span class="n">fail_information</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">fail</span><span class="o">.</span><span class="n">start_position</span><span class="p">,</span>
+                     <span class="n">fail</span><span class="o">.</span><span class="n">end_position</span><span class="p">]</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">fail</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                     <span class="n">fail</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="n">report</span><span class="o">.</span><span class="n">test_type</span> <span class="o">==</span> <span class="n">TestType</span><span class="o">.</span><span class="n">AVERAGE</span><span class="p">:</span>
+                    <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;crimson&#39;</span>
+                    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+                              <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                              <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                              <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                              <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Averages Failed&#39;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">report</span><span class="o">.</span><span class="n">test_type</span> <span class="ow">in</span> <span class="p">[</span><span class="n">TestType</span><span class="o">.</span><span class="n">MINIMUM</span><span class="p">,</span> <span class="n">TestType</span><span class="o">.</span><span class="n">DROPOUT</span><span class="p">]:</span>
+                    <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;deeppink&#39;</span>
+                    <span class="n">axis</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">fail</span><span class="o">.</span><span class="n">center_position</span><span class="p">],</span>
+                                 <span class="p">[</span><span class="n">fail</span><span class="o">.</span><span class="n">value</span><span class="p">],</span>
+                                 <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                                 <span class="n">s</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                                 <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;D&#39;</span><span class="p">,</span>
+                                 <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Minimum Failed&#39;</span><span class="p">)</span>
+                    <span class="n">axis</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+                              <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                              <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;|&#39;</span><span class="p">,</span>
+                              <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                              <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Minimum Failed&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">fig</span></div>
+
+
+<div class="viewcode-block" id="excecute_assessment"><a class="viewcode-back" href="../../generated/quality_assessment.quality_assessor.excecute_assessment.html#quality_assessment.quality_assessor.excecute_assessment">[docs]</a><span class="k">def</span> <span class="nf">excecute_assessment</span><span class="p">(</span><span class="n">quality_info</span><span class="p">:</span> <span class="n">TapeQualityInformation</span><span class="p">,</span>
+                        <span class="n">product</span><span class="p">:</span> <span class="n">TapeSpecs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Do all the steps to assess a tape.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        quality_info (TapeQualityInformation): Quality information about the tape</span>
+<span class="sd">        product (TapeSpecs): Product definition to assess the tape against</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">assessor</span> <span class="o">=</span> <span class="n">TapeQualityAssessor</span><span class="p">(</span><span class="n">quality_info</span><span class="p">,</span> <span class="n">product</span><span class="p">)</span>
+
+    <span class="n">assessor</span><span class="o">.</span><span class="n">assess_meets_specs</span><span class="p">()</span>
+    <span class="n">assessor</span><span class="o">.</span><span class="n">plot_dropout_histogram</span><span class="p">()</span>
+    <span class="n">assessor</span><span class="o">.</span><span class="n">determine_ok_tape_section</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">min_tape_length</span><span class="p">)</span>
+
+    <span class="n">assessor</span><span class="o">.</span><span class="n">save_pdf_report</span><span class="p">()</span>
+    <span class="n">assessor</span><span class="o">.</span><span class="n">print_reports</span><span class="p">()</span>
+    <span class="n">assessor</span><span class="o">.</span><span class="n">plot_defects</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../generated/quality_assessment.quality_assessor.main.html#quality_assessment.quality_assessor.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Main function of module to test functionality of classes in module</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">product</span> <span class="o">=</span> <span class="n">TapeProduct</span><span class="o">.</span><span class="n">SUPERLINK_PHASE_TEST</span><span class="o">.</span><span class="n">value</span>
+    <span class="c1"># expected_average = width * thickness * critical current density * factor</span>
+    <span class="c1"># to fix units</span>
+    <span class="n">expected_average</span> <span class="o">=</span> <span class="n">product</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="mf">1.9</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">10</span>
+    <span class="n">expected_average</span> <span class="o">=</span> <span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">min_average</span> <span class="k">if</span> <span class="n">product</span><span class="o">.</span><span class="n">min_average</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                        <span class="k">else</span> <span class="n">expected_average</span><span class="p">)</span>
+
+    <span class="n">quality_info2</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">TapeQualityInformation</span><span class="p">(</span>
+            <span class="n">load_data</span><span class="p">(</span><span class="s2">&quot;data/21407-3L-110_300A_Lam_Markiert.dat&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+            <span class="s2">&quot;21407-3L-110&quot;</span><span class="p">,</span> <span class="n">expected_average</span><span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">quality_info2</span><span class="p">:</span>
+        <span class="n">excecute_assessment</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">product</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Quality Assessment 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quality_assessment.quality_assessor</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Veit Große.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>

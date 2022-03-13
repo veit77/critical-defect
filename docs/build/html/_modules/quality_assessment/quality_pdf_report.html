@@ -1,0 +1,277 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quality_assessment.quality_pdf_report &#8212; Quality Assessment 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
+    
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Quality Assessment 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quality_assessment.quality_pdf_report</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for quality_assessment.quality_pdf_report</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Class implementation for DefectReportPDF</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">fpdf</span> <span class="kn">import</span> <span class="n">FPDF</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_agg</span> <span class="kn">import</span> <span class="n">FigureCanvasAgg</span> <span class="k">as</span> <span class="n">FigureCanvas</span>
+<span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="kn">import</span> <span class="n">Figure</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">.data_types</span> <span class="kn">import</span> <span class="n">QualityReport</span><span class="p">,</span> <span class="n">TapeSection</span>
+
+
+<div class="viewcode-block" id="DefectReportPDF"><a class="viewcode-back" href="../../generated/quality_assessment.quality_pdf_report.DefectReportPDF.html#quality_assessment.quality_pdf_report.DefectReportPDF">[docs]</a><span class="k">class</span> <span class="nc">DefectReportPDF</span><span class="p">(</span><span class="n">FPDF</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Subclass of FPDF to set up page structure</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="DefectReportPDF.__init__"><a class="viewcode-back" href="../../generated/quality_assessment.quality_pdf_report.DefectReportPDF.__init__.html#quality_assessment.quality_pdf_report.DefectReportPDF.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tape_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">product</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">orientation</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tape_id</span> <span class="o">=</span> <span class="n">tape_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="o">=</span> <span class="n">product</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">orientation</span><span class="o">=</span><span class="n">orientation</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
+
+<div class="viewcode-block" id="DefectReportPDF.header"><a class="viewcode-back" href="../../generated/quality_assessment.quality_pdf_report.DefectReportPDF.header.html#quality_assessment.quality_pdf_report.DefectReportPDF.header">[docs]</a>    <span class="k">def</span> <span class="nf">header</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Draw header</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Rendering logo:</span>
+        <span class="n">logo_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;assets&#39;</span><span class="p">,</span> <span class="s1">&#39;THEVA-Logo.png&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">logo_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_margin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_margin</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+        <span class="c1"># Setting font: helvetica bold 15</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_font</span><span class="p">(</span><span class="s2">&quot;helvetica&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+        <span class="c1"># Moving cursor to the right:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_x</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">l_margin</span><span class="p">)</span>
+        <span class="c1"># Printing title:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epw</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;Tape Quality Report&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_x</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epw</span><span class="p">)</span>
+        <span class="c1"># Printing title:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_font</span><span class="p">(</span><span class="s2">&quot;helvetica&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">font_size</span><span class="p">,</span>
+                  <span class="sa">f</span><span class="s2">&quot;**Tape ID:** </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tape_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                  <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="n">markdown</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">font_size</span><span class="p">,</span>
+                  <span class="sa">f</span><span class="s2">&quot;**Product:** </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">product</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                  <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="n">markdown</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DefectReportPDF.footer"><a class="viewcode-back" href="../../generated/quality_assessment.quality_pdf_report.DefectReportPDF.footer.html#quality_assessment.quality_pdf_report.DefectReportPDF.footer">[docs]</a>    <span class="k">def</span> <span class="nf">footer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Draw footer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Position cursor at 1.5 cm from bottom:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_y</span><span class="p">(</span><span class="o">-</span><span class="mi">15</span><span class="p">)</span>
+        <span class="c1"># Setting font: helvetica italic 8</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_font</span><span class="p">(</span><span class="s2">&quot;helvetica&quot;</span><span class="p">,</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+        <span class="c1"># Printing page number:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Page </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">page_no</span><span class="p">()</span><span class="si">}</span><span class="s2">/</span><span class="se">{{</span><span class="s2">nb</span><span class="se">}}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ReportPDFCreator"><a class="viewcode-back" href="../../generated/quality_assessment.quality_pdf_report.ReportPDFCreator.html#quality_assessment.quality_pdf_report.ReportPDFCreator">[docs]</a><span class="k">class</span> <span class="nc">ReportPDFCreator</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Class to create report PDF</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_pdf</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">DefectReportPDF</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="ReportPDFCreator.__init__"><a class="viewcode-back" href="../../generated/quality_assessment.quality_pdf_report.ReportPDFCreator.__init__.html#quality_assessment.quality_pdf_report.ReportPDFCreator.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tape_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">product</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">data_plot</span><span class="p">:</span> <span class="n">Figure</span><span class="p">,</span>
+                 <span class="n">quality_reports</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">QualityReport</span><span class="p">],</span>
+                 <span class="n">ok_tape_sections</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TapeSection</span><span class="p">]):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tape_id</span> <span class="o">=</span> <span class="n">tape_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="o">=</span> <span class="n">product</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_plot</span> <span class="o">=</span> <span class="n">data_plot</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quality_reports</span> <span class="o">=</span> <span class="n">quality_reports</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ok_tape_sections</span> <span class="o">=</span> <span class="n">ok_tape_sections</span></div>
+
+<div class="viewcode-block" id="ReportPDFCreator.create_report"><a class="viewcode-back" href="../../generated/quality_assessment.quality_pdf_report.ReportPDFCreator.create_report.html#quality_assessment.quality_pdf_report.ReportPDFCreator.create_report">[docs]</a>    <span class="k">def</span> <span class="nf">create_report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Main function to draw content of report PDF</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pdf</span> <span class="o">=</span> <span class="n">DefectReportPDF</span><span class="p">(</span><span class="n">tape_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tape_id</span><span class="p">,</span>
+                                    <span class="n">product</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">product</span><span class="p">,</span>
+                                    <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;L&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pdf</span><span class="o">.</span><span class="n">alias_nb_pages</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pdf</span><span class="o">.</span><span class="n">add_page</span><span class="p">()</span>
+
+        <span class="c1"># plot data graph with failure markers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_draw_data_plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pdf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pdf</span><span class="o">.</span><span class="n">l_margin</span><span class="p">,</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">_pdf</span><span class="o">.</span><span class="n">t_margin</span> <span class="o">+</span> <span class="mi">20</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pdf</span><span class="o">.</span><span class="n">epw</span><span class="p">)</span>
+
+        <span class="c1"># plot table with OK tape sections</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_draw_ok_tape_section_list</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pdf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pdf</span><span class="o">.</span><span class="n">l_margin</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pdf</span><span class="o">.</span><span class="n">epw</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pdf</span><span class="o">.</span><span class="n">t_margin</span> <span class="o">+</span> <span class="mi">110</span><span class="p">)</span>
+
+        <span class="c1"># plot table with test pass informations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_draw_test_pass_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pdf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pdf</span><span class="o">.</span><span class="n">l_margin</span><span class="p">,</span>
+                                  <span class="bp">self</span><span class="o">.</span><span class="n">_pdf</span><span class="o">.</span><span class="n">t_margin</span> <span class="o">+</span> <span class="mi">110</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ReportPDFCreator.save_report"><a class="viewcode-back" href="../../generated/quality_assessment.quality_pdf_report.ReportPDFCreator.save_report.html#quality_assessment.quality_pdf_report.ReportPDFCreator.save_report">[docs]</a>    <span class="k">def</span> <span class="nf">save_report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Save the PDF to disk.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            to_path (str): Path (incl. file name) to save the PDF to.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: Raised if the PDF cannot is not created (is None).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pdf</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;PDF has not been created yet.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pdf</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">to_path</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_draw_data_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pdf</span><span class="p">:</span> <span class="n">DefectReportPDF</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                        <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pdf</span><span class="o">.</span><span class="n">set_y</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="n">canvas</span> <span class="o">=</span> <span class="n">FigureCanvas</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_plot</span><span class="p">)</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">canvas</span><span class="o">.</span><span class="n">buffer_rgba</span><span class="p">()))</span>
+        <span class="n">pdf</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="n">width</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_draw_ok_tape_section_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pdf</span><span class="p">:</span> <span class="n">DefectReportPDF</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                                   <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pdf</span><span class="o">.</span><span class="n">set_font</span><span class="p">(</span><span class="s2">&quot;helvetica&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+        <span class="n">line_height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_draw_head_line</span><span class="p">(</span><span class="n">pdf</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;OK Tape Sections:&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_draw_table_cells</span><span class="p">(</span><span class="n">pdf</span><span class="p">,</span> <span class="p">[(</span><span class="mi">15</span><span class="p">,</span> <span class="s2">&quot;Nr.&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">),</span>
+                                     <span class="p">(</span><span class="mi">35</span><span class="p">,</span> <span class="s2">&quot;Start Position&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">),</span>
+                                     <span class="p">(</span><span class="mi">35</span><span class="p">,</span> <span class="s2">&quot;End Position&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">),</span>
+                                     <span class="p">(</span><span class="mi">35</span><span class="p">,</span> <span class="s2">&quot;Length&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">)],</span> <span class="n">line_height</span><span class="p">)</span>
+
+        <span class="c1"># Draw table rows</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ok_tape_sections</span><span class="p">):</span>
+            <span class="n">pdf</span><span class="o">.</span><span class="n">set_x</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pdf</span><span class="o">.</span><span class="n">set_font</span><span class="p">(</span><span class="s2">&quot;helvetica&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_draw_table_cells</span><span class="p">(</span><span class="n">pdf</span><span class="p">,</span>
+                                   <span class="p">[(</span><span class="mi">15</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">),</span>
+                                    <span class="p">(</span><span class="mi">35</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">start_position</span><span class="si">:</span><span class="s2">0.2f</span><span class="si">}</span><span class="s2">m&quot;</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">),</span>
+                                    <span class="p">(</span><span class="mi">35</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">end_position</span><span class="si">:</span><span class="s2">0.2f</span><span class="si">}</span><span class="s2">m&quot;</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">),</span>
+                                    <span class="p">(</span><span class="mi">35</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">length</span><span class="si">:</span><span class="s2">0.2f</span><span class="si">}</span><span class="s2">m&quot;</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">)],</span>
+                                   <span class="n">line_height</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_draw_test_pass_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pdf</span><span class="p">:</span> <span class="n">DefectReportPDF</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                             <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pdf</span><span class="o">.</span><span class="n">set_font</span><span class="p">(</span><span class="s2">&quot;helvetica&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+        <span class="n">line_height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_draw_head_line</span><span class="p">(</span><span class="n">pdf</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+                                           <span class="s2">&quot;Test Pass Information:&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_draw_table_cells</span><span class="p">(</span><span class="n">pdf</span><span class="p">,</span> <span class="p">[(</span><span class="mi">35</span><span class="p">,</span> <span class="s2">&quot;Test&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">),</span>
+                                     <span class="p">(</span><span class="mi">35</span><span class="p">,</span> <span class="s2">&quot;Pass/Fail&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">),</span>
+                                     <span class="p">(</span><span class="mi">35</span><span class="p">,</span> <span class="s2">&quot;Number of Fails&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">)],</span>
+                               <span class="n">line_height</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pdf</span><span class="o">.</span><span class="n">set_font</span><span class="p">(</span><span class="s2">&quot;helvetica&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">report</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">quality_reports</span><span class="p">:</span>
+            <span class="n">passed</span> <span class="o">=</span> <span class="s2">&quot;Pass&quot;</span> <span class="k">if</span> <span class="n">report</span><span class="o">.</span><span class="n">passed</span> <span class="k">else</span> <span class="s2">&quot;Fail&quot;</span>
+            <span class="n">nb_failed</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">report</span><span class="o">.</span><span class="n">fail_information</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">report</span><span class="o">.</span><span class="n">fail_information</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">nb_failed</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">nb_failed</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">report</span><span class="o">.</span><span class="n">fail_information</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">pdf</span><span class="o">.</span><span class="n">set_x</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_draw_table_cells</span><span class="p">(</span><span class="n">pdf</span><span class="p">,</span>
+                                   <span class="p">[(</span><span class="mi">35</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">report</span><span class="o">.</span><span class="n">test_type</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">),</span>
+                                    <span class="p">(</span><span class="mi">35</span><span class="p">,</span> <span class="n">passed</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">),</span>
+                                    <span class="p">(</span><span class="mi">35</span><span class="p">,</span> <span class="n">nb_failed</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">)],</span> <span class="n">line_height</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_draw_head_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pdf</span><span class="p">:</span> <span class="n">DefectReportPDF</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                        <span class="n">head_line</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">pdf</span><span class="o">.</span><span class="n">set_xy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pdf</span><span class="o">.</span><span class="n">font_size</span> <span class="o">*</span> <span class="mf">2.0</span>
+        <span class="n">pdf</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">head_line</span><span class="p">,</span> <span class="n">ln</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">markdown</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">pdf</span><span class="o">.</span><span class="n">set_x</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">_draw_table_cells</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pdf</span><span class="p">:</span> <span class="n">DefectReportPDF</span><span class="p">,</span>
+                          <span class="n">cell_entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
+                          <span class="n">line_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">align</span><span class="p">)</span> <span class="ow">in</span> <span class="n">cell_entries</span><span class="p">:</span>
+            <span class="n">pdf</span><span class="o">.</span><span class="n">multi_cell</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">line_height</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span>
+                           <span class="n">border</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ln</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="n">align</span><span class="p">,</span>
+                           <span class="n">max_line_height</span><span class="o">=</span><span class="n">pdf</span><span class="o">.</span><span class="n">font_size</span><span class="p">,</span>
+                           <span class="n">markdown</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">pdf</span><span class="o">.</span><span class="n">ln</span><span class="p">(</span><span class="n">line_height</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../generated/quality_assessment.quality_pdf_report.main.html#quality_assessment.quality_pdf_report.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Main function to test PDF rendering</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pdf</span> <span class="o">=</span> <span class="n">DefectReportPDF</span><span class="p">(</span><span class="n">tape_id</span><span class="o">=</span><span class="s2">&quot;tape_id&quot;</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="s2">&quot;product&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;L&quot;</span><span class="p">)</span>
+    <span class="n">pdf</span><span class="o">.</span><span class="n">alias_nb_pages</span><span class="p">()</span>
+    <span class="n">pdf</span><span class="o">.</span><span class="n">add_page</span><span class="p">()</span>
+    <span class="n">pdf</span><span class="o">.</span><span class="n">set_font</span><span class="p">(</span><span class="s2">&quot;Times&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">41</span><span class="p">):</span>
+        <span class="n">pdf</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Printing line number </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">pdf</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="s2">&quot;tuto2.pdf&quot;</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Quality Assessment 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quality_assessment.quality_pdf_report</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Veit Große.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>

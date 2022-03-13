@@ -1,0 +1,310 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quality_assessment.tape_quality_information &#8212; Quality Assessment 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
+    
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Quality Assessment 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quality_assessment.tape_quality_information</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for quality_assessment.tape_quality_information</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Class implementation for TapeQualityInformation</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">isclose</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">find_peaks</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+<span class="kn">from</span> <span class="nn">.data_types</span> <span class="kn">import</span> <span class="p">(</span><span class="n">QualityParameterInfo</span><span class="p">,</span> <span class="n">PeakInfo</span><span class="p">,</span> <span class="n">AveragesInfo</span><span class="p">,</span>
+                         <span class="n">TapeSection</span><span class="p">,</span> <span class="n">ScatterInfo</span><span class="p">,</span> <span class="n">TestType</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="TapeQualityInformation"><a class="viewcode-back" href="../../generated/quality_assessment.tape_quality_information.TapeQualityInformation.html#quality_assessment.tape_quality_information.TapeQualityInformation">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">TapeQualityInformation</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Class to collect information on quality features of HTS tapes</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    data : DataFrame</span>
+<span class="sd">        Critical current vs. position data of a HTS tape.</span>
+<span class="sd">    tape_id: str</span>
+<span class="sd">        ID of the HTS tape</span>
+<span class="sd">    expected_average : float</span>
+<span class="sd">        Approximate average critical current. Used for drop-out detection and</span>
+<span class="sd">        piecewise average calculation.</span>
+<span class="sd">    averages : list[AveragesInfo] = []</span>
+<span class="sd">        Piecewise averages.</span>
+<span class="sd">    scattering: list[ScatterInfo] = []</span>
+<span class="sd">        Piecewise scattering info (standard deviation).</span>
+<span class="sd">    dropouts : list[PeakInfo] = []</span>
+<span class="sd">        Information about all drop-outs.</span>
+
+<span class="sd">    Methods:</span>
+<span class="sd">    --------</span>
+<span class="sd">    calculate_statistics(TestType) -&gt; list[QualitityParameterInfo]</span>
+<span class="sd">        Calculates piecewise statistics info.</span>
+<span class="sd">    calculate_drop_out_info() -&gt; list[QualitityParameterInfo]</span>
+<span class="sd">        Calculate drop-out information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">DataFrame</span>
+    <span class="n">tape_id</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="n">expected_average</span><span class="p">:</span> <span class="nb">float</span>
+
+    <span class="c1"># TODO make following attributes read-only</span>
+    <span class="n">averages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AveragesInfo</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">scattering</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ScatterInfo</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">dropouts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">PeakInfo</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">tape_section</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TapeSection</span><span class="p">:</span>
+        <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_start_end_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">start_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">start</span><span class="p">]</span>
+        <span class="n">end_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">end</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">TapeSection</span><span class="p">(</span><span class="n">start_pos</span><span class="p">,</span> <span class="n">end_pos</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_peak_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">expected_average</span> <span class="o">*</span> <span class="mf">0.8</span>
+
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Wrong data type for data.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">expected_average</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Property expected_average not set&quot;</span><span class="p">)</span>
+
+        <span class="c1"># reverse order of dataframe if end position is smaller than start</span>
+        <span class="c1"># position.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TapeQualityInformation.calculate_statisitcs"><a class="viewcode-back" href="../../generated/quality_assessment.tape_quality_information.TapeQualityInformation.calculate_statisitcs.html#quality_assessment.tape_quality_information.TapeQualityInformation.calculate_statisitcs">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_statisitcs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_type</span><span class="p">:</span> <span class="n">TestType</span><span class="p">,</span>
+                             <span class="n">piece_length</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Calculates piecewise statistics values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            p_type (TestType): Parameter type that should be calculated.</span>
+<span class="sd">            piece_length (float, optional): piece length over which to</span>
+<span class="sd">                calculate the parameter. If None, use the whole length.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">start_index</span><span class="p">,</span> <span class="n">end_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_start_end_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="n">piece_length</span>
+
+        <span class="c1"># if piece_length is not set, average over the whole length</span>
+        <span class="k">if</span> <span class="n">piece_length</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">piece_length</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">end_index</span><span class="p">]</span> <span class="o">-</span>
+                      <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">start_index</span><span class="p">])</span>
+
+        <span class="n">next_position</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">start_index</span><span class="p">]</span> <span class="o">+</span> <span class="n">length</span><span class="p">)</span>
+        <span class="n">last_index</span> <span class="o">=</span> <span class="n">start_index</span>
+        <span class="n">piece</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">info_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Calculate scattering and store them in ScatterInfo instance</span>
+        <span class="k">while</span> <span class="n">next_position</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">end_index</span><span class="p">,</span> <span class="mi">0</span><span class="p">]:</span>
+            <span class="n">next_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">next_position</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_quality_parameter_info</span><span class="p">(</span>
+                <span class="n">piece</span><span class="p">,</span> <span class="n">last_index</span><span class="p">,</span> <span class="n">next_index</span><span class="p">,</span> <span class="n">p_type</span><span class="p">)</span>
+            <span class="n">info_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+            <span class="n">last_index</span> <span class="o">=</span> <span class="n">next_index</span>
+            <span class="n">next_position</span> <span class="o">+=</span> <span class="n">length</span>
+            <span class="n">piece</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># append scattering till end of tape</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_quality_parameter_info</span><span class="p">(</span>
+            <span class="n">piece</span><span class="p">,</span> <span class="n">last_index</span><span class="p">,</span> <span class="n">end_index</span><span class="p">,</span> <span class="n">p_type</span><span class="p">)</span>
+
+        <span class="n">info_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">p_type</span> <span class="o">==</span> <span class="n">TestType</span><span class="o">.</span><span class="n">AVERAGE</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">averages</span> <span class="o">=</span> <span class="n">info_list</span>
+        <span class="k">elif</span> <span class="n">p_type</span> <span class="o">==</span> <span class="n">TestType</span><span class="o">.</span><span class="n">SCATTER</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scattering</span> <span class="o">=</span> <span class="n">info_list</span></div>
+
+<div class="viewcode-block" id="TapeQualityInformation.calculate_drop_out_info"><a class="viewcode-back" href="../../generated/quality_assessment.tape_quality_information.TapeQualityInformation.calculate_drop_out_info.html#quality_assessment.tape_quality_information.TapeQualityInformation.calculate_drop_out_info">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_drop_out_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                <span class="n">use_true_baseline</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+                                <span class="n">pos_tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2e-3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Calculate drop-out information.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            use_true_baseline (bool): Use calculated or expected average as baseline.</span>
+<span class="sd">            pos_tol (float): Tolerance for position to be identified as the same.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">start_index</span><span class="p">,</span> <span class="n">end_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_start_end_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">indices</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">find_peaks</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+                                <span class="n">height</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">_peak_definition</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                                <span class="n">distance</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+        <span class="c1"># Remove all drop-outs not on the actual tape</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">start_index</span><span class="p">,</span> <span class="n">indices</span><span class="p">))</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">end_index</span><span class="p">,</span> <span class="n">indices</span><span class="p">))</span>
+
+        <span class="n">peak_info_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">PeakInfo</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">last_peak</span> <span class="o">=</span> <span class="n">PeakInfo</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">indices</span><span class="p">):</span>
+            <span class="n">position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">expected_average</span>
+            <span class="c1"># set level to average value at the peak position</span>
+            <span class="k">if</span> <span class="n">use_true_baseline</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">averages</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">average</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">averages</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">position</span> <span class="o">&gt;</span> <span class="n">average</span><span class="o">.</span><span class="n">start_position</span>
+                            <span class="ow">and</span> <span class="n">position</span> <span class="o">&lt;</span> <span class="n">average</span><span class="o">.</span><span class="n">end_position</span><span class="p">):</span>
+                        <span class="n">level</span> <span class="o">=</span> <span class="n">average</span><span class="o">.</span><span class="n">value</span>
+                        <span class="k">break</span>
+
+            <span class="n">half_max</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span> <span class="o">+</span> <span class="n">level</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+            <span class="k">if</span> <span class="n">half_max</span> <span class="o">&gt;</span> <span class="n">level</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">start_position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_half_max_position</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">half_max</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="n">end_position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_half_max_position</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">half_max</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+            <span class="n">current_peak</span> <span class="o">=</span> <span class="n">PeakInfo</span><span class="p">(</span><span class="n">p_id</span><span class="o">=</span><span class="n">i</span><span class="p">,</span>
+                                    <span class="n">start_position</span><span class="o">=</span><span class="n">start_position</span><span class="p">,</span>
+                                    <span class="n">end_position</span><span class="o">=</span><span class="n">end_position</span><span class="p">,</span>
+                                    <span class="n">center_position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span>
+                                    <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+
+            <span class="c1"># check if width is the same. if value smaler than before, remove</span>
+            <span class="c1"># last entry and replace by new entry. Add new entry, if not the</span>
+            <span class="c1"># same width (tolerance is 2mm -&gt; might be tweaked a bit)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">isclose</span><span class="p">(</span><span class="n">start_position</span><span class="p">,</span> <span class="n">last_peak</span><span class="o">.</span><span class="n">start_position</span><span class="p">,</span> <span class="n">abs_tol</span><span class="o">=</span><span class="n">pos_tol</span><span class="p">)</span>
+                    <span class="ow">and</span> <span class="n">isclose</span><span class="p">(</span><span class="n">end_position</span><span class="p">,</span> <span class="n">last_peak</span><span class="o">.</span><span class="n">end_position</span><span class="p">,</span> <span class="n">abs_tol</span><span class="o">=</span><span class="n">pos_tol</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">last_peak</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                    <span class="n">peak_info_list</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">last_peak</span><span class="p">)</span>
+                    <span class="n">peak_info_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_peak</span><span class="p">)</span>
+                    <span class="n">last_peak</span> <span class="o">=</span> <span class="n">current_peak</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">peak_info_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_peak</span><span class="p">)</span>
+                <span class="n">last_peak</span> <span class="o">=</span> <span class="n">current_peak</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropouts</span> <span class="o">=</span> <span class="n">peak_info_list</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_quality_parameter_info</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">piece</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">start_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">q_parameter</span><span class="p">:</span> <span class="n">TestType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QualityParameterInfo</span><span class="p">]:</span>
+        <span class="n">start_position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">start_index</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">end_position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">end_index</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">p_value</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">p_info</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">q_parameter</span> <span class="o">==</span> <span class="n">TestType</span><span class="o">.</span><span class="n">AVERAGE</span><span class="p">:</span>
+            <span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">end_index</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+            <span class="n">p_info</span> <span class="o">=</span> <span class="n">AveragesInfo</span><span class="p">(</span><span class="n">p_id</span><span class="o">=</span><span class="n">piece</span><span class="p">,</span>
+                                  <span class="n">start_position</span><span class="o">=</span><span class="n">start_position</span><span class="p">,</span>
+                                  <span class="n">end_position</span><span class="o">=</span><span class="n">end_position</span><span class="p">,</span>
+                                  <span class="n">value</span><span class="o">=</span><span class="n">p_value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">q_parameter</span> <span class="o">==</span> <span class="n">TestType</span><span class="o">.</span><span class="n">SCATTER</span><span class="p">:</span>
+            <span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">end_index</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+            <span class="n">p_info</span> <span class="o">=</span> <span class="n">ScatterInfo</span><span class="p">(</span><span class="n">p_id</span><span class="o">=</span><span class="n">piece</span><span class="p">,</span>
+                                 <span class="n">start_position</span><span class="o">=</span><span class="n">start_position</span><span class="p">,</span>
+                                 <span class="n">end_position</span><span class="o">=</span><span class="n">end_position</span><span class="p">,</span>
+                                 <span class="n">value</span><span class="o">=</span><span class="n">p_value</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">p_info</span>
+
+    <span class="k">def</span> <span class="nf">_find_half_max_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">peak_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">half_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                                <span class="n">go_up</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">half_max_position</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">last_index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">go_up</span><span class="p">:</span>
+            <span class="n">last_index</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">step</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="n">half_max_position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">last_index</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">peak_index</span><span class="p">,</span> <span class="n">last_index</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">half_max</span><span class="p">:</span>
+                <span class="n">x_values</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="n">step</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+                <span class="n">y_values</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="n">step</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+                <span class="n">f_of_y</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">y_values</span><span class="p">,</span> <span class="n">x_values</span><span class="p">)</span>
+                <span class="n">half_max_position</span> <span class="o">=</span> <span class="n">f_of_y</span><span class="p">(</span><span class="n">half_max</span><span class="p">)[()]</span>
+                <span class="k">break</span>
+
+        <span class="k">return</span> <span class="n">half_max_position</span>  <span class="c1"># type: ignore</span>
+
+    <span class="k">def</span> <span class="nf">_find_start_end_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="n">threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">expected_average</span> <span class="o">*</span> <span class="mf">0.8</span>
+
+        <span class="c1"># Find start and end of tape -&gt; where Ic is greater threshold</span>
+        <span class="c1"># the first time and last time, respectively.</span>
+        <span class="n">above_threshold_list</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+        <span class="n">start_index</span> <span class="o">=</span> <span class="n">above_threshold_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">end_index</span> <span class="o">=</span> <span class="n">above_threshold_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">start_index</span><span class="p">,</span> <span class="n">end_index</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Quality Assessment 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quality_assessment.tape_quality_information</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Veit Große.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>

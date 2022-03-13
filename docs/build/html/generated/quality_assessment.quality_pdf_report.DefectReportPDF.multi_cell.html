@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>DefectReportPDF.multi_cell &#8212; Quality Assessment 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="DefectReportPDF.new_path" href="quality_assessment.quality_pdf_report.DefectReportPDF.new_path.html" />
+    <link rel="prev" title="DefectReportPDF.local_context" href="quality_assessment.quality_pdf_report.DefectReportPDF.local_context.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quality_assessment.quality_pdf_report.DefectReportPDF.new_path.html" title="DefectReportPDF.new_path"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quality_assessment.quality_pdf_report.DefectReportPDF.local_context.html" title="DefectReportPDF.local_context"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Quality Assessment 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quality_assessment.quality_pdf_report.html" >quality_assessment.quality_pdf_report</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="quality_assessment.quality_pdf_report.DefectReportPDF.html" accesskey="U">DefectReportPDF</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">DefectReportPDF.multi_cell</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="defectreportpdf-multi-cell">
+<h1>DefectReportPDF.multi_cell<a class="headerlink" href="#defectreportpdf-multi-cell" title="Permalink to this headline">¶</a></h1>
+<dl class="py method">
+<dt class="sig sig-object py" id="quality_assessment.quality_pdf_report.DefectReportPDF.multi_cell">
+<span class="sig-prename descclassname"><span class="pre">DefectReportPDF.</span></span><span class="sig-name descname"><span class="pre">multi_cell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">txt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">border</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'J'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ln</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_line_height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markdown</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_sh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quality_assessment.quality_pdf_report.DefectReportPDF.multi_cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method allows printing text with line breaks. They can be automatic
+(breaking at the most recent space or soft-hyphen character) as soon as the text
+reaches the right border of the cell, or explicit (via the <cite>n</cite> character).
+As many cells as necessary are stacked, one below the other.
+Text can be aligned, centered or justified. The cell block can be framed and
+the background painted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>w</strong> (<em>float</em>) – cell width. If 0, they extend up to the right margin of the page.</p></li>
+<li><p><strong>h</strong> (<em>float</em>) – cell height. Default value: None, meaning to use the current font size.</p></li>
+<li><p><strong>txt</strong> (<em>str</em>) – strign to print.</p></li>
+<li><p><strong>border</strong> – Indicates if borders must be drawn around the cell.
+The value can be either a number (<cite>0</cite>: no border ; <cite>1</cite>: frame)
+or a string containing some or all of the following characters
+(in any order):
+<cite>L</cite>: left ; <cite>T</cite>: top ; <cite>R</cite>: right ; <cite>B</cite>: bottom. Default value: 0.</p></li>
+<li><p><strong>align</strong> (<em>str</em>) – Allows to center or align the text. Possible values are:
+<cite>J</cite>: justify (default value); <cite>L</cite> or empty string: left align ;
+<cite>C</cite>: center ; <cite>R</cite>: right align</p></li>
+<li><p><strong>fill</strong> (<em>bool</em>) – Indicates if the cell background must be painted (<cite>True</cite>)
+or transparent (<cite>False</cite>). Default value: False.</p></li>
+<li><p><strong>split_only</strong> (<em>bool</em>) – if <cite>True</cite>, does not output anything, only perform
+word-wrapping and return the resulting multi-lines array of strings.</p></li>
+<li><p><strong>link</strong> (<em>str</em>) – optional link to add on the cell, internal
+(identifier returned by <cite>add_link</cite>) or external URL.</p></li>
+<li><p><strong>ln</strong> (<em>int</em>) – Indicates where the current position should go after the call.
+Possible values are: <cite>0</cite>: to the bottom right ; <cite>1</cite>: to the beginning
+of the next line ; <cite>2</cite>: below with the same horizontal offset ;
+<cite>3</cite>: to the right with the same vertical offset. Default value: 0.</p></li>
+<li><p><strong>max_line_height</strong> (<em>float</em>) – optional maximum height of each sub-cell generated</p></li>
+<li><p><strong>markdown</strong> (<em>bool</em>) – enable minimal markdown-like markup to render part
+of text as bold / italics / underlined. Default to False.</p></li>
+<li><p><strong>print_sh</strong> (<em>bool</em>) – Treat a soft-hyphen (u00ad) as a normal printable
+character, instead of a line breaking opportunity. Default value: False</p></li>
+</ul>
+</dd>
+</dl>
+<p>Using <cite>ln=3</cite> and <cite>maximum height=pdf.font_size</cite> is useful to build tables
+with multiline text in cells.</p>
+<dl class="simple">
+<dt>Returns: a boolean indicating if page break was triggered,</dt><dd><p>or if <cite>split_only == True</cite>: <cite>txt</cite> splitted into lines in an array</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="quality_assessment.quality_pdf_report.DefectReportPDF.local_context.html"
+                          title="previous chapter">DefectReportPDF.local_context</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="quality_assessment.quality_pdf_report.DefectReportPDF.new_path.html"
+                          title="next chapter">DefectReportPDF.new_path</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/generated/quality_assessment.quality_pdf_report.DefectReportPDF.multi_cell.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quality_assessment.quality_pdf_report.DefectReportPDF.new_path.html" title="DefectReportPDF.new_path"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quality_assessment.quality_pdf_report.DefectReportPDF.local_context.html" title="DefectReportPDF.local_context"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Quality Assessment 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quality_assessment.quality_pdf_report.html" >quality_assessment.quality_pdf_report</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="quality_assessment.quality_pdf_report.DefectReportPDF.html" >DefectReportPDF</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">DefectReportPDF.multi_cell</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Veit Große.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>

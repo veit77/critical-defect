@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>TapeSpecs &#8212; Quality Assessment 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="TapeSpecs.width" href="quality_assessment.data_types.TapeSpecs.width.html" />
+    <link rel="prev" title="TapeSection.__init__" href="quality_assessment.data_types.TapeSection.__init__.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quality_assessment.data_types.TapeSpecs.width.html" title="TapeSpecs.width"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quality_assessment.data_types.TapeSection.__init__.html" title="TapeSection.__init__"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Quality Assessment 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quality_assessment.data_types.html" accesskey="U">quality_assessment.data_types</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">TapeSpecs</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="tapespecs">
+<h1>TapeSpecs<a class="headerlink" href="#tapespecs" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="quality_assessment.data_types.TapeSpecs">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">quality_assessment.data_types.</span></span><span class="sig-name descname"><span class="pre">TapeSpecs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_tape_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width_from_true_baseline</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">averaging_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quality_assessment/data_types.html#TapeSpecs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quality_assessment.data_types.TapeSpecs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tuple holding information about tape specifications</p>
+<blockquote>
+<div><p>width (float): Tape width in mm
+min_tape_length (float): Minimum tape length for product in m
+min_value (float): Minimum value in A
+dropout_value (Optional[float]): Minimum drop-out value in A
+dropout_func (Optional[Callable[[float], float]]): Maximum width of drop-out in mm
+min_average (Optional[float]): Minimum average value in A
+average_length (Optional[float]): Length over which to average in m
+description (str): Name/Description of the product</p>
+</div></blockquote>
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.data_types.TapeSpecs.width.html#quality_assessment.data_types.TapeSpecs.width" title="quality_assessment.data_types.TapeSpecs.width"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TapeSpecs.width</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.data_types.TapeSpecs.min_tape_length.html#quality_assessment.data_types.TapeSpecs.min_tape_length" title="quality_assessment.data_types.TapeSpecs.min_tape_length"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TapeSpecs.min_tape_length</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.data_types.TapeSpecs.min_value.html#quality_assessment.data_types.TapeSpecs.min_value" title="quality_assessment.data_types.TapeSpecs.min_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TapeSpecs.min_value</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.data_types.TapeSpecs.dropout_value.html#quality_assessment.data_types.TapeSpecs.dropout_value" title="quality_assessment.data_types.TapeSpecs.dropout_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TapeSpecs.dropout_value</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.data_types.TapeSpecs.dropout_func.html#quality_assessment.data_types.TapeSpecs.dropout_func" title="quality_assessment.data_types.TapeSpecs.dropout_func"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TapeSpecs.dropout_func</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.data_types.TapeSpecs.width_from_true_baseline.html#quality_assessment.data_types.TapeSpecs.width_from_true_baseline" title="quality_assessment.data_types.TapeSpecs.width_from_true_baseline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TapeSpecs.width_from_true_baseline</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.data_types.TapeSpecs.min_average.html#quality_assessment.data_types.TapeSpecs.min_average" title="quality_assessment.data_types.TapeSpecs.min_average"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TapeSpecs.min_average</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.data_types.TapeSpecs.averaging_length.html#quality_assessment.data_types.TapeSpecs.averaging_length" title="quality_assessment.data_types.TapeSpecs.averaging_length"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TapeSpecs.averaging_length</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.data_types.TapeSpecs.description.html#quality_assessment.data_types.TapeSpecs.description" title="quality_assessment.data_types.TapeSpecs.description"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TapeSpecs.description</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.data_types.TapeSpecs.__init__.html#quality_assessment.data_types.TapeSpecs.__init__" title="quality_assessment.data_types.TapeSpecs.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TapeSpecs.__init__</span></code></a>(width, min_tape_length, ...)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="quality_assessment.data_types.TapeSection.__init__.html"
+                          title="previous chapter">TapeSection.__init__</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="quality_assessment.data_types.TapeSpecs.width.html"
+                          title="next chapter">TapeSpecs.width</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/generated/quality_assessment.data_types.TapeSpecs.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quality_assessment.data_types.TapeSpecs.width.html" title="TapeSpecs.width"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quality_assessment.data_types.TapeSection.__init__.html" title="TapeSection.__init__"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Quality Assessment 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quality_assessment.data_types.html" >quality_assessment.data_types</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">TapeSpecs</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Veit Große.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>

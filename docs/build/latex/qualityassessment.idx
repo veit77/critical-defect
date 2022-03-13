@@ -1,0 +1,190 @@
+\indexentry{module@\spxentry{module}!quality\_assessment.tape\_quality\_information@\spxentry{quality\_assessment.tape\_quality\_information}|hyperpage}{3}
+\indexentry{quality\_assessment.tape\_quality\_information@\spxentry{quality\_assessment.tape\_quality\_information}!module@\spxentry{module}|hyperpage}{3}
+\indexentry{TapeQualityInformation (class in quality\_assessment.tape\_quality\_information)@\spxentry{TapeQualityInformation}\spxextra{class in quality\_assessment.tape\_quality\_information}|hyperpage}{3}
+\indexentry{tape\_section (quality\_assessment.tape\_quality\_information.TapeQualityInformation property)@\spxentry{tape\_section}\spxextra{quality\_assessment.tape\_quality\_information.TapeQualityInformation property}|hyperpage}{4}
+\indexentry{data (quality\_assessment.tape\_quality\_information.TapeQualityInformation attribute)@\spxentry{data}\spxextra{quality\_assessment.tape\_quality\_information.TapeQualityInformation attribute}|hyperpage}{4}
+\indexentry{tape\_id (quality\_assessment.tape\_quality\_information.TapeQualityInformation attribute)@\spxentry{tape\_id}\spxextra{quality\_assessment.tape\_quality\_information.TapeQualityInformation attribute}|hyperpage}{4}
+\indexentry{expected\_average (quality\_assessment.tape\_quality\_information.TapeQualityInformation attribute)@\spxentry{expected\_average}\spxextra{quality\_assessment.tape\_quality\_information.TapeQualityInformation attribute}|hyperpage}{4}
+\indexentry{averages (quality\_assessment.tape\_quality\_information.TapeQualityInformation attribute)@\spxentry{averages}\spxextra{quality\_assessment.tape\_quality\_information.TapeQualityInformation attribute}|hyperpage}{4}
+\indexentry{scattering (quality\_assessment.tape\_quality\_information.TapeQualityInformation attribute)@\spxentry{scattering}\spxextra{quality\_assessment.tape\_quality\_information.TapeQualityInformation attribute}|hyperpage}{5}
+\indexentry{dropouts (quality\_assessment.tape\_quality\_information.TapeQualityInformation attribute)@\spxentry{dropouts}\spxextra{quality\_assessment.tape\_quality\_information.TapeQualityInformation attribute}|hyperpage}{5}
+\indexentry{\_\_init\_\_() (quality\_assessment.tape\_quality\_information.TapeQualityInformation method)@\spxentry{\_\_init\_\_()}\spxextra{quality\_assessment.tape\_quality\_information.TapeQualityInformation method}|hyperpage}{5}
+\indexentry{calculate\_drop\_out\_info() (quality\_assessment.tape\_quality\_information.TapeQualityInformation method)@\spxentry{calculate\_drop\_out\_info()}\spxextra{quality\_assessment.tape\_quality\_information.TapeQualityInformation method}|hyperpage}{5}
+\indexentry{calculate\_statisitcs() (quality\_assessment.tape\_quality\_information.TapeQualityInformation method)@\spxentry{calculate\_statisitcs()}\spxextra{quality\_assessment.tape\_quality\_information.TapeQualityInformation method}|hyperpage}{5}
+\indexentry{module@\spxentry{module}!quality\_assessment.quality\_assessor@\spxentry{quality\_assessment.quality\_assessor}|hyperpage}{7}
+\indexentry{quality\_assessment.quality\_assessor@\spxentry{quality\_assessment.quality\_assessor}!module@\spxentry{module}|hyperpage}{7}
+\indexentry{TapeQualityAssessor (class in quality\_assessment.quality\_assessor)@\spxentry{TapeQualityAssessor}\spxextra{class in quality\_assessment.quality\_assessor}|hyperpage}{7}
+\indexentry{\_\_init\_\_() (quality\_assessment.quality\_assessor.TapeQualityAssessor method)@\spxentry{\_\_init\_\_()}\spxextra{quality\_assessment.quality\_assessor.TapeQualityAssessor method}|hyperpage}{8}
+\indexentry{assess\_average\_value() (quality\_assessment.quality\_assessor.TapeQualityAssessor method)@\spxentry{assess\_average\_value()}\spxextra{quality\_assessment.quality\_assessor.TapeQualityAssessor method}|hyperpage}{8}
+\indexentry{assess\_dropouts() (quality\_assessment.quality\_assessor.TapeQualityAssessor method)@\spxentry{assess\_dropouts()}\spxextra{quality\_assessment.quality\_assessor.TapeQualityAssessor method}|hyperpage}{8}
+\indexentry{assess\_meets\_specs() (quality\_assessment.quality\_assessor.TapeQualityAssessor method)@\spxentry{assess\_meets\_specs()}\spxextra{quality\_assessment.quality\_assessor.TapeQualityAssessor method}|hyperpage}{8}
+\indexentry{assess\_min\_value() (quality\_assessment.quality\_assessor.TapeQualityAssessor method)@\spxentry{assess\_min\_value()}\spxextra{quality\_assessment.quality\_assessor.TapeQualityAssessor method}|hyperpage}{8}
+\indexentry{determine\_ok\_tape\_section() (quality\_assessment.quality\_assessor.TapeQualityAssessor method)@\spxentry{determine\_ok\_tape\_section()}\spxextra{quality\_assessment.quality\_assessor.TapeQualityAssessor method}|hyperpage}{8}
+\indexentry{plot\_defects() (quality\_assessment.quality\_assessor.TapeQualityAssessor method)@\spxentry{plot\_defects()}\spxextra{quality\_assessment.quality\_assessor.TapeQualityAssessor method}|hyperpage}{9}
+\indexentry{plot\_dropout\_histogram() (quality\_assessment.quality\_assessor.TapeQualityAssessor method)@\spxentry{plot\_dropout\_histogram()}\spxextra{quality\_assessment.quality\_assessor.TapeQualityAssessor method}|hyperpage}{9}
+\indexentry{print\_reports() (quality\_assessment.quality\_assessor.TapeQualityAssessor method)@\spxentry{print\_reports()}\spxextra{quality\_assessment.quality\_assessor.TapeQualityAssessor method}|hyperpage}{9}
+\indexentry{save\_pdf\_report() (quality\_assessment.quality\_assessor.TapeQualityAssessor method)@\spxentry{save\_pdf\_report()}\spxextra{quality\_assessment.quality\_assessor.TapeQualityAssessor method}|hyperpage}{9}
+\indexentry{excecute\_assessment() (in module quality\_assessment.quality\_assessor)@\spxentry{excecute\_assessment()}\spxextra{in module quality\_assessment.quality\_assessor}|hyperpage}{9}
+\indexentry{main() (in module quality\_assessment.quality\_assessor)@\spxentry{main()}\spxextra{in module quality\_assessment.quality\_assessor}|hyperpage}{10}
+\indexentry{module@\spxentry{module}!quality\_assessment.helper@\spxentry{quality\_assessment.helper}|hyperpage}{11}
+\indexentry{quality\_assessment.helper@\spxentry{quality\_assessment.helper}!module@\spxentry{module}|hyperpage}{11}
+\indexentry{load\_data() (in module quality\_assessment.helper)@\spxentry{load\_data()}\spxextra{in module quality\_assessment.helper}|hyperpage}{11}
+\indexentry{module@\spxentry{module}!quality\_assessment.quality\_pdf\_report@\spxentry{quality\_assessment.quality\_pdf\_report}|hyperpage}{13}
+\indexentry{quality\_assessment.quality\_pdf\_report@\spxentry{quality\_assessment.quality\_pdf\_report}!module@\spxentry{module}|hyperpage}{13}
+\indexentry{DefectReportPDF (class in quality\_assessment.quality\_pdf\_report)@\spxentry{DefectReportPDF}\spxextra{class in quality\_assessment.quality\_pdf\_report}|hyperpage}{13}
+\indexentry{MARKDOWN\_BOLD\_MARKER (quality\_assessment.quality\_pdf\_report.DefectReportPDF attribute)@\spxentry{MARKDOWN\_BOLD\_MARKER}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF attribute}|hyperpage}{14}
+\indexentry{MARKDOWN\_ITALICS\_MARKER (quality\_assessment.quality\_pdf\_report.DefectReportPDF attribute)@\spxentry{MARKDOWN\_ITALICS\_MARKER}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF attribute}|hyperpage}{14}
+\indexentry{MARKDOWN\_UNDERLINE\_MARKER (quality\_assessment.quality\_pdf\_report.DefectReportPDF attribute)@\spxentry{MARKDOWN\_UNDERLINE\_MARKER}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF attribute}|hyperpage}{14}
+\indexentry{accept\_page\_break (quality\_assessment.quality\_pdf\_report.DefectReportPDF property)@\spxentry{accept\_page\_break}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF property}|hyperpage}{14}
+\indexentry{dash\_pattern (quality\_assessment.quality\_pdf\_report.DefectReportPDF property)@\spxentry{dash\_pattern}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF property}|hyperpage}{15}
+\indexentry{draw\_color (quality\_assessment.quality\_pdf\_report.DefectReportPDF property)@\spxentry{draw\_color}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF property}|hyperpage}{15}
+\indexentry{eph (quality\_assessment.quality\_pdf\_report.DefectReportPDF property)@\spxentry{eph}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF property}|hyperpage}{15}
+\indexentry{epw (quality\_assessment.quality\_pdf\_report.DefectReportPDF property)@\spxentry{epw}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF property}|hyperpage}{15}
+\indexentry{fill\_color (quality\_assessment.quality\_pdf\_report.DefectReportPDF property)@\spxentry{fill\_color}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF property}|hyperpage}{15}
+\indexentry{font\_family (quality\_assessment.quality\_pdf\_report.DefectReportPDF property)@\spxentry{font\_family}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF property}|hyperpage}{15}
+\indexentry{font\_size (quality\_assessment.quality\_pdf\_report.DefectReportPDF property)@\spxentry{font\_size}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF property}|hyperpage}{15}
+\indexentry{font\_size\_pt (quality\_assessment.quality\_pdf\_report.DefectReportPDF property)@\spxentry{font\_size\_pt}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF property}|hyperpage}{15}
+\indexentry{font\_stretching (quality\_assessment.quality\_pdf\_report.DefectReportPDF property)@\spxentry{font\_stretching}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF property}|hyperpage}{16}
+\indexentry{font\_style (quality\_assessment.quality\_pdf\_report.DefectReportPDF property)@\spxentry{font\_style}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF property}|hyperpage}{16}
+\indexentry{line\_width (quality\_assessment.quality\_pdf\_report.DefectReportPDF property)@\spxentry{line\_width}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF property}|hyperpage}{16}
+\indexentry{pages\_count (quality\_assessment.quality\_pdf\_report.DefectReportPDF property)@\spxentry{pages\_count}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF property}|hyperpage}{16}
+\indexentry{text\_color (quality\_assessment.quality\_pdf\_report.DefectReportPDF property)@\spxentry{text\_color}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF property}|hyperpage}{16}
+\indexentry{underline (quality\_assessment.quality\_pdf\_report.DefectReportPDF property)@\spxentry{underline}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF property}|hyperpage}{16}
+\indexentry{unifontsubset (quality\_assessment.quality\_pdf\_report.DefectReportPDF property)@\spxentry{unifontsubset}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF property}|hyperpage}{16}
+\indexentry{\_\_init\_\_() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{\_\_init\_\_()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{19}
+\indexentry{add\_action() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{add\_action()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{20}
+\indexentry{add\_font() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{add\_font()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{20}
+\indexentry{add\_link() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{add\_link()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{20}
+\indexentry{add\_page() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{add\_page()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{20}
+\indexentry{alias\_nb\_pages() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{alias\_nb\_pages()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{21}
+\indexentry{arc() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{arc()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{21}
+\indexentry{cell() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{cell()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{22}
+\indexentry{circle() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{circle()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{22}
+\indexentry{close() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{close()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{23}
+\indexentry{code39() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{code39()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{23}
+\indexentry{dashed\_line() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{dashed\_line()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{23}
+\indexentry{draw\_path() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{draw\_path()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{23}
+\indexentry{drawing\_context() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{drawing\_context()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{23}
+\indexentry{ellipse() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{ellipse()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{24}
+\indexentry{footer() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{footer()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{24}
+\indexentry{get\_normalized\_string\_width\_with\_style() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{get\_normalized\_string\_width\_with\_style()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{24}
+\indexentry{get\_string\_width() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{get\_string\_width()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{24}
+\indexentry{get\_x() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{get\_x()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{25}
+\indexentry{get\_y() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{get\_y()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{25}
+\indexentry{header() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{header()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{25}
+\indexentry{image() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{image()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{25}
+\indexentry{insert\_toc\_placeholder() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{insert\_toc\_placeholder()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{26}
+\indexentry{interleaved2of5() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{interleaved2of5()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{26}
+\indexentry{line() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{line()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{26}
+\indexentry{link() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{link()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{26}
+\indexentry{ln() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{ln()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{27}
+\indexentry{local\_context() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{local\_context()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{27}
+\indexentry{multi\_cell() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{multi\_cell()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{27}
+\indexentry{new\_path() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{new\_path()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{28}
+\indexentry{normalize\_text() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{normalize\_text()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{28}
+\indexentry{open() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{open()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{28}
+\indexentry{output() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{output()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{29}
+\indexentry{page\_no() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{page\_no()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{29}
+\indexentry{polygon() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{polygon()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{29}
+\indexentry{polyline() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{polyline()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{29}
+\indexentry{rect() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{rect()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{29}
+\indexentry{rect\_clip() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{rect\_clip()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{30}
+\indexentry{regular\_polygon() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{regular\_polygon()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{30}
+\indexentry{rotate() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{rotate()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{30}
+\indexentry{rotation() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{rotation()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{30}
+\indexentry{set\_author() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_author()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{31}
+\indexentry{set\_auto\_page\_break() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_auto\_page\_break()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{31}
+\indexentry{set\_compression() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_compression()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{31}
+\indexentry{set\_creation\_date() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_creation\_date()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{31}
+\indexentry{set\_creator() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_creator()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{32}
+\indexentry{set\_dash\_pattern() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_dash\_pattern()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{32}
+\indexentry{set\_display\_mode() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_display\_mode()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{32}
+\indexentry{set\_doc\_option() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_doc\_option()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{32}
+\indexentry{set\_draw\_color() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_draw\_color()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{33}
+\indexentry{set\_fill\_color() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_fill\_color()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{33}
+\indexentry{set\_font() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_font()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{33}
+\indexentry{set\_font\_size() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_font\_size()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{34}
+\indexentry{set\_image\_filter() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_image\_filter()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{34}
+\indexentry{set\_keywords() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_keywords()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{34}
+\indexentry{set\_lang() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_lang()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{34}
+\indexentry{set\_left\_margin() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_left\_margin()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{34}
+\indexentry{set\_line\_width() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_line\_width()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{34}
+\indexentry{set\_link() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_link()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{35}
+\indexentry{set\_margin() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_margin()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{35}
+\indexentry{set\_margins() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_margins()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{35}
+\indexentry{set\_producer() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_producer()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{35}
+\indexentry{set\_right\_margin() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_right\_margin()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{35}
+\indexentry{set\_section\_title\_styles() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_section\_title\_styles()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{36}
+\indexentry{set\_stretching() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_stretching()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{36}
+\indexentry{set\_subject() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_subject()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{36}
+\indexentry{set\_text\_color() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_text\_color()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{36}
+\indexentry{set\_title() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_title()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{37}
+\indexentry{set\_top\_margin() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_top\_margin()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{37}
+\indexentry{set\_x() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_x()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{37}
+\indexentry{set\_xmp\_metadata() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_xmp\_metadata()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{37}
+\indexentry{set\_xy() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_xy()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{37}
+\indexentry{set\_y() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{set\_y()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{37}
+\indexentry{solid\_arc() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{solid\_arc()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{38}
+\indexentry{start\_section() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{start\_section()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{38}
+\indexentry{text() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{text()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{38}
+\indexentry{text\_annotation() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{text\_annotation()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{39}
+\indexentry{unbreakable() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{unbreakable()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{39}
+\indexentry{will\_page\_break() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{will\_page\_break()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{39}
+\indexentry{write() (quality\_assessment.quality\_pdf\_report.DefectReportPDF method)@\spxentry{write()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}|hyperpage}{39}
+\indexentry{ReportPDFCreator (class in quality\_assessment.quality\_pdf\_report)@\spxentry{ReportPDFCreator}\spxextra{class in quality\_assessment.quality\_pdf\_report}|hyperpage}{40}
+\indexentry{\_\_init\_\_() (quality\_assessment.quality\_pdf\_report.ReportPDFCreator method)@\spxentry{\_\_init\_\_()}\spxextra{quality\_assessment.quality\_pdf\_report.ReportPDFCreator method}|hyperpage}{40}
+\indexentry{create\_report() (quality\_assessment.quality\_pdf\_report.ReportPDFCreator method)@\spxentry{create\_report()}\spxextra{quality\_assessment.quality\_pdf\_report.ReportPDFCreator method}|hyperpage}{40}
+\indexentry{save\_report() (quality\_assessment.quality\_pdf\_report.ReportPDFCreator method)@\spxentry{save\_report()}\spxextra{quality\_assessment.quality\_pdf\_report.ReportPDFCreator method}|hyperpage}{40}
+\indexentry{main() (in module quality\_assessment.quality\_pdf\_report)@\spxentry{main()}\spxextra{in module quality\_assessment.quality\_pdf\_report}|hyperpage}{41}
+\indexentry{module@\spxentry{module}!quality\_assessment.data\_types@\spxentry{quality\_assessment.data\_types}|hyperpage}{43}
+\indexentry{quality\_assessment.data\_types@\spxentry{quality\_assessment.data\_types}!module@\spxentry{module}|hyperpage}{43}
+\indexentry{AveragesInfo (class in quality\_assessment.data\_types)@\spxentry{AveragesInfo}\spxextra{class in quality\_assessment.data\_types}|hyperpage}{43}
+\indexentry{center\_position (quality\_assessment.data\_types.AveragesInfo property)@\spxentry{center\_position}\spxextra{quality\_assessment.data\_types.AveragesInfo property}|hyperpage}{44}
+\indexentry{description (quality\_assessment.data\_types.AveragesInfo property)@\spxentry{description}\spxextra{quality\_assessment.data\_types.AveragesInfo property}|hyperpage}{44}
+\indexentry{width (quality\_assessment.data\_types.AveragesInfo property)@\spxentry{width}\spxextra{quality\_assessment.data\_types.AveragesInfo property}|hyperpage}{44}
+\indexentry{\_\_init\_\_() (quality\_assessment.data\_types.AveragesInfo method)@\spxentry{\_\_init\_\_()}\spxextra{quality\_assessment.data\_types.AveragesInfo method}|hyperpage}{44}
+\indexentry{PeakInfo (class in quality\_assessment.data\_types)@\spxentry{PeakInfo}\spxextra{class in quality\_assessment.data\_types}|hyperpage}{44}
+\indexentry{description (quality\_assessment.data\_types.PeakInfo property)@\spxentry{description}\spxextra{quality\_assessment.data\_types.PeakInfo property}|hyperpage}{45}
+\indexentry{width (quality\_assessment.data\_types.PeakInfo property)@\spxentry{width}\spxextra{quality\_assessment.data\_types.PeakInfo property}|hyperpage}{45}
+\indexentry{\_\_init\_\_() (quality\_assessment.data\_types.PeakInfo method)@\spxentry{\_\_init\_\_()}\spxextra{quality\_assessment.data\_types.PeakInfo method}|hyperpage}{45}
+\indexentry{QualityParameterInfo (class in quality\_assessment.data\_types)@\spxentry{QualityParameterInfo}\spxextra{class in quality\_assessment.data\_types}|hyperpage}{45}
+\indexentry{p\_id (quality\_assessment.data\_types.QualityParameterInfo attribute)@\spxentry{p\_id}\spxextra{quality\_assessment.data\_types.QualityParameterInfo attribute}|hyperpage}{46}
+\indexentry{start\_position (quality\_assessment.data\_types.QualityParameterInfo attribute)@\spxentry{start\_position}\spxextra{quality\_assessment.data\_types.QualityParameterInfo attribute}|hyperpage}{46}
+\indexentry{end\_position (quality\_assessment.data\_types.QualityParameterInfo attribute)@\spxentry{end\_position}\spxextra{quality\_assessment.data\_types.QualityParameterInfo attribute}|hyperpage}{46}
+\indexentry{center\_position (quality\_assessment.data\_types.QualityParameterInfo attribute)@\spxentry{center\_position}\spxextra{quality\_assessment.data\_types.QualityParameterInfo attribute}|hyperpage}{46}
+\indexentry{width (quality\_assessment.data\_types.QualityParameterInfo attribute)@\spxentry{width}\spxextra{quality\_assessment.data\_types.QualityParameterInfo attribute}|hyperpage}{46}
+\indexentry{value (quality\_assessment.data\_types.QualityParameterInfo attribute)@\spxentry{value}\spxextra{quality\_assessment.data\_types.QualityParameterInfo attribute}|hyperpage}{46}
+\indexentry{description (quality\_assessment.data\_types.QualityParameterInfo attribute)@\spxentry{description}\spxextra{quality\_assessment.data\_types.QualityParameterInfo attribute}|hyperpage}{46}
+\indexentry{\_\_init\_\_() (quality\_assessment.data\_types.QualityParameterInfo method)@\spxentry{\_\_init\_\_()}\spxextra{quality\_assessment.data\_types.QualityParameterInfo method}|hyperpage}{46}
+\indexentry{QualityReport (class in quality\_assessment.data\_types)@\spxentry{QualityReport}\spxextra{class in quality\_assessment.data\_types}|hyperpage}{47}
+\indexentry{fail\_information (quality\_assessment.data\_types.QualityReport attribute)@\spxentry{fail\_information}\spxextra{quality\_assessment.data\_types.QualityReport attribute}|hyperpage}{47}
+\indexentry{passed (quality\_assessment.data\_types.QualityReport property)@\spxentry{passed}\spxextra{quality\_assessment.data\_types.QualityReport property}|hyperpage}{47}
+\indexentry{tape\_id (quality\_assessment.data\_types.QualityReport attribute)@\spxentry{tape\_id}\spxextra{quality\_assessment.data\_types.QualityReport attribute}|hyperpage}{47}
+\indexentry{test\_type (quality\_assessment.data\_types.QualityReport attribute)@\spxentry{test\_type}\spxextra{quality\_assessment.data\_types.QualityReport attribute}|hyperpage}{47}
+\indexentry{\_\_init\_\_() (quality\_assessment.data\_types.QualityReport method)@\spxentry{\_\_init\_\_()}\spxextra{quality\_assessment.data\_types.QualityReport method}|hyperpage}{48}
+\indexentry{ScatterInfo (class in quality\_assessment.data\_types)@\spxentry{ScatterInfo}\spxextra{class in quality\_assessment.data\_types}|hyperpage}{48}
+\indexentry{center\_position (quality\_assessment.data\_types.ScatterInfo property)@\spxentry{center\_position}\spxextra{quality\_assessment.data\_types.ScatterInfo property}|hyperpage}{48}
+\indexentry{description (quality\_assessment.data\_types.ScatterInfo property)@\spxentry{description}\spxextra{quality\_assessment.data\_types.ScatterInfo property}|hyperpage}{48}
+\indexentry{width (quality\_assessment.data\_types.ScatterInfo property)@\spxentry{width}\spxextra{quality\_assessment.data\_types.ScatterInfo property}|hyperpage}{48}
+\indexentry{\_\_init\_\_() (quality\_assessment.data\_types.ScatterInfo method)@\spxentry{\_\_init\_\_()}\spxextra{quality\_assessment.data\_types.ScatterInfo method}|hyperpage}{49}
+\indexentry{TapeSection (class in quality\_assessment.data\_types)@\spxentry{TapeSection}\spxextra{class in quality\_assessment.data\_types}|hyperpage}{49}
+\indexentry{length (quality\_assessment.data\_types.TapeSection property)@\spxentry{length}\spxextra{quality\_assessment.data\_types.TapeSection property}|hyperpage}{49}
+\indexentry{start\_position (quality\_assessment.data\_types.TapeSection attribute)@\spxentry{start\_position}\spxextra{quality\_assessment.data\_types.TapeSection attribute}|hyperpage}{49}
+\indexentry{end\_position (quality\_assessment.data\_types.TapeSection attribute)@\spxentry{end\_position}\spxextra{quality\_assessment.data\_types.TapeSection attribute}|hyperpage}{49}
+\indexentry{\_\_init\_\_() (quality\_assessment.data\_types.TapeSection method)@\spxentry{\_\_init\_\_()}\spxextra{quality\_assessment.data\_types.TapeSection method}|hyperpage}{50}
+\indexentry{TapeSpecs (class in quality\_assessment.data\_types)@\spxentry{TapeSpecs}\spxextra{class in quality\_assessment.data\_types}|hyperpage}{50}
+\indexentry{width (quality\_assessment.data\_types.TapeSpecs attribute)@\spxentry{width}\spxextra{quality\_assessment.data\_types.TapeSpecs attribute}|hyperpage}{51}
+\indexentry{min\_tape\_length (quality\_assessment.data\_types.TapeSpecs attribute)@\spxentry{min\_tape\_length}\spxextra{quality\_assessment.data\_types.TapeSpecs attribute}|hyperpage}{51}
+\indexentry{min\_value (quality\_assessment.data\_types.TapeSpecs attribute)@\spxentry{min\_value}\spxextra{quality\_assessment.data\_types.TapeSpecs attribute}|hyperpage}{51}
+\indexentry{dropout\_value (quality\_assessment.data\_types.TapeSpecs attribute)@\spxentry{dropout\_value}\spxextra{quality\_assessment.data\_types.TapeSpecs attribute}|hyperpage}{51}
+\indexentry{dropout\_func (quality\_assessment.data\_types.TapeSpecs attribute)@\spxentry{dropout\_func}\spxextra{quality\_assessment.data\_types.TapeSpecs attribute}|hyperpage}{51}
+\indexentry{width\_from\_true\_baseline (quality\_assessment.data\_types.TapeSpecs attribute)@\spxentry{width\_from\_true\_baseline}\spxextra{quality\_assessment.data\_types.TapeSpecs attribute}|hyperpage}{51}
+\indexentry{min\_average (quality\_assessment.data\_types.TapeSpecs attribute)@\spxentry{min\_average}\spxextra{quality\_assessment.data\_types.TapeSpecs attribute}|hyperpage}{51}
+\indexentry{averaging\_length (quality\_assessment.data\_types.TapeSpecs attribute)@\spxentry{averaging\_length}\spxextra{quality\_assessment.data\_types.TapeSpecs attribute}|hyperpage}{51}
+\indexentry{description (quality\_assessment.data\_types.TapeSpecs attribute)@\spxentry{description}\spxextra{quality\_assessment.data\_types.TapeSpecs attribute}|hyperpage}{51}
+\indexentry{\_\_init\_\_() (quality\_assessment.data\_types.TapeSpecs method)@\spxentry{\_\_init\_\_()}\spxextra{quality\_assessment.data\_types.TapeSpecs method}|hyperpage}{52}
+\indexentry{TestType (class in quality\_assessment.data\_types)@\spxentry{TestType}\spxextra{class in quality\_assessment.data\_types}|hyperpage}{52}
+\indexentry{AVERAGE (quality\_assessment.data\_types.TestType attribute)@\spxentry{AVERAGE}\spxextra{quality\_assessment.data\_types.TestType attribute}|hyperpage}{52}
+\indexentry{SCATTER (quality\_assessment.data\_types.TestType attribute)@\spxentry{SCATTER}\spxextra{quality\_assessment.data\_types.TestType attribute}|hyperpage}{52}
+\indexentry{MINIMUM (quality\_assessment.data\_types.TestType attribute)@\spxentry{MINIMUM}\spxextra{quality\_assessment.data\_types.TestType attribute}|hyperpage}{53}
+\indexentry{DROPOUT (quality\_assessment.data\_types.TestType attribute)@\spxentry{DROPOUT}\spxextra{quality\_assessment.data\_types.TestType attribute}|hyperpage}{53}

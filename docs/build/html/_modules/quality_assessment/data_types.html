@@ -1,0 +1,271 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quality_assessment.data_types &#8212; Quality Assessment 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
+    
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Quality Assessment 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quality_assessment.data_types</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for quality_assessment.data_types</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; provides data types for analysing defect structures in HTS tapes</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">runtime_checkable</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+
+
+<div class="viewcode-block" id="QualityParameterInfo"><a class="viewcode-back" href="../../generated/quality_assessment.data_types.QualityParameterInfo.html#quality_assessment.data_types.QualityParameterInfo">[docs]</a><span class="nd">@runtime_checkable</span>
+<span class="k">class</span> <span class="nc">QualityParameterInfo</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Protocol for defect information</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">    -----------</span>
+<span class="sd">        p_id (int): ID of the defect</span>
+<span class="sd">        start_position (float): Start position of the defect.</span>
+<span class="sd">        end_position (float): End position of the defect.</span>
+<span class="sd">        center_position (float): Center position of the defect.</span>
+<span class="sd">        width (float): Width of the defect section.</span>
+<span class="sd">        value (float): Value of the defect.</span>
+<span class="sd">        description (str): Description of the defect information</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p_id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">start_position</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">end_position</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">center_position</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">width</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">value</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="PeakInfo"><a class="viewcode-back" href="../../generated/quality_assessment.data_types.PeakInfo.html#quality_assessment.data_types.PeakInfo">[docs]</a><span class="k">class</span> <span class="nc">PeakInfo</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Class holding information about individual peaks.</span>
+<span class="sd">        Conforms to QualityParameterInfo protocol</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_position</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_position</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Peak at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">center_position</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">m, &quot;</span> <span class="o">+</span>
+                <span class="sa">f</span><span class="s2">&quot;width: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">*</span><span class="mi">1000</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">mm, value: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">A&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PeakInfo.__init__"><a class="viewcode-back" href="../../generated/quality_assessment.data_types.PeakInfo.__init__.html#quality_assessment.data_types.PeakInfo.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">p_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">start_position</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+                 <span class="n">end_position</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+                 <span class="n">center_position</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+                 <span class="n">value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_id</span> <span class="o">=</span> <span class="n">p_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_position</span> <span class="o">=</span> <span class="n">start_position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_position</span> <span class="o">=</span> <span class="n">end_position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center_position</span> <span class="o">=</span> <span class="n">center_position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span></div></div>
+
+
+<div class="viewcode-block" id="AveragesInfo"><a class="viewcode-back" href="../../generated/quality_assessment.data_types.AveragesInfo.html#quality_assessment.data_types.AveragesInfo">[docs]</a><span class="k">class</span> <span class="nc">AveragesInfo</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Class holding information about piecewise averages.</span>
+<span class="sd">        Conforms to QualityParameterInfo protocol</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">center_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_position</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_position</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_position</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_position</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Average between </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">start_position</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">m and &quot;</span> <span class="o">+</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">end_position</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">m is </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">A&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AveragesInfo.__init__"><a class="viewcode-back" href="../../generated/quality_assessment.data_types.AveragesInfo.__init__.html#quality_assessment.data_types.AveragesInfo.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">p_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                 <span class="n">start_position</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+                 <span class="n">end_position</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+                 <span class="n">value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_id</span> <span class="o">=</span> <span class="n">p_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_position</span> <span class="o">=</span> <span class="n">start_position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_position</span> <span class="o">=</span> <span class="n">end_position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span></div></div>
+
+
+<div class="viewcode-block" id="ScatterInfo"><a class="viewcode-back" href="../../generated/quality_assessment.data_types.ScatterInfo.html#quality_assessment.data_types.ScatterInfo">[docs]</a><span class="k">class</span> <span class="nc">ScatterInfo</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Class holding information about piecewise scatter characteristics.</span>
+<span class="sd">        Conforms to QualityParameterInfo protocol</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">center_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_position</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_position</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_position</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_position</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Scatter between </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">start_position</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">m and &quot;</span> <span class="o">+</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">end_position</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">m is </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">A&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ScatterInfo.__init__"><a class="viewcode-back" href="../../generated/quality_assessment.data_types.ScatterInfo.__init__.html#quality_assessment.data_types.ScatterInfo.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">p_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                 <span class="n">start_position</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+                 <span class="n">end_position</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+                 <span class="n">value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_id</span> <span class="o">=</span> <span class="n">p_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_position</span> <span class="o">=</span> <span class="n">start_position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_position</span> <span class="o">=</span> <span class="n">end_position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span></div></div>
+
+
+<div class="viewcode-block" id="TapeSpecs"><a class="viewcode-back" href="../../generated/quality_assessment.data_types.TapeSpecs.html#quality_assessment.data_types.TapeSpecs">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">TapeSpecs</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Tuple holding information about tape specifications</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">    -----------</span>
+<span class="sd">        width (float): Tape width in mm</span>
+<span class="sd">        min_tape_length (float): Minimum tape length for product in m</span>
+<span class="sd">        min_value (float): Minimum value in A</span>
+<span class="sd">        dropout_value (Optional[float]): Minimum drop-out value in A</span>
+<span class="sd">        dropout_func (Optional[Callable[[float], float]]): Maximum width of drop-out in mm</span>
+<span class="sd">        min_average (Optional[float]): Minimum average value in A</span>
+<span class="sd">        average_length (Optional[float]): Length over which to average in m</span>
+<span class="sd">        description (str): Name/Description of the product</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">width</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">min_tape_length</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">min_value</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">dropout_value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">dropout_func</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]]</span>
+    <span class="n">width_from_true_baseline</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">min_average</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">averaging_length</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="TestType"><a class="viewcode-back" href="../../generated/quality_assessment.data_types.TestType.html#quality_assessment.data_types.TestType">[docs]</a><span class="k">class</span> <span class="nc">TestType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Enum of different quality test types.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">AVERAGE</span> <span class="o">=</span> <span class="s1">&#39;Average Value&#39;</span>
+    <span class="n">SCATTER</span> <span class="o">=</span> <span class="s1">&#39;Scatter&#39;</span>         <span class="c1"># TODO Currently not available in Specs and Tests</span>
+    <span class="n">MINIMUM</span> <span class="o">=</span> <span class="s1">&#39;Minimum Value&#39;</span>
+    <span class="n">DROPOUT</span> <span class="o">=</span> <span class="s1">&#39;Drop Out&#39;</span></div>
+
+
+<div class="viewcode-block" id="TapeSection"><a class="viewcode-back" href="../../generated/quality_assessment.data_types.TapeSection.html#quality_assessment.data_types.TapeSection">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">TapeSection</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Holds information of tape sections.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">    -----------</span>
+<span class="sd">        start_position (float): Start position of the tape section.</span>
+<span class="sd">        end_position (float): End position of the tape section.</span>
+<span class="sd">        length (float, read only): Length of the tape section.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_position</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_position</span>
+
+    <span class="n">start_position</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">end_position</span><span class="p">:</span> <span class="nb">float</span></div>
+
+
+<div class="viewcode-block" id="QualityReport"><a class="viewcode-back" href="../../generated/quality_assessment.data_types.QualityReport.html#quality_assessment.data_types.QualityReport">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">QualityReport</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Class containing all information for a quality report for a tape</span>
+<span class="sd">        regarding a specific quality parameter.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">    -----------</span>
+<span class="sd">        tape_id (str): ID of the tested tape.</span>
+<span class="sd">        test_type (TestType): Type of the test.</span>
+<span class="sd">        fail_information (Optional[list[QualityParameterInfo]]): Information about failures</span>
+<span class="sd">        passed (bool): Test passed or not.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tape_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">test_type</span><span class="p">:</span> <span class="n">TestType</span>
+    <span class="n">fail_information</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">QualityParameterInfo</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">passed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fail_information</span> <span class="ow">is</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># if list is empty, set fail_information to None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fail_information</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fail_information</span> <span class="o">=</span> <span class="kc">None</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Quality Assessment 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quality_assessment.data_types</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Veit Große.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>

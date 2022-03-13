@@ -1,0 +1,448 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>DefectReportPDF &#8212; Quality Assessment 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="DefectReportPDF.MARKDOWN_BOLD_MARKER" href="quality_assessment.quality_pdf_report.DefectReportPDF.MARKDOWN_BOLD_MARKER.html" />
+    <link rel="prev" title="quality_assessment.quality_pdf_report" href="quality_assessment.quality_pdf_report.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quality_assessment.quality_pdf_report.DefectReportPDF.MARKDOWN_BOLD_MARKER.html" title="DefectReportPDF.MARKDOWN_BOLD_MARKER"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quality_assessment.quality_pdf_report.html" title="quality_assessment.quality_pdf_report"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Quality Assessment 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quality_assessment.quality_pdf_report.html" accesskey="U">quality_assessment.quality_pdf_report</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">DefectReportPDF</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="defectreportpdf">
+<h1>DefectReportPDF<a class="headerlink" href="#defectreportpdf" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="quality_assessment.quality_pdf_report.DefectReportPDF">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">quality_assessment.quality_pdf_report.</span></span><span class="sig-name descname"><span class="pre">DefectReportPDF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tape_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">product</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quality_assessment/quality_pdf_report.html#DefectReportPDF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quality_assessment.quality_pdf_report.DefectReportPDF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subclass of FPDF to set up page structure</p>
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.MARKDOWN_BOLD_MARKER.html#quality_assessment.quality_pdf_report.DefectReportPDF.MARKDOWN_BOLD_MARKER" title="quality_assessment.quality_pdf_report.DefectReportPDF.MARKDOWN_BOLD_MARKER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.MARKDOWN_BOLD_MARKER</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.MARKDOWN_ITALICS_MARKER.html#quality_assessment.quality_pdf_report.DefectReportPDF.MARKDOWN_ITALICS_MARKER" title="quality_assessment.quality_pdf_report.DefectReportPDF.MARKDOWN_ITALICS_MARKER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.MARKDOWN_ITALICS_MARKER</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.MARKDOWN_UNDERLINE_MARKER.html#quality_assessment.quality_pdf_report.DefectReportPDF.MARKDOWN_UNDERLINE_MARKER" title="quality_assessment.quality_pdf_report.DefectReportPDF.MARKDOWN_UNDERLINE_MARKER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.MARKDOWN_UNDERLINE_MARKER</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.accept_page_break.html#quality_assessment.quality_pdf_report.DefectReportPDF.accept_page_break" title="quality_assessment.quality_pdf_report.DefectReportPDF.accept_page_break"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.accept_page_break</span></code></a></p></td>
+<td><p>Whenever a page break condition is met, this method is called, and the break is issued or not depending on the returned value.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.dash_pattern.html#quality_assessment.quality_pdf_report.DefectReportPDF.dash_pattern" title="quality_assessment.quality_pdf_report.DefectReportPDF.dash_pattern"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.dash_pattern</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.draw_color.html#quality_assessment.quality_pdf_report.DefectReportPDF.draw_color" title="quality_assessment.quality_pdf_report.DefectReportPDF.draw_color"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.draw_color</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.eph.html#quality_assessment.quality_pdf_report.DefectReportPDF.eph" title="quality_assessment.quality_pdf_report.DefectReportPDF.eph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.eph</span></code></a></p></td>
+<td><p>the page height minus its vertical margins.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.epw.html#quality_assessment.quality_pdf_report.DefectReportPDF.epw" title="quality_assessment.quality_pdf_report.DefectReportPDF.epw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.epw</span></code></a></p></td>
+<td><p>the page width minus its horizontal margins.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.fill_color.html#quality_assessment.quality_pdf_report.DefectReportPDF.fill_color" title="quality_assessment.quality_pdf_report.DefectReportPDF.fill_color"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.fill_color</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.font_family.html#quality_assessment.quality_pdf_report.DefectReportPDF.font_family" title="quality_assessment.quality_pdf_report.DefectReportPDF.font_family"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.font_family</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.font_size.html#quality_assessment.quality_pdf_report.DefectReportPDF.font_size" title="quality_assessment.quality_pdf_report.DefectReportPDF.font_size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.font_size</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.font_size_pt.html#quality_assessment.quality_pdf_report.DefectReportPDF.font_size_pt" title="quality_assessment.quality_pdf_report.DefectReportPDF.font_size_pt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.font_size_pt</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.font_stretching.html#quality_assessment.quality_pdf_report.DefectReportPDF.font_stretching" title="quality_assessment.quality_pdf_report.DefectReportPDF.font_stretching"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.font_stretching</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.font_style.html#quality_assessment.quality_pdf_report.DefectReportPDF.font_style" title="quality_assessment.quality_pdf_report.DefectReportPDF.font_style"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.font_style</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.line_width.html#quality_assessment.quality_pdf_report.DefectReportPDF.line_width" title="quality_assessment.quality_pdf_report.DefectReportPDF.line_width"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.line_width</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.pages_count.html#quality_assessment.quality_pdf_report.DefectReportPDF.pages_count" title="quality_assessment.quality_pdf_report.DefectReportPDF.pages_count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.pages_count</span></code></a></p></td>
+<td><p>Returns the total pages of the document.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.text_color.html#quality_assessment.quality_pdf_report.DefectReportPDF.text_color" title="quality_assessment.quality_pdf_report.DefectReportPDF.text_color"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.text_color</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.underline.html#quality_assessment.quality_pdf_report.DefectReportPDF.underline" title="quality_assessment.quality_pdf_report.DefectReportPDF.underline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.underline</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.unifontsubset.html#quality_assessment.quality_pdf_report.DefectReportPDF.unifontsubset" title="quality_assessment.quality_pdf_report.DefectReportPDF.unifontsubset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.unifontsubset</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.__init__.html#quality_assessment.quality_pdf_report.DefectReportPDF.__init__" title="quality_assessment.quality_pdf_report.DefectReportPDF.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.__init__</span></code></a>(tape_id, product, ...)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">param orientation</dt>
+<dd class="field-odd"><p>possible values are &quot;portrait&quot; (can be abbreviated &quot;P&quot;)</p>
+</dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.add_action.html#quality_assessment.quality_pdf_report.DefectReportPDF.add_action" title="quality_assessment.quality_pdf_report.DefectReportPDF.add_action"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.add_action</span></code></a>(action, x, y, w, h)</p></td>
+<td><p>Puts an Action annotation on a rectangular area of the page.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.add_font.html#quality_assessment.quality_pdf_report.DefectReportPDF.add_font" title="quality_assessment.quality_pdf_report.DefectReportPDF.add_font"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.add_font</span></code></a>(family[, style, ...])</p></td>
+<td><p>Imports a TrueType or OpenType font and makes it available for later calls to the <cite>set_font()</cite> method.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.add_link.html#quality_assessment.quality_pdf_report.DefectReportPDF.add_link" title="quality_assessment.quality_pdf_report.DefectReportPDF.add_link"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.add_link</span></code></a>()</p></td>
+<td><p>Creates a new internal link and returns its identifier.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.add_page.html#quality_assessment.quality_pdf_report.DefectReportPDF.add_page" title="quality_assessment.quality_pdf_report.DefectReportPDF.add_page"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.add_page</span></code></a>([orientation, ...])</p></td>
+<td><p>Adds a new page to the document.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.alias_nb_pages.html#quality_assessment.quality_pdf_report.DefectReportPDF.alias_nb_pages" title="quality_assessment.quality_pdf_report.DefectReportPDF.alias_nb_pages"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.alias_nb_pages</span></code></a>([alias])</p></td>
+<td><p>Defines an alias for the total number of pages.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.arc.html#quality_assessment.quality_pdf_report.DefectReportPDF.arc" title="quality_assessment.quality_pdf_report.DefectReportPDF.arc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.arc</span></code></a>(x, y, a, start_angle, ...)</p></td>
+<td><p>Outputs an arc. It can be drawn (border only), filled (with no border) or both. a (float): Semi-major axis diameter. b (float): Semi-minor axis diameter, if None, equals to a (default: None). start_angle (float): Start angle of the arc (in degrees). end_angle (float): End angle of the arc (in degrees). inclination (float): Inclination of the arc in respect of the x-axis (default: 0). clockwise (bool): Way of drawing the arc (True: clockwise, False: counterclockwise) (default: False). start_from_center (bool): Start drawing from the center of the circle (default: False). end_at_center (bool): End drawing at the center of the circle (default: False). style (str): Style of rendering. Possible values are:         * <cite>D</cite> or None: draw border. This is the default value. * <cite>F</cite>: fill         * <cite>DF</cite> or <cite>FD</cite>: draw and fill.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.cell.html#quality_assessment.quality_pdf_report.DefectReportPDF.cell" title="quality_assessment.quality_pdf_report.DefectReportPDF.cell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.cell</span></code></a>([w, h, txt, border, ...])</p></td>
+<td><p>Prints a cell (rectangular area) with optional borders, background color and character string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.circle.html#quality_assessment.quality_pdf_report.DefectReportPDF.circle" title="quality_assessment.quality_pdf_report.DefectReportPDF.circle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.circle</span></code></a>(x, y, r[, style])</p></td>
+<td><p>Outputs a circle.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.close.html#quality_assessment.quality_pdf_report.DefectReportPDF.close" title="quality_assessment.quality_pdf_report.DefectReportPDF.close"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.close</span></code></a>()</p></td>
+<td><p>Terminates the PDF document.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.code39.html#quality_assessment.quality_pdf_report.DefectReportPDF.code39" title="quality_assessment.quality_pdf_report.DefectReportPDF.code39"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.code39</span></code></a>(txt, x, y[, w, h])</p></td>
+<td><p>Barcode 3of9</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.dashed_line.html#quality_assessment.quality_pdf_report.DefectReportPDF.dashed_line" title="quality_assessment.quality_pdf_report.DefectReportPDF.dashed_line"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.dashed_line</span></code></a>(x1, y1, x2, y2)</p></td>
+<td><p>Draw a dashed line between two points.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.draw_path.html#quality_assessment.quality_pdf_report.DefectReportPDF.draw_path" title="quality_assessment.quality_pdf_report.DefectReportPDF.draw_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.draw_path</span></code></a>(path[, debug_stream])</p></td>
+<td><p>Add a pre-constructed path to the document.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.drawing_context.html#quality_assessment.quality_pdf_report.DefectReportPDF.drawing_context" title="quality_assessment.quality_pdf_report.DefectReportPDF.drawing_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.drawing_context</span></code></a>([debug_stream])</p></td>
+<td><p>Create a context for drawing paths on the current page.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.ellipse.html#quality_assessment.quality_pdf_report.DefectReportPDF.ellipse" title="quality_assessment.quality_pdf_report.DefectReportPDF.ellipse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.ellipse</span></code></a>(x, y, w, h[, style])</p></td>
+<td><p>Outputs an ellipse.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.footer.html#quality_assessment.quality_pdf_report.DefectReportPDF.footer" title="quality_assessment.quality_pdf_report.DefectReportPDF.footer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.footer</span></code></a>()</p></td>
+<td><p>Draw footer</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.get_normalized_string_width_with_style.html#quality_assessment.quality_pdf_report.DefectReportPDF.get_normalized_string_width_with_style" title="quality_assessment.quality_pdf_report.DefectReportPDF.get_normalized_string_width_with_style"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.get_normalized_string_width_with_style</span></code></a>(...)</p></td>
+<td><p>Returns the length of a string with given style</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.get_string_width.html#quality_assessment.quality_pdf_report.DefectReportPDF.get_string_width" title="quality_assessment.quality_pdf_report.DefectReportPDF.get_string_width"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.get_string_width</span></code></a>(s[, ...])</p></td>
+<td><p>Returns the length of a string in user unit.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.get_x.html#quality_assessment.quality_pdf_report.DefectReportPDF.get_x" title="quality_assessment.quality_pdf_report.DefectReportPDF.get_x"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.get_x</span></code></a>()</p></td>
+<td><p>Returns the abscissa of the current position.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.get_y.html#quality_assessment.quality_pdf_report.DefectReportPDF.get_y" title="quality_assessment.quality_pdf_report.DefectReportPDF.get_y"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.get_y</span></code></a>()</p></td>
+<td><p>Returns the ordinate of the current position.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.header.html#quality_assessment.quality_pdf_report.DefectReportPDF.header" title="quality_assessment.quality_pdf_report.DefectReportPDF.header"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.header</span></code></a>()</p></td>
+<td><p>Draw header</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.image.html#quality_assessment.quality_pdf_report.DefectReportPDF.image" title="quality_assessment.quality_pdf_report.DefectReportPDF.image"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.image</span></code></a>(name[, x, y, w, h, ...])</p></td>
+<td><p>Put an image on the page.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.insert_toc_placeholder.html#quality_assessment.quality_pdf_report.DefectReportPDF.insert_toc_placeholder" title="quality_assessment.quality_pdf_report.DefectReportPDF.insert_toc_placeholder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.insert_toc_placeholder</span></code></a>(...)</p></td>
+<td><p>Configure Table Of Contents rendering at the end of the document generation, and reserve some vertical space right now in order to insert it.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.interleaved2of5.html#quality_assessment.quality_pdf_report.DefectReportPDF.interleaved2of5" title="quality_assessment.quality_pdf_report.DefectReportPDF.interleaved2of5"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.interleaved2of5</span></code></a>(txt, x, y[, ...])</p></td>
+<td><p>Barcode I2of5 (numeric), adds a 0 if odd length</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.line.html#quality_assessment.quality_pdf_report.DefectReportPDF.line" title="quality_assessment.quality_pdf_report.DefectReportPDF.line"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.line</span></code></a>(x1, y1, x2, y2)</p></td>
+<td><p>Draw a line between two points.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.link.html#quality_assessment.quality_pdf_report.DefectReportPDF.link" title="quality_assessment.quality_pdf_report.DefectReportPDF.link"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.link</span></code></a>(x, y, w, h, link[, ...])</p></td>
+<td><p>Puts a link annotation on a rectangular area of the page.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.ln.html#quality_assessment.quality_pdf_report.DefectReportPDF.ln" title="quality_assessment.quality_pdf_report.DefectReportPDF.ln"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.ln</span></code></a>([h])</p></td>
+<td><p>Line Feed.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.local_context.html#quality_assessment.quality_pdf_report.DefectReportPDF.local_context" title="quality_assessment.quality_pdf_report.DefectReportPDF.local_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.local_context</span></code></a>()</p></td>
+<td><p>Create a local grapics state, which won't affect the surrounding code.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.multi_cell.html#quality_assessment.quality_pdf_report.DefectReportPDF.multi_cell" title="quality_assessment.quality_pdf_report.DefectReportPDF.multi_cell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.multi_cell</span></code></a>(w[, h, txt, ...])</p></td>
+<td><p>This method allows printing text with line breaks.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.new_path.html#quality_assessment.quality_pdf_report.DefectReportPDF.new_path" title="quality_assessment.quality_pdf_report.DefectReportPDF.new_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.new_path</span></code></a>([x, y, paint_rule, ...])</p></td>
+<td><p>Create a path for appending lines and curves to.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.normalize_text.html#quality_assessment.quality_pdf_report.DefectReportPDF.normalize_text" title="quality_assessment.quality_pdf_report.DefectReportPDF.normalize_text"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.normalize_text</span></code></a>(txt)</p></td>
+<td><p>Check that text input is in the correct format/encoding</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.open.html#quality_assessment.quality_pdf_report.DefectReportPDF.open" title="quality_assessment.quality_pdf_report.DefectReportPDF.open"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.open</span></code></a>()</p></td>
+<td><p>Starts the generation of the PDF document.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.output.html#quality_assessment.quality_pdf_report.DefectReportPDF.output" title="quality_assessment.quality_pdf_report.DefectReportPDF.output"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.output</span></code></a>([name, dest])</p></td>
+<td><p>Output PDF to some destination.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.page_no.html#quality_assessment.quality_pdf_report.DefectReportPDF.page_no" title="quality_assessment.quality_pdf_report.DefectReportPDF.page_no"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.page_no</span></code></a>()</p></td>
+<td><p>Get the current page number</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.polygon.html#quality_assessment.quality_pdf_report.DefectReportPDF.polygon" title="quality_assessment.quality_pdf_report.DefectReportPDF.polygon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.polygon</span></code></a>(point_list[, fill])</p></td>
+<td><p>Outputs a polygon defined by three or more points.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.polyline.html#quality_assessment.quality_pdf_report.DefectReportPDF.polyline" title="quality_assessment.quality_pdf_report.DefectReportPDF.polyline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.polyline</span></code></a>(point_list[, fill, ...])</p></td>
+<td><p>Draws lines between two or more points.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.rect.html#quality_assessment.quality_pdf_report.DefectReportPDF.rect" title="quality_assessment.quality_pdf_report.DefectReportPDF.rect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.rect</span></code></a>(x, y, w, h[, style])</p></td>
+<td><p>Outputs a rectangle.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.rect_clip.html#quality_assessment.quality_pdf_report.DefectReportPDF.rect_clip" title="quality_assessment.quality_pdf_report.DefectReportPDF.rect_clip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.rect_clip</span></code></a>(x, y, w, h)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.regular_polygon.html#quality_assessment.quality_pdf_report.DefectReportPDF.regular_polygon" title="quality_assessment.quality_pdf_report.DefectReportPDF.regular_polygon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.regular_polygon</span></code></a>(x, y, ...[, ...])</p></td>
+<td><p>Outputs a regular polygon with n sides It can be rotated Style can also be applied (fill, border...)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.rotate.html#quality_assessment.quality_pdf_report.DefectReportPDF.rotate" title="quality_assessment.quality_pdf_report.DefectReportPDF.rotate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.rotate</span></code></a>(angle[, x, y])</p></td>
+<td><p><div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 2.1.0.</span></p>
+</div>
+</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.rotation.html#quality_assessment.quality_pdf_report.DefectReportPDF.rotation" title="quality_assessment.quality_pdf_report.DefectReportPDF.rotation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.rotation</span></code></a>(angle[, x, y])</p></td>
+<td><p>This method allows to perform a rotation around a given center.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_author.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_author" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_author"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_author</span></code></a>(author)</p></td>
+<td><p>Defines the author of the document.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_auto_page_break.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_auto_page_break" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_auto_page_break"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_auto_page_break</span></code></a>(auto[, ...])</p></td>
+<td><p>Set auto page break mode and triggering bottom margin.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_compression.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_compression" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_compression"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_compression</span></code></a>(compress)</p></td>
+<td><p>Activates or deactivates page compression.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_creation_date.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_creation_date" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_creation_date"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_creation_date</span></code></a>([date])</p></td>
+<td><p>Sets Creation of Date time, or current time if None given.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_creator.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_creator" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_creator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_creator</span></code></a>(creator)</p></td>
+<td><p>Defines the creator of the document.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_dash_pattern.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_dash_pattern" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_dash_pattern"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_dash_pattern</span></code></a>([dash, ...])</p></td>
+<td><p>Set the current dash pattern for lines and curves.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_display_mode.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_display_mode" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_display_mode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_display_mode</span></code></a>(zoom[, layout])</p></td>
+<td><p>Defines the way the document is to be displayed by the viewer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_doc_option.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_doc_option" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_doc_option"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_doc_option</span></code></a>(opt, value)</p></td>
+<td><p>Defines a document option.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_draw_color.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_draw_color" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_draw_color"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_draw_color</span></code></a>(r[, g, b])</p></td>
+<td><p>Defines the color used for all stroking operations (lines, rectangles and cell borders).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_fill_color.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_fill_color" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_fill_color"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_fill_color</span></code></a>(r[, g, b])</p></td>
+<td><p>Defines the color used for all filling operations (filled rectangles and cell backgrounds).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_font.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_font" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_font"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_font</span></code></a>([family, style, size])</p></td>
+<td><p>Sets the font used to print character strings.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_font_size.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_font_size" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_font_size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_font_size</span></code></a>(size)</p></td>
+<td><p>Configure the font size in points</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_image_filter.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_image_filter" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_image_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_image_filter</span></code></a>(image_filter)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">param image_filter</dt>
+<dd class="field-odd"><p>name of a support image filter or &quot;AUTO&quot;,</p>
+</dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_keywords.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_keywords" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_keywords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_keywords</span></code></a>(keywords)</p></td>
+<td><p>Associate keywords with the document</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_lang.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_lang" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_lang"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_lang</span></code></a>(lang)</p></td>
+<td><p>A language identifier specifying the natural language for all text in the document except where overridden by language specifications for structure elements or marked content.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_left_margin.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_left_margin" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_left_margin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_left_margin</span></code></a>(margin)</p></td>
+<td><p>Sets the document left margin.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_line_width.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_line_width" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_line_width"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_line_width</span></code></a>(width)</p></td>
+<td><p>Defines the line width of all stroking operations (lines, rectangles and cell borders).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_link.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_link" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_link"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_link</span></code></a>(link[, y, x, page, ...])</p></td>
+<td><p>Defines the page and position a link points to.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_margin.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_margin" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_margin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_margin</span></code></a>(margin)</p></td>
+<td><p>Sets the document right, left, top &amp; bottom margins to the same value.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_margins.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_margins" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_margins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_margins</span></code></a>(left, top[, right])</p></td>
+<td><p>Sets the document left, top &amp; optionaly right margins to the same value.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_producer.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_producer" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_producer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_producer</span></code></a>(producer)</p></td>
+<td><p>Producer of document</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_right_margin.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_right_margin" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_right_margin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_right_margin</span></code></a>(margin)</p></td>
+<td><p>Sets the document right margin.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_section_title_styles.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_section_title_styles" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_section_title_styles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_section_title_styles</span></code></a>(level0)</p></td>
+<td><p>Defines a style for section titles.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_stretching.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_stretching" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_stretching"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_stretching</span></code></a>(stretching)</p></td>
+<td><p>Sets horizontal font stretching.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_subject.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_subject" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_subject"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_subject</span></code></a>(subject)</p></td>
+<td><p>Defines the subject of the document.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_text_color.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_text_color" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_text_color"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_text_color</span></code></a>(r[, g, b])</p></td>
+<td><p>Defines the color used for text.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_title.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_title" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_title"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_title</span></code></a>(title)</p></td>
+<td><p>Defines the title of the document.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_top_margin.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_top_margin" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_top_margin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_top_margin</span></code></a>(margin)</p></td>
+<td><p>Sets the document top margin.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_x.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_x" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_x"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_x</span></code></a>(x)</p></td>
+<td><p>Defines the abscissa of the current position.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_xmp_metadata.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_xmp_metadata" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_xmp_metadata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_xmp_metadata</span></code></a>(xmp_metadata)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_xy.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_xy" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_xy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_xy</span></code></a>(x, y)</p></td>
+<td><p>Defines the abscissa and ordinate of the current position.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.set_y.html#quality_assessment.quality_pdf_report.DefectReportPDF.set_y" title="quality_assessment.quality_pdf_report.DefectReportPDF.set_y"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.set_y</span></code></a>(y)</p></td>
+<td><p>Moves the current abscissa back to the left margin and sets the ordinate.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.solid_arc.html#quality_assessment.quality_pdf_report.DefectReportPDF.solid_arc" title="quality_assessment.quality_pdf_report.DefectReportPDF.solid_arc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.solid_arc</span></code></a>(x, y, a, ...[, b, ...])</p></td>
+<td><p>Outputs a solid arc.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.start_section.html#quality_assessment.quality_pdf_report.DefectReportPDF.start_section" title="quality_assessment.quality_pdf_report.DefectReportPDF.start_section"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.start_section</span></code></a>(name[, level])</p></td>
+<td><p>Start a section in the document outline.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.text.html#quality_assessment.quality_pdf_report.DefectReportPDF.text" title="quality_assessment.quality_pdf_report.DefectReportPDF.text"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.text</span></code></a>(x, y[, txt])</p></td>
+<td><p>Prints a character string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.text_annotation.html#quality_assessment.quality_pdf_report.DefectReportPDF.text_annotation" title="quality_assessment.quality_pdf_report.DefectReportPDF.text_annotation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.text_annotation</span></code></a>(x, y, text)</p></td>
+<td><p>Puts a text annotation on a rectangular area of the page.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.unbreakable.html#quality_assessment.quality_pdf_report.DefectReportPDF.unbreakable" title="quality_assessment.quality_pdf_report.DefectReportPDF.unbreakable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.unbreakable</span></code></a>()</p></td>
+<td><p>Ensures that all rendering performed in this context appear on a single page by performing page break beforehand if need be.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.will_page_break.html#quality_assessment.quality_pdf_report.DefectReportPDF.will_page_break" title="quality_assessment.quality_pdf_report.DefectReportPDF.will_page_break"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.will_page_break</span></code></a>(height)</p></td>
+<td><p>Let you know if adding an element will trigger a page break, based on its height and the current ordinate (<cite>y</cite> position).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="quality_assessment.quality_pdf_report.DefectReportPDF.write.html#quality_assessment.quality_pdf_report.DefectReportPDF.write" title="quality_assessment.quality_pdf_report.DefectReportPDF.write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefectReportPDF.write</span></code></a>([h, txt, link, print_sh])</p></td>
+<td><p>Prints text from the current position.</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="quality_assessment.quality_pdf_report.html"
+                          title="previous chapter">quality_assessment.quality_pdf_report</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="quality_assessment.quality_pdf_report.DefectReportPDF.MARKDOWN_BOLD_MARKER.html"
+                          title="next chapter">DefectReportPDF.MARKDOWN_BOLD_MARKER</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/generated/quality_assessment.quality_pdf_report.DefectReportPDF.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quality_assessment.quality_pdf_report.DefectReportPDF.MARKDOWN_BOLD_MARKER.html" title="DefectReportPDF.MARKDOWN_BOLD_MARKER"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quality_assessment.quality_pdf_report.html" title="quality_assessment.quality_pdf_report"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Quality Assessment 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quality_assessment.quality_pdf_report.html" >quality_assessment.quality_pdf_report</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">DefectReportPDF</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Veit Große.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+    </div>
+  </body>
+</html>
