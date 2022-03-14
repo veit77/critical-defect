@@ -184,6 +184,14 @@
 \contentsline {subsection}{\numberline {5.8.2}TestType.SCATTER}{52}{subsection.5.8.2}%
 \contentsline {subsection}{\numberline {5.8.3}TestType.MINIMUM}{53}{subsection.5.8.3}%
 \contentsline {subsection}{\numberline {5.8.4}TestType.DROPOUT}{53}{subsection.5.8.4}%
-\contentsline {chapter}{\numberline {6}Indices and tables}{55}{chapter.6}%
-\contentsline {chapter}{Python Module Index}{57}{section*.188}%
-\contentsline {chapter}{Index}{59}{section*.189}%
+\contentsline {chapter}{\numberline {6}quality\_assessment.products}{55}{chapter.6}%
+\contentsline {section}{\numberline {6.1}TapeProduct}{55}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}TapeProduct.SUPERLINK\_PHASE}{56}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}TapeProduct.SUPERLINK\_NEUTRAL}{56}{subsection.6.1.2}%
+\contentsline {subsection}{\numberline {6.1.3}TapeProduct.SUPERLINK\_PHASE\_TEST}{56}{subsection.6.1.3}%
+\contentsline {subsection}{\numberline {6.1.4}TapeProduct.STANDARD1}{56}{subsection.6.1.4}%
+\contentsline {subsection}{\numberline {6.1.5}TapeProduct.STANDARD2}{56}{subsection.6.1.5}%
+\contentsline {subsection}{\numberline {6.1.6}TapeProduct.STANDARD3}{56}{subsection.6.1.6}%
+\contentsline {chapter}{\numberline {7}Indices and tables}{57}{chapter.7}%
+\contentsline {chapter}{Python Module Index}{59}{section*.196}%
+\contentsline {chapter}{Index}{61}{section*.197}%

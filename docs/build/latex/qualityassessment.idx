@@ -188,3 +188,12 @@
 \indexentry{SCATTER (quality\_assessment.data\_types.TestType attribute)@\spxentry{SCATTER}\spxextra{quality\_assessment.data\_types.TestType attribute}|hyperpage}{52}
 \indexentry{MINIMUM (quality\_assessment.data\_types.TestType attribute)@\spxentry{MINIMUM}\spxextra{quality\_assessment.data\_types.TestType attribute}|hyperpage}{53}
 \indexentry{DROPOUT (quality\_assessment.data\_types.TestType attribute)@\spxentry{DROPOUT}\spxextra{quality\_assessment.data\_types.TestType attribute}|hyperpage}{53}
+\indexentry{module@\spxentry{module}!quality\_assessment.products@\spxentry{quality\_assessment.products}|hyperpage}{55}
+\indexentry{quality\_assessment.products@\spxentry{quality\_assessment.products}!module@\spxentry{module}|hyperpage}{55}
+\indexentry{TapeProduct (class in quality\_assessment.products)@\spxentry{TapeProduct}\spxextra{class in quality\_assessment.products}|hyperpage}{55}
+\indexentry{SUPERLINK\_PHASE (quality\_assessment.products.TapeProduct attribute)@\spxentry{SUPERLINK\_PHASE}\spxextra{quality\_assessment.products.TapeProduct attribute}|hyperpage}{56}
+\indexentry{SUPERLINK\_NEUTRAL (quality\_assessment.products.TapeProduct attribute)@\spxentry{SUPERLINK\_NEUTRAL}\spxextra{quality\_assessment.products.TapeProduct attribute}|hyperpage}{56}
+\indexentry{SUPERLINK\_PHASE\_TEST (quality\_assessment.products.TapeProduct attribute)@\spxentry{SUPERLINK\_PHASE\_TEST}\spxextra{quality\_assessment.products.TapeProduct attribute}|hyperpage}{56}
+\indexentry{STANDARD1 (quality\_assessment.products.TapeProduct attribute)@\spxentry{STANDARD1}\spxextra{quality\_assessment.products.TapeProduct attribute}|hyperpage}{56}
+\indexentry{STANDARD2 (quality\_assessment.products.TapeProduct attribute)@\spxentry{STANDARD2}\spxextra{quality\_assessment.products.TapeProduct attribute}|hyperpage}{56}
+\indexentry{STANDARD3 (quality\_assessment.products.TapeProduct attribute)@\spxentry{STANDARD3}\spxextra{quality\_assessment.products.TapeProduct attribute}|hyperpage}{56}

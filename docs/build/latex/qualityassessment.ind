@@ -219,6 +219,7 @@
   \item \spxentry{module}
     \subitem \spxentry{quality\_assessment.data\_types}, \hyperpage{43}
     \subitem \spxentry{quality\_assessment.helper}, \hyperpage{11}
+    \subitem \spxentry{quality\_assessment.products}, \hyperpage{55}
     \subitem \spxentry{quality\_assessment.quality\_assessor}, \hyperpage{7}
     \subitem \spxentry{quality\_assessment.quality\_pdf\_report}, \hyperpage{13}
     \subitem \spxentry{quality\_assessment.tape\_quality\_information}, \hyperpage{3}
@@ -267,6 +268,8 @@
     \subitem \spxentry{module}, \hyperpage{43}
   \item \spxentry{quality\_assessment.helper}
     \subitem \spxentry{module}, \hyperpage{11}
+  \item \spxentry{quality\_assessment.products}
+    \subitem \spxentry{module}, \hyperpage{55}
   \item \spxentry{quality\_assessment.quality\_assessor}
     \subitem \spxentry{module}, \hyperpage{7}
   \item \spxentry{quality\_assessment.quality\_pdf\_report}
@@ -369,12 +372,24 @@
 		\hyperpage{37}
   \item \spxentry{solid\_arc()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}, 
 		\hyperpage{38}
+  \item \spxentry{STANDARD1}\spxextra{quality\_assessment.products.TapeProduct attribute}, 
+		\hyperpage{56}
+  \item \spxentry{STANDARD2}\spxextra{quality\_assessment.products.TapeProduct attribute}, 
+		\hyperpage{56}
+  \item \spxentry{STANDARD3}\spxextra{quality\_assessment.products.TapeProduct attribute}, 
+		\hyperpage{56}
   \item \spxentry{start\_position}\spxextra{quality\_assessment.data\_types.QualityParameterInfo attribute}, 
 		\hyperpage{46}
   \item \spxentry{start\_position}\spxextra{quality\_assessment.data\_types.TapeSection attribute}, 
 		\hyperpage{49}
   \item \spxentry{start\_section()}\spxextra{quality\_assessment.quality\_pdf\_report.DefectReportPDF method}, 
 		\hyperpage{38}
+  \item \spxentry{SUPERLINK\_NEUTRAL}\spxextra{quality\_assessment.products.TapeProduct attribute}, 
+		\hyperpage{56}
+  \item \spxentry{SUPERLINK\_PHASE}\spxextra{quality\_assessment.products.TapeProduct attribute}, 
+		\hyperpage{56}
+  \item \spxentry{SUPERLINK\_PHASE\_TEST}\spxextra{quality\_assessment.products.TapeProduct attribute}, 
+		\hyperpage{56}
 
   \indexspace
   \bigletter T
@@ -384,6 +399,7 @@
 		\hyperpage{4}
   \item \spxentry{tape\_section}\spxextra{quality\_assessment.tape\_quality\_information.TapeQualityInformation property}, 
 		\hyperpage{4}
+  \item \spxentry{TapeProduct}\spxextra{class in quality\_assessment.products}, \hyperpage{55}
   \item \spxentry{TapeQualityAssessor}\spxextra{class in quality\_assessment.quality\_assessor}, 
 		\hyperpage{7}
   \item \spxentry{TapeQualityInformation}\spxextra{class in quality\_assessment.tape\_quality\_information}, 
