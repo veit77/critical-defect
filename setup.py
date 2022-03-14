@@ -19,8 +19,8 @@ def read(fname: str) -> str:
                 encoding='utf8').read()
 
 
-setup(name="quality_assessment",
-      version="1.0b5",
+setup(name="Quality Assessment",
+      version="1.0b6",
       author="Veit Grosse",
       author_email="veit.grosse@gmail.com",
       description=("Package to derive information "
