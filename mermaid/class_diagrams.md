@@ -19,8 +19,6 @@ class TapeQualityAssessor{
 
     -assess_average_value() QualityReport
     -assess_dropouts() QualityReport
-    -assess_min_value() QualityReport
-
 }
 
 class TapeQualityInformation{
@@ -54,7 +52,7 @@ class TapeSpecs{
     +float min_tape_length
     +height min_value
     +float dropout_value
-    +Callable dropout_func: Optional[Callable[[float], float]]
+    +Callable~float, float~ dropout_func
     +bool width_from_true_baseline
     +float min_average
     +float averaging_length
